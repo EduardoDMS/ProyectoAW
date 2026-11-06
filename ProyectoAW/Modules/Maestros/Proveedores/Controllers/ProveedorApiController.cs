@@ -1,0 +1,67 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
+using ProyectoAW.Modules.Maestros.Proveedores.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.Proveedores.Services;
+
+namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    //[EnableCors("PwaRead")]
+    public class ProveedorApiController : ControllerBase
+    {
+        private readonly IProveedorService _service;
+
+        public ProveedorApiController(IProveedorService service)
+        {
+            _service=service;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTodos()
+        {
+            var proveedores=await _service.ObtenerTodosAsync();
+
+            return Ok(proveedores);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> ObtenerPorId(int id)
+        {
+            var proveedor = await _service.ObtenerPorIdAsync(id);
+
+            if(proveedor==null)
+                return NotFound();
+
+            return Ok(proveedor);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear([FromBody] CrearProveedorDto request)
+        {
+            var proveedor = await _service.CrearAsync(request);
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = proveedor.IdProveedor }, proveedor);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarProveedorDto request)
+        {
+            var actualizado = await _service.ActualizarAsync(id, request);
+            if (!actualizado)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}/estado")]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
+        {
+            var actualizado = await _service.CambiarEstadoAsync(id,activo);
+
+            if (!actualizado)
+                return NotFound();
+
+            return NoContent();
+        }
+    }
+}
