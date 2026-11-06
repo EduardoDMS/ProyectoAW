@@ -1,6 +1,10 @@
-// Almacenes
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ProyectoAW.Infraestructure.MVC;
+// Guias
+using ProyectoAW.Modules.Guias.Repositories;
+using ProyectoAW.Modules.Guias.Services;
+// Almacenes
 using ProyectoAW.Modules.Maestros.Almacenes.Repositories;
 using ProyectoAW.Modules.Maestros.Almacenes.Services;
 // Categorias
@@ -21,32 +25,35 @@ using ProyectoAW.Modules.Maestros.TipoDocumentos.Services;
 // Ubicaciones
 using ProyectoAW.Modules.Maestros.Ubicaciones.Repositories;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Services;
-// Usuarios
-using ProyectoAW.Modules.Seguridad.Usuarios.Repositories;
-using ProyectoAW.Modules.Seguridad.Usuarios.Services;
-using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
-using ProyectoAW.Modules.Guias.Repositories;
-using ProyectoAW.Modules.Guias.Services;
-
-
-
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
+// Usuarios
+using ProyectoAW.Modules.Seguridad.Usuarios.Repositories;
+using ProyectoAW.Modules.Seguridad.Usuarios.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
+// MVC
+builder.Services.AddControllersWithViews().AddRazorOptions(options =>
+{
+    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
+});
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// EF Core
 builder.Services.AddDbContext<ProyectoAW.Infrastructure.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-// dependencias
+// DI
 builder.Services.AddScoped<IAlmacenRepository, AlmacenRepository>();
 builder.Services.AddScoped<IAlmacenService, AlmacenService>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
@@ -69,6 +76,7 @@ builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IGuiaRepository, GuiaRepository>();
 builder.Services.AddScoped<IGuiaService, GuiaService>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -87,16 +95,15 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapStaticAssets();
+
+//app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
-app.MapControllers();
-
 
 app.Run();

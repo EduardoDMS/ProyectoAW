@@ -20,7 +20,6 @@
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Almacenes\Entities\" />
-    <Folder Include="Modules\Maestros\Almacenes\Views\" />
     <Folder Include="Modules\Maestros\Almacenes\Services\" />
     <Folder Include="Modules\Maestros\Almacenes\Repositories\" />
     <Folder Include="Modules\Maestros\Categorias\Controllers\" />
