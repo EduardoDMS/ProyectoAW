@@ -1,0 +1,48 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ProyectoAW.Modules.Maestros.Productos.Entities;
+
+public class ProductoConfiguration:IEntityTypeConfiguration<Producto>
+{
+    public void Configure(EntityTypeBuilder<Producto> builder)
+    {
+        builder.HasKey(p => p.IdProducto);
+
+        builder.Property(p => p.Codigo)
+               .HasMaxLength(50)
+               .IsRequired();
+
+        builder.Property(p => p.Nombre)
+               .HasMaxLength(150)
+               .IsRequired();
+
+        builder.Property(p => p.Activo)
+               .HasDefaultValue(true);
+        
+        builder.Property(p => p.Lote)
+               .HasMaxLength(50);
+                
+        builder.Property(p => p.Serie)
+               .HasMaxLength(50);
+
+        builder.HasIndex(p => p.Codigo)
+               .IsUnique();
+        
+        builder.Property(p => p.FchRegistro)
+               .HasDefaultValueSql("GETDATE()")
+               .ValueGeneratedOnAdd();
+
+        builder.Property(p => p.FchModificacion)
+               .IsRequired(false);
+
+        builder.HasOne(p => p.Categoria)
+               .WithMany(c => c.Producto)
+               .HasForeignKey(p => p.IdCategoria)
+               .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(p => p.UnidadMedida).WithMany(u => u.Productos)
+               .HasForeignKey(p => p.IdUnidadMedida).OnDelete(DeleteBehavior.Restrict);
+
+    }
+}

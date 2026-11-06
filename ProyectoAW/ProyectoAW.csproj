@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Modules\Guias\" />
+    <Folder Include="Modules\Stocks\" />
     <Folder Include="Modules\Guias\Controllers\" />
     <Folder Include="Modules\Guias\DTOs\Responses\" />
     <Folder Include="Modules\Guias\DTOs\Requests\" />
@@ -18,7 +20,6 @@
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Almacenes\Entities\" />
-    <Folder Include="Modules\Maestros\Almacenes\Views\" />
     <Folder Include="Modules\Maestros\Almacenes\Services\" />
     <Folder Include="Modules\Maestros\Almacenes\Repositories\" />
     <Folder Include="Modules\Maestros\Categorias\Controllers\" />
@@ -65,15 +66,18 @@
     <Folder Include="Modules\Maestros\UnidadesMedida\Services\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Repositories\" />
     <Folder Include="Modules\Seguridad\Permisos\" />
-    <Folder Include="Modules\Seguridad\Usuarios\" />
-    <Folder Include="Modules\Seguridad\Roles\" />
-    <Folder Include="Modules\Stocks\Controllers\" />
-    <Folder Include="Modules\Stocks\DTOs\Responses\" />
-    <Folder Include="Modules\Stocks\DTOs\Requests\" />
-    <Folder Include="Modules\Stocks\Entities\" />
-    <Folder Include="Modules\Stocks\Views\" />
-    <Folder Include="Modules\Stocks\Services\" />
-    <Folder Include="Modules\Stocks\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
   </ItemGroup>
 
 </Project>

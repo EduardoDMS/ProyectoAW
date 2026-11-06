@@ -1,0 +1,156 @@
+﻿using ProyectoAW.Infrastructure.Errors;
+using ProyectoAW.Modules.Maestros.Productos.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
+using ProyectoAW.Modules.Maestros.Productos.Entities;
+using ProyectoAW.Modules.Maestros.Productos.Repositories;
+//using ProyectoAW.Infrastructure.Errors;
+
+namespace ProyectoAW.Modules.Maestros.Productos.Services;
+
+public class ProductoService:IProductoService
+{
+    private readonly IProductoRepository _repository;
+
+    public ProductoService(IProductoRepository repository)
+    {
+        _repository = repository;
+    }
+
+    // preguntar si retorna toda la clase menos la fecha p 
+    public async Task<List<ProductoDto>> ObtenerTodosAsync()
+    {
+        var productos=await _repository.ObtenerTodosAsync();
+
+        return productos.Select(p=>new ProductoDto
+        {
+            IdProducto=p.IdProducto,
+            Codigo=p.Codigo,
+            Nombre=p.Nombre,
+            Lote = p.Lote,
+            Serie = p.Serie,
+            Activo =p.Activo,
+            IdCategoria = p.IdCategoria,
+            IdUnidadMedida = p.IdUnidadMedida
+        }).ToList();
+    }
+
+    public async Task<ProductoDto?> ObtenerPorIdAsync(int id)
+    {
+        var producto = await _repository.ObtenerPorIdAsync(id);
+
+        if (producto == null)
+            return null;
+
+        return new ProductoDto
+        {
+            IdProducto = producto.IdProducto,
+            Codigo = producto.Codigo,
+            Nombre = producto.Nombre,
+            Lote = producto.Lote,
+            Serie = producto.Serie,
+            Activo = producto.Activo,
+            IdCategoria = producto.IdCategoria,
+            IdUnidadMedida = producto.IdUnidadMedida
+        };
+    }
+
+    public async Task<ProductoDto?> ObtenerPorCodigoAsync(string codigo)
+    {
+        var producto = await _repository.ObtenerPorCodigoAsync(codigo);
+
+        if (producto == null)
+            return null;
+
+        return new ProductoDto
+        {
+            IdProducto = producto.IdProducto,
+            Codigo = producto.Codigo,
+            Nombre = producto.Nombre,
+            Lote = producto.Lote,
+            Serie = producto.Serie,
+            Activo = producto.Activo,
+            IdCategoria = producto.IdCategoria,
+            IdUnidadMedida = producto.IdUnidadMedida
+        };
+    }
+
+    public async Task<ProductoDto> CrearAsync(CrearProductoDto dto)
+    {
+        var codigo = dto.Codigo.Trim();
+
+        var productoExistente = await _repository.ObtenerPorCodigoAsync(codigo);
+
+        if (productoExistente != null)
+            throw new ConflictoNegocioException("Ya existe un producto con ese código.");
+
+        var producto = new Producto
+        {
+            Codigo = codigo,
+            Nombre = dto.Nombre?.Trim(),
+            Lote = dto.Lote,
+            Serie = dto.Serie,
+            Activo = true,
+            FchRegistro = DateTime.UtcNow,
+            IdCategoria = dto.IdCategoria,
+            IdUnidadMedida = dto.IdUnidadMedida
+        };
+
+        await _repository.CrearAsync(producto);
+
+        return new ProductoDto
+        {
+            IdProducto = producto.IdProducto,
+            Codigo = producto.Codigo,
+            Nombre = producto.Nombre,
+            Lote = producto.Lote,
+            Serie = producto.Serie,
+            Activo = producto.Activo,
+            IdCategoria = producto.IdCategoria
+        };
+    }
+
+    public async Task<bool> ActualizarAsync(int id, ActualizarProductoDto dto)
+    {
+        var producto = await _repository.ObtenerPorIdAsync(id);
+
+        if(producto == null)
+            return false;
+
+        var codigo=dto.Codigo.Trim();
+
+        var productoConMismoCodigo = await _repository.ObtenerPorCodigoAsync(codigo);
+
+        if(productoConMismoCodigo!=null && productoConMismoCodigo.IdProducto!=id)
+        {
+            throw new ConflictoNegocioException("Ya existe otro producto con ese código.");
+        }
+
+        producto.Codigo = codigo;
+        producto.Nombre=dto.Nombre?.Trim();
+        producto.Lote = dto.Lote;
+        producto.Serie = dto.Serie;
+        producto.Activo = dto.Activo;
+        producto.FchModificacion = DateTime.Now;
+
+        producto.IdCategoria = dto.IdCategoria;
+        producto.IdUnidadMedida = dto.IdUnidadMedida;
+        
+        await _repository.ActualizarAsync(producto);
+
+        return true;
+    }
+
+    public async Task<bool> CambiarEstadoAsync(int id, bool activo)
+    {
+        var producto = await _repository.ObtenerPorIdAsync(id);
+
+        if (producto == null)
+            return false;
+
+        producto.Activo = activo;
+
+        await _repository.ActualizarAsync(producto);
+
+        return true;
+    }
+}

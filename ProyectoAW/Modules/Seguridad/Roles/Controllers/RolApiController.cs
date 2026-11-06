@@ -1,0 +1,58 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoAW.Modules.Seguridad.Roles.DTOs.Requests;
+using ProyectoAW.Modules.Seguridad.Roles.Services;
+
+namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RolApiController : ControllerBase
+    {
+        private readonly IRolService _service;
+
+        public RolApiController(IRolService service)
+        {
+            _service = service;
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerTodas()
+        {
+            var roles = await _service.ObtenerTodosRolesAsync();
+            return Ok(roles);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> ObtenerPorId(int id)
+        {
+            var rol = await _service.ObtenerRolPorIdAsync(id);
+
+            if (rol == null)
+                return NotFound();
+
+            return Ok(rol);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear([FromBody] CrearRolDto request)
+        {
+            var rol = await _service.CrearRolAsync(request);
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = rol.IdRol }, rol);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarRolDto request)
+        {
+            var actualizado = await _service.ActualizarRolAsync(id, request);
+            if (!actualizado)
+                return NotFound();
+
+            return NoContent();
+        }
+
+
+
+
+    }
+}
