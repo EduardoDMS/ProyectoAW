@@ -1,0 +1,17 @@
+﻿using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Responses;
+
+namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
+{
+    public interface IUbicacionService
+    {
+        Task<List<UbicacionDto>> ObtenerUbicacionesAsync();
+        Task<List<UbicacionDto>> ObtenerUbicacionesAsync(int? idAlmacen, bool soloActivas);
+        Task<UbicacionDto?> ObtenerUbicacionPorIdAsync(int id);
+        Task<UbicacionDto?> ObtenerUbicacionPorCodigoAsync(string codigo);
+        Task<UbicacionDto> CrearUbicacionAsync(CrearUbicacionDto dto);
+        Task<bool> ActualizarAsync(int id, ActualizarUbicacionDto dto);
+        Task<bool> CambiarEstadoAsync(int id, bool activo);
+
+    }
+}
