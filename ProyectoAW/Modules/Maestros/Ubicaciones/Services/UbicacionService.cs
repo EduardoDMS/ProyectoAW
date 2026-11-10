@@ -2,7 +2,8 @@
 using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Repositories;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
-using ProyectoAW.Infrastructure.Errors;
+using ProyectoAW.Infraestructure.RP;
+
 
 namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
 {
@@ -27,7 +28,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacionConElMismoCodigo = await _repository.ObtenerUbicacionPorCodigoAsync(codigo);
             if(ubicacionConElMismoCodigo != null && ubicacionConElMismoCodigo.IdUbicacion != id)
             {
-                throw new ConflictoNegocioException($"Ya existe una ubicación con el código '{codigo}'.");
+                throw new NegocioException($"Ya existe una ubicación con el código '{codigo}'.");
             }
 
             ubicacion.Codigo = codigo;
@@ -49,7 +50,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacionExistente = await _repository.ObtenerUbicacionPorCodigoAsync(codigo);
         
             if(ubicacionExistente != null)
-                throw new ConflictoNegocioException($"Ya existe una ubicación con el código '{codigo}'.");
+                throw new  NegocioException($"Ya existe una ubicación con el código '{codigo}'.");
 
             var ubicacion = new Ubicacion
             {
@@ -78,7 +79,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacion = await _repository.ObtenerUbicacionPorIdAsync(id);
             
             if (ubicacion == null)
-                return false;
+                throw new NegocioException($"No se encontró la ubicación con ID {id}.");
 
             ubicacion.Activo = activo;
             ubicacion.FchModificacion = DateTime.UtcNow;// estaria buena evaluar aqui el cambio tambien de fecha 
@@ -113,7 +114,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacion = await _repository.ObtenerUbicacionPorCodigoAsync(codigo);
 
             if (ubicacion == null)
-                return null;
+                throw new NegocioException($"No se encontró la ubicación con código {codigo}.");
 
             return new UbicacionDto
             {
@@ -131,8 +132,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacion = await _repository.ObtenerUbicacionPorIdAsync(id);
 
             if(ubicacion == null)
-                return null;
-            
+                throw new NegocioException($"No se encontró la ubicación con ID {id}.");
             return new UbicacionDto
             {
                 IdUbicacion = ubicacion.IdUbicacion,

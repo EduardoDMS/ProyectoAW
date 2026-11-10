@@ -1,9 +1,10 @@
-﻿using ProyectoAW.Infrastructure.Errors;
+﻿
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Roles.DTOs.Response;
 using ProyectoAW.Modules.Seguridad.Roles;
 using ProyectoAW.Modules.Seguridad.Roles.Entities;
+using ProyectoAW.Infraestructure.RP;
 
 namespace ProyectoAW.Modules.Seguridad.Roles.Services
 {
@@ -31,7 +32,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Services
 
             if(rolConMismoNombre != null && rolConMismoNombre.IdRol != id)
             {
-                throw new ConflictoNegocioException("Ya existe un rol con ese nombre.");
+                throw new NegocioException("Ya existe un rol con ese nombre.");
             }
 
             rol.Nombre = nombre;
@@ -49,7 +50,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Services
             var rolExistente = await _repo.ObtenerPorNombreAsync(nombre);
 
             if (rolExistente != null)
-                throw new ConflictoNegocioException("Ya existe un rol con ese nombre.");
+                throw new NegocioException("Ya existe un rol con ese nombre.");
 
             var rol = new Rol { Nombre = nombre };
             await _repo.CrearAsync(rol);

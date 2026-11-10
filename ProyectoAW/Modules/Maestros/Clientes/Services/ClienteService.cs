@@ -1,8 +1,8 @@
-﻿using ProyectoAW.Modules.Maestros.Clientes.DTOs.Requests;
+﻿using ProyectoAW.Infraestructure.RP;
+using ProyectoAW.Modules.Maestros.Clientes.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Clientes.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Clientes.Entities;
 using ProyectoAW.Modules.Maestros.Clientes.Repositories;
-using ProyectoAW.Infrastructure.Errors;
 
 namespace ProyectoAW.Modules.Maestros.Clientes.Services
 {
@@ -20,7 +20,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
             var cliente = await _repository.ObtenerPorIdAsync(id);
 
             if (cliente == null)
-                return false;
+                throw new NegocioException("Cliente no encontrado.");
 
             var numeroDocumento = dto.NumeroDocumento.Trim();
 
@@ -28,7 +28,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
 
             if(clienteConMismoNumero!=null && clienteConMismoNumero.IdCliente!=id)
             {
-                throw new ConflictoNegocioException("Ya existe un cliente con ese número de documento.");
+                throw new NegocioException("Ya existe un cliente con ese número de documento.");
             }
 
             cliente.RazonSocial=dto.RazonSocial;
@@ -66,7 +66,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
             var clienteExistente = await _repository.ObtenerPorNumeroDocumentoAsync(numeroDocumento);
 
             if (clienteExistente != null)
-                throw new ConflictoNegocioException("Ya existe un cliente con ese número de documento.");
+                throw new NegocioException("Ya existe un cliente con ese número de documento.");
 
             var cliente = new Cliente
             {

@@ -2,8 +2,9 @@
 using ProyectoAW.Modules.Maestros.Categorias.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Categorias.Entities;
 using ProyectoAW.Modules.Maestros.Categorias.Repositories;
-using ProyectoAW.Infrastructure.Errors;
+
 using ProyectoAW.Models;
+using ProyectoAW.Infraestructure.RP;
 //using ProyectoAW.Models;
 
 namespace ProyectoAW.Modules.Maestros.Categorias.Services
@@ -16,20 +17,19 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
             _repository = repository;
         }
 
-
         public async Task<bool> ActualizarCategoriaAsync(int id, ActualizarCategoriaDto dto)
         {
             var categoria = await _repository.GetByIdAsync(id);
 
             if (categoria == null)
-                throw new NoEncontradoException($"No se encontró la categoría con ID {id}.");
+                throw new NegocioException($"No se encontró la categoría con ID {id}.");
 
             var nombreCate = dto.Nombre.Trim().ToUpper();
             var categoriaConMismoNombre = await _repository.GetByNombreAsync(nombreCate);
 
             if(categoriaConMismoNombre != null && categoriaConMismoNombre.IdCategoria != id)
             {
-                throw new ConflictoNegocioException($"Ya existe una categoría con el nombre '{nombreCate}'.");
+                throw new NegocioException($"Ya existe una categoría con el nombre '{nombreCate}'.");
             }
 
             categoria.Nombre = nombreCate;
@@ -45,7 +45,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
             var categoria = await _repository.GetByIdAsync(id);
 
             if (categoria == null)
-                return false;
+                throw new NegocioException($"No se encontró la categoría con ID {id}.");
 
             categoria.Activo = activo;
             await _repository.UpdateAsync(categoria);
@@ -58,7 +58,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
 
             var categoriaExistente = await _repository.GetByNombreAsync(nombre);
             if(categoriaExistente != null)
-                throw new ConflictoNegocioException($"Ya existe una categoría con el nombre '{nombre}'.");
+                throw new NegocioException($"Ya existe una categoría con el nombre '{nombre}'.");
 
             var categoria = new Categoria
             {
@@ -97,7 +97,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
         {
             var categoria = await _repository.GetByIdAsync(id);
             if (categoria == null)
-                return null;
+                throw new NegocioException($"No se encontró una categoría con el ID {id}.");
 
             return new CategoriaDto
             {
@@ -110,17 +110,17 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
 
         public async Task<CategoriaDto?> ObtenerCategoriaPorNombreAsync(string nombre)
         {
-             var categoria = await _repository.GetByNombreAsync(nombre);
-             if (categoria == null)
-                 return null;
+            var categoria = await _repository.GetByNombreAsync(nombre);
+            if (categoria == null)
+                 throw new NegocioException($"No se encontró una categoría con el nombre '{nombre}'.");
 
-             return new CategoriaDto
-             {
+            return new CategoriaDto
+            {
                  IdCategoria = categoria.IdCategoria,
                  Nombre = categoria.Nombre,
                  Descripcion = categoria.Descripcion,
                  Activo = categoria.Activo
-             };
+            };
         }
     }
 }

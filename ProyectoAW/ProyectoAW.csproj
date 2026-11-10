@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Guias\" />
     <Folder Include="Modules\Stocks\" />
     <Folder Include="Modules\Guias\Controllers\" />
     <Folder Include="Modules\Guias\DTOs\Responses\" />
     <Folder Include="Modules\Guias\DTOs\Requests\" />
-    <Folder Include="Modules\Guias\Entities\" />
     <Folder Include="Modules\Guias\Views\" />
     <Folder Include="Modules\Guias\Services\" />
-    <Folder Include="Modules\Guias\Repositories\" />
     <Folder Include="Modules\Maestros\Almacenes\Controllers\" />
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Responses\" />
@@ -59,12 +56,8 @@
     <Folder Include="Modules\Maestros\Ubicaciones\Repositories\" />
     <Folder Include="Modules\Maestros\TipoDocumentos\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Controllers\" />
-    <Folder Include="Modules\Maestros\UnidadesMedida\DTOs\Requests\" />
-    <Folder Include="Modules\Maestros\UnidadesMedida\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Entities\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Views\" />
-    <Folder Include="Modules\Maestros\UnidadesMedida\Services\" />
-    <Folder Include="Modules\Maestros\UnidadesMedida\Repositories\" />
     <Folder Include="Modules\Seguridad\Permisos\" />
   </ItemGroup>
 

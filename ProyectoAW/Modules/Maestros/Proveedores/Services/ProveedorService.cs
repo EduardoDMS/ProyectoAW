@@ -1,8 +1,8 @@
-﻿using ProyectoAW.Modules.Maestros.Proveedores.DTOs.Requests;
+﻿using ProyectoAW.Infraestructure.RP;
+using ProyectoAW.Modules.Maestros.Proveedores.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Proveedores.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Proveedores.Entities;
 using ProyectoAW.Modules.Maestros.Proveedores.Repositories;
-using ProyectoAW.Infrastructure.Errors;
 
 namespace ProyectoAW.Modules.Maestros.Proveedores.Services
 {
@@ -20,7 +20,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
             var proveedor = await _repository.ObtenerPorIdAsync(id);
 
             if (proveedor == null)
-                return false;
+                throw new NegocioException("Proveedor no encontrado.");
 
             var numeroDocumento = dto.NumeroDocumento.Trim();
 
@@ -28,7 +28,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
 
             if(clienteConMismoNumero != null && clienteConMismoNumero.IdProveedor!=id)
             {
-                throw new ConflictoNegocioException("Ya existe un proveedor con ese número de documento.");
+                throw new NegocioException("Ya existe un proveedor con ese número de documento.");
             }
 
             proveedor.RazonSocial = dto.RazonSocial;
@@ -68,7 +68,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
             var proveedorExistente=await _repository.ObtenerPorNumeroDocumentoAsync(numeroDocumento);
 
             if (proveedorExistente != null)
-                throw new ConflictoNegocioException("Ya existe un proveedor con ese número de documento.");
+                throw new NegocioException("Ya existe un proveedor con ese número de documento.");
 
             var proveedor = new Proveedor
             {
@@ -104,7 +104,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
             var proveedor = await _repository.ObtenerPorIdAsync(id);
 
             if(proveedor==null)
-                return null;
+                throw new NegocioException("Proveedor no encontrado.");
 
             return new ProveedorDto
             {

@@ -118,5 +118,11 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
             await _context.UbicacionesDespacho.AddRangeAsync(nuevasUbicaciones);
             await _context.SaveChangesAsync();
         }
+
+        public async Task ActualizarAsync(Almacen almacen)
+        {
+            _context.Almacenes.Update(almacen);
+            await _context.SaveChangesAsync();
+        }
     }
 }
