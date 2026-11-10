@@ -46,7 +46,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdProducto");
 
-                    b.ToTable("DetallesGuia");
+                    b.ToTable("DetallesGuia", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
@@ -91,7 +91,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdTipoOperacionGuia");
 
-                    b.ToTable("Guias");
+                    b.ToTable("Guias", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
@@ -130,7 +130,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Codigo")
                         .IsUnique();
 
-                    b.ToTable("Almacenes");
+                    b.ToTable("Almacenes", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Categorias.Entities.Categoria", b =>
@@ -158,7 +158,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasKey("IdCategoria");
 
-                    b.ToTable("Categorias");
+                    b.ToTable("Categorias", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", b =>
@@ -215,7 +215,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("NumeroDocumento")
                         .IsUnique();
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Clientes", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Estados.Entities.EstadoGuia", b =>
@@ -374,7 +374,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdUnidadMedida");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Proveedores.Entities.Proveedor", b =>
@@ -434,7 +434,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("NumeroDocumento")
                         .IsUnique();
 
-                    b.ToTable("Proveedores");
+                    b.ToTable("Proveedores", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", b =>
@@ -455,7 +455,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Documento")
                         .IsUnique();
 
-                    b.ToTable("TipoDocument");
+                    b.ToTable("TipoDocument", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", b =>
@@ -496,7 +496,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdAlmacen");
 
-                    b.ToTable("Ubicaciones");
+                    b.ToTable("Ubicaciones", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.UbicacionDespacho", b =>
@@ -564,7 +564,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Nombre")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", b =>
@@ -618,7 +618,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.DetalleGuia", b =>

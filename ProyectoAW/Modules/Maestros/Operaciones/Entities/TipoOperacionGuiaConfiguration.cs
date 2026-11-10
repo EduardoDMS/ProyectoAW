@@ -18,8 +18,8 @@ namespace ProyectoAW.Modules.Maestros.Operaciones.Entities
 
             builder.HasData(
                 new TipoOperacionGuia { IdTipoOperacionGuia = TipoOperacionGuiaIds.Entrada, Codigo = "ENT", Nombre = "Entrada" },
-                new TipoOperacionGuia { IdTipoOperacionGuia = TipoOperacionGuiaIds.Salida, Codigo = "SAL", Nombre = "Salida" },
-                new TipoOperacionGuia { IdTipoOperacionGuia = TipoOperacionGuiaIds.Traslado, Codigo = "TRA", Nombre = "Traslado" });
+                new TipoOperacionGuia { IdTipoOperacionGuia = TipoOperacionGuiaIds.Salida, Codigo = "SAL", Nombre = "Salida" });
+               // new TipoOperacionGuia { IdTipoOperacionGuia = TipoOperacionGuiaIds.Traslado, Codigo = "TRA", Nombre = "Traslado" });
         }
     }
 }

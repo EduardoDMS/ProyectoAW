@@ -32,7 +32,6 @@ namespace ProyectoAW.Infrastructure.Data
         public DbSet<Rol> Roles => Set<Rol>();
         public DbSet<Guia> Guias => Set<Guia>();
         public DbSet<DetalleGuia> DetallesGuia => Set<DetalleGuia>();
-        //public DbSet<CabeceraGuia> CabeceraGuia => Set<CabeceraGuia>();
         //public DbSet<MotivoGuia> MotivosGuia => Set<MotivoGuia>();
         //public DbSet<TipoComportamientoGuia> TiposComportamientoGuia => Set<TipoComportamientoGuia>();
         //public DbSet<DetalleGuia> DetalleGuia => Set<DetalleGuia>();

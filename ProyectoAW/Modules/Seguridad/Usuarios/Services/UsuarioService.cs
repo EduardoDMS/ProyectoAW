@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using ProyectoAW.Infrastructure.Errors;
+using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Responses;
@@ -37,14 +37,15 @@ public class UsuarioService : IUsuarioService
     {
         ValidarDatos(dto.Nombre, dto.Apellido, dto.Username);
         var usuario = await _repository.GetByIdAsync(id);
-        if (usuario is null) return false;
+        if (usuario is null) 
+            throw new NegocioException("Usuario no encontrado.");
 
         // Confirma que el rol sea asignable y que el nombre de usuario no pertenezca a otra cuenta.
         await ValidarRolAsync(dto.IdRol);
         var username = dto.Username.Trim();
         var usuarioConElmismoNombre = await _repository.ObtenerPorUsernameAsync(username);
         if (usuarioConElmismoNombre is not null && usuarioConElmismoNombre.IdUsuario != id)
-            throw new ConflictoNegocioException("Ya existe un usuario con ese nombre de usuario.");
+            throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
 
         usuario.Username = username;
         usuario.Nombre = dto.Nombre.Trim();
@@ -63,7 +64,8 @@ public class UsuarioService : IUsuarioService
     public async Task<bool> CambiarEstadoAsync(int id, bool activo)
     {
         var usuario = await _repository.GetByIdAsync(id);
-        if (usuario is null) return false;
+        if (usuario is null) 
+            throw new NegocioException("Usuario no encontrado.");
         usuario.Activo = activo;
         await _repository.ActualizarAsync(usuario);
         return true;
@@ -73,12 +75,12 @@ public class UsuarioService : IUsuarioService
     {
         ValidarDatos(dto.Nombre, dto.Apellido, dto.Username);
         if (string.IsNullOrWhiteSpace(dto.Password))
-            throw new ReglaNegocioException("La contraseña es obligatoria.");
+            throw new NegocioException("La contraseña es obligatoria.");
 
         await ValidarRolAsync(dto.IdRol);
         var username = dto.Username.Trim();
         if (await _repository.ObtenerPorUsernameAsync(username) is not null)
-            throw new ConflictoNegocioException("Ya existe un usuario con ese nombre de usuario.");
+            throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
 
         var usuario = new Usuario
         {
@@ -107,22 +109,22 @@ public class UsuarioService : IUsuarioService
     {
         var rol = await _rolService.ObtenerRolPorIdAsync(idRol);
         if (rol is null)
-            throw new ReglaNegocioException("Selecciona un rol válido.");
+            throw new NegocioException("Selecciona un rol válido.");
 
         var nombre = rol.Nombre.Trim();
         var permitido = RolesAdministrables.Any(rolPermitido =>
             nombre.Equals(rolPermitido, StringComparison.OrdinalIgnoreCase));
         if (!permitido)
-            throw new ReglaNegocioException("Solo se puede asignar el rol Administrador o Operador.");
+            throw new NegocioException("Solo se puede asignar el rol Administrador o Operador.");
     }
 
     private static void ValidarDatos(string nombre, string apellido, string username)
     {
         if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(apellido) ||
             string.IsNullOrWhiteSpace(username))
-            throw new ReglaNegocioException("Nombre, apellido y nombre de usuario son obligatorios.");
+            throw new NegocioException("Nombre, apellido y nombre de usuario son obligatorios.");
         if (nombre.Trim().Length > 100 || apellido.Trim().Length > 100 || username.Trim().Length > 20)
-            throw new ReglaNegocioException("El nombre y apellido admiten hasta 100 caracteres; el usuario, hasta 20.");
+            throw new NegocioException("El nombre y apellido admiten hasta 100 caracteres; el usuario, hasta 20.");
     }
 
     private static UsuarioDto ToDto(Usuario usuario) => new()
