@@ -25,6 +25,9 @@ using ProyectoAW.Modules.Maestros.TipoDocumentos.Services;
 // Ubicaciones
 using ProyectoAW.Modules.Maestros.Ubicaciones.Repositories;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Services;
+// Unidad de Medida
+using ProyectoAW.Modules.Maestros.UnidadesMedida.Repositories;
+using ProyectoAW.Modules.Maestros.UnidadesMedida.Services;
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
@@ -68,6 +71,8 @@ builder.Services.AddScoped<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddScoped<ITipoDocumentoService, TipoDocumentoService>();
 builder.Services.AddScoped<IUbicacionRepository, UbicacionRepository>();
 builder.Services.AddScoped<IUbicacionService, UbicacionService>();
+builder.Services.AddScoped<IUnidadMedidaRepository,UnidadMedidaRepository>();
+builder.Services.AddScoped<IUnidadMedidaService, UnidadMedidaService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
@@ -99,7 +104,8 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-//app.MapControllers();
+// Publica controladores con rutas por atributos, como /api/guias.
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

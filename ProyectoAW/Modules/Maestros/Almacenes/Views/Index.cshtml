@@ -25,7 +25,11 @@
 	<div class="row mb-3">
 		<div class="col">
 			<label class="form-label">Almacén</label>
-			<input id="txtBuscarAlmacen" class="form-control" placeholder="Buscar almacén..."/>
+			<div class="input-group">
+				<input id="txtBuscarAlmacen" class="form-control" placeholder="Buscar almacén..." />
+				<button id="btnLimpiarFiltros" class="btn btn-outline-secondary"><i class="ti ti-eraser fs-5"></i></button>
+			</div>
+			
 		</div>
 		<div class="col">
 			<label class="form-label">Estado</label>
@@ -118,9 +122,9 @@
 					<!-- Código -->
 					<div class="col-md-6 mb-3">
 						<label for="txtCodigoEditar" class="form-label">
-							Código <span class="text-danger">*</span>
+							Código
 						</label>
-						<input type="text" id="txtCodigoEditar" class="form-control" placeholder="Ej: ALM_001" maxlength="50" required />
+						<input type="text" id="txtCodigoEditar" class="form-control" maxlength="50" disabled />
 					</div>
 
 					<!-- Nombre -->
@@ -128,7 +132,7 @@
 						<label for="txtNombreEditar" class="form-label">
 							Nombre <span class="text-danger">*</span>
 						</label>
-						<input type="text" id="txtNombreEditar" class="form-control" placeholder="Ej: Almacén principal" maxlength="50" required />
+						<input type="text" id="txtNombreEditar" class="form-control" maxlength="50" required />
 					</div>
 
 					<!-- Estado -->
@@ -159,6 +163,8 @@
 		</div>
 	</div>
 </div>
+
+
 @section Scripts{
 	<script src="~/js/modules/maestros/almacenes/almacen-index.js" asp-append-version="true"></script>
 	<script src="~/js/modules/maestros/almacenes/almacen-form.js" asp-append-version="true"></script>

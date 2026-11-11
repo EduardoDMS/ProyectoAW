@@ -15,6 +15,8 @@ namespace ProyectoAW.Modules.Maestros.Operaciones.Entities
     {
         public const int Entrada = 1;
         public const int Salida = 2;
-        public const int Traslado = 3;
+        
+        // no se usa la 3 ya 
+        // public const int Traslado = 3;
     }
 }

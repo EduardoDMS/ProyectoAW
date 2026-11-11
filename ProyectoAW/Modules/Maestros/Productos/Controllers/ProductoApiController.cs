@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Productos.Services;
+using ProyectoAW.Infraestructure.RP;
 
 
 namespace ProyectoAW.Modules.Maestros.Productos.Controllers
@@ -21,48 +22,168 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
-            var productos = await _service.ObtenerTodosAsync();
+            try
+            {
+                var productos = await _service.ObtenerTodosAsync();
+                return Ok(new Respuesta
+                {
+                    Mensaje = "Productos obtenidos exitosamente.",
+                    Exito = true,
+                    Datos = productos
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Mensaje = ex.Message,
+                    Exito = false
+                });
 
-            return Ok(productos);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Exito = false
+                });
+            }
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var producto = await _service.ObtenerPorIdAsync(id);
-
-            if (producto == null)
-                return NotFound();
-
-            return Ok(producto);
+            try
+            {
+                var producto = await _service.ObtenerPorIdAsync(id);
+                return Ok( new Respuesta
+                {
+                    Mensaje = "Producto encontrado.",
+                    Exito = true,
+                    Datos = producto
+                });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Mensaje = ex.Message,
+                    Exito = false
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Exito = false
+                });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearProductoDto request)
         {
-            var producto = await _service.CrearAsync(request);
-            return CreatedAtAction(nameof(ObtenerPorId), new { id = producto.IdProducto }, producto);
+            try
+            {
+                var producto = await _service.CrearAsync(request);
+                return CreatedAtAction(
+                                    nameof(ObtenerPorId),
+                                    new { id = producto.IdProducto },
+                                    new Respuesta
+                                    {
+                                        Mensaje = "Producto creado exitosamente.",
+                                        Exito = true,
+                                        Datos = producto
+                                    });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Mensaje = ex.Message,
+                    Exito = false
+                });
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Exito = false
+                });
+            }
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarProductoDto request)
         {
-            var actualizado = await _service.ActualizarAsync(id, request);
-            if (!actualizado)
-                return NotFound();
+            try
+            {
+                var actualizado = await _service.ActualizarAsync(id, request);
+                if (!actualizado)
+                    throw new NegocioException("Producto no fue posible actualizar");
 
-            return NoContent();
+                return Ok(new Respuesta
+                {
+                    Mensaje = "Producto actualizado exitosamente.",
+                    Exito = true
+                });
+
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Mensaje = ex.Message,
+                    Exito = false
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Exito = false
+                });
+            }
+
         }
 
         [HttpPatch("{id:int}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo) 
         {
-            var actualizado=await _service.CambiarEstadoAsync(id,activo);
+            try
+            {
+                var actualizado = await _service.CambiarEstadoAsync(id, activo);
 
-            if (!actualizado)
-                return NotFound();
+                if (!actualizado)
+                    throw new NegocioException("Producto no fue posible actualizar");
 
-            return NoContent();
+                return Ok(new Respuesta
+                {
+                    Mensaje = "Estado del producto actualizado exitosamente.",
+                    Exito = true
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Mensaje = ex.Message,
+                    Exito = false
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Mensaje = "Ocurrió un error inesperado.",
+                    Exito = false
+                });
+            }
         }
     }
 }

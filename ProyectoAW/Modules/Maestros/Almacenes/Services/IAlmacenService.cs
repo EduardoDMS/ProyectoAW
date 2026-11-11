@@ -12,6 +12,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Services
 
         Task<bool> CambiarEstadoAlmacenAsync(int id, bool activo);
 
-
+        Task<bool> ActualizarAsync(int id, ActualizarAlmacenDto dto);
     }
 }

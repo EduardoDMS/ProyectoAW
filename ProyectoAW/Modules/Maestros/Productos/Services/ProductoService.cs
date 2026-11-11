@@ -1,4 +1,5 @@
-﻿using ProyectoAW.Infrastructure.Errors;
+﻿
+using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Productos.Entities;
@@ -39,7 +40,7 @@ public class ProductoService:IProductoService
         var producto = await _repository.ObtenerPorIdAsync(id);
 
         if (producto == null)
-            return null;
+            throw new NegocioException("Producto no encontrado / No existe.");
 
         return new ProductoDto
         {
@@ -59,7 +60,7 @@ public class ProductoService:IProductoService
         var producto = await _repository.ObtenerPorCodigoAsync(codigo);
 
         if (producto == null)
-            return null;
+            throw new NegocioException("No se encontró un producto con ese código.");
 
         return new ProductoDto
         {
@@ -81,7 +82,7 @@ public class ProductoService:IProductoService
         var productoExistente = await _repository.ObtenerPorCodigoAsync(codigo);
 
         if (productoExistente != null)
-            throw new ConflictoNegocioException("Ya existe un producto con ese código.");
+            throw new NegocioException("Ya existe un producto con ese código.");
 
         var producto = new Producto
         {
@@ -114,7 +115,7 @@ public class ProductoService:IProductoService
         var producto = await _repository.ObtenerPorIdAsync(id);
 
         if(producto == null)
-            return false;
+            throw new NegocioException("Producto no encontrado.");
 
         var codigo=dto.Codigo.Trim();
 
@@ -122,7 +123,7 @@ public class ProductoService:IProductoService
 
         if(productoConMismoCodigo!=null && productoConMismoCodigo.IdProducto!=id)
         {
-            throw new ConflictoNegocioException("Ya existe otro producto con ese código.");
+            throw new NegocioException("Ya existe otro producto con ese código.");
         }
 
         producto.Codigo = codigo;
@@ -145,7 +146,7 @@ public class ProductoService:IProductoService
         var producto = await _repository.ObtenerPorIdAsync(id);
 
         if (producto == null)
-            return false;
+            throw new NegocioException("Producto no encontrado.");
 
         producto.Activo = activo;
 

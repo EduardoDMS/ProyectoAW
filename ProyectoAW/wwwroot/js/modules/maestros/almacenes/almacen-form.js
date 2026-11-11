@@ -46,7 +46,7 @@ async function guardarAlmacen() {
         limpiarFormularioAlmacen();
 
         // Notificar que se creo un almacen
-        document.dispatchEvent(new CustomEvent('almacen:creado'));
+        document.dispatchEvent(new CustomEvent('almacen:guardado'));
     } catch (error) {
         console.error(error);
         alert(error.message);
@@ -62,30 +62,35 @@ function limpiarFormularioAlmacen() {
 
 // EDITAR ALMACEN
 async function editarAlmacen(almacen) {
-    console.log("Editar almacen: ", almacen)
     try {
         // Consultar los datos actualizados por ID
         const response = await fetch(`/api/AlmacenApi/${almacen.idAlmacen}`);
 
+        const resultado = await response.json();
+
         if (!response.ok) {
-            throw new Error('No se pudo obtener el almacén');
+            throw new Error(resultado.mensaje || 'No se pudo obtener el almacén');
         }
 
-        const datos = await response.json();
+        if (resultado.exito) {
+            const almacen = resultado.datos;
 
-        // Cargar datos en el formulario
-        document.getElementById('txtIdAlmacenEditar').value = datos.idAlmacen;
-        document.getElementById('txtCodigoEditar').value = datos.codigo;
-        document.getElementById('txtNombreEditar').value = datos.nombre;
-        document.getElementById('chkActivoEditar').checked = datos.activo;
+            console.log(almacen);
+            console.log(resultado.mensaje);
 
-        // Abrir modal
-        const modalElement = document.getElementById('modalEditarAlmacen');
-        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-        modal.show();
+            // Cargar datos en el formulario
+            document.getElementById('txtIdAlmacenEditar').value = almacen.idAlmacen;
+            document.getElementById('txtCodigoEditar').value = almacen.codigo;
+            document.getElementById('txtNombreEditar').value = almacen.nombre;
+            document.getElementById('chkActivoEditar').checked = almacen.activo;
 
+            // Abrir modal
+            const modalElement = document.getElementById('modalEditarAlmacen');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modal.show();
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error: ', error.message);
         alert(error.message);
     }
 }
@@ -100,7 +105,42 @@ async function actualizarAlmacen() {
         activo: document.getElementById('chkActivoEditar').checked
     };
 
+    // Validaciones
+    if (!request.codigo || !request.nombre) {
+        alert("Complete los campos obligatorios.");
+        return;
+    }
 
+    try {
+        const response = await fetch(`/api/AlmacenApi/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        });
+
+        const resultado = await response.json();
+
+        if (!response.ok || !resultado.exito) {
+            throw new Error(resultado.mensaje || 'No se pudo actualizar el almacén');
+        }
+
+        // Cerrar modal
+        const modalElement = document.getElementById('modalEditarAlmacen');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+
+        modal.hide();
+
+        // Notificar que se actualizo un almacen
+        document.dispatchEvent(new CustomEvent('almacen:guardado'));
+
+        // alert(resultado.mensaje);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
 }
 
 function eliminarAlmacen(almacen) {

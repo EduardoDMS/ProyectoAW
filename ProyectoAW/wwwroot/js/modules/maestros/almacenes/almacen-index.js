@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarEventos();
 
     // Escucha el evento desde almacen-form
-    document.addEventListener('almacen:creado', () => {
+    document.addEventListener('almacen:guardado', () => {
         cargarAlmacenes();
     });
 });
@@ -73,18 +73,24 @@ function inicializarTabla() {
 async function cargarAlmacenes() {
     try {
         const response = await fetch('/api/AlmacenApi');
-        //console.log(response);
+
+        const resultado = await response.json();
 
         if (!response.ok) {
-            throw new Error('Error al cargar los almacenes');
+            throw new Error(resultado.mensaje || 'Error al cargar los almacenes');
         }
 
-        const datos = await response.json();
-        //console.log(datos);
+        if (resultado.exito) {
+            const almacenes = resultado.datos;
 
-        tablaAlmacenes.setData(datos);
+            console.log(almacenes);
+            console.log(resultado.mensaje);
+
+            tablaAlmacenes.setData(almacenes);
+            //tablaAlmacenes.replaceData(almacenes);
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error: ',error.message);
     }
 }
 
@@ -92,6 +98,7 @@ async function cargarAlmacenes() {
 function inicializarEventos() {
     document.getElementById('txtBuscarAlmacen').addEventListener('input', filtrarAlmacenes);
     document.getElementById('slcEstado').addEventListener('change', filtrarAlmacenes);
+    document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
 }
 
 // FILTROS: Interacciones del usuario
@@ -118,4 +125,11 @@ function filtrarAlmacenes() {
     }
 
     tablaAlmacenes.setFilter(filtros);
+}
+
+function limpiarFiltros() {
+    document.getElementById('txtBuscarAlmacen').value = "";
+    document.getElementById('slcEstado').value = 0;
+
+    tablaAlmacenes.clearFilter();
 }
