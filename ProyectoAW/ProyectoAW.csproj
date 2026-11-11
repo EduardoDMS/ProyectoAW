@@ -7,6 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.js.map" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js.map" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
+    <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Modules\Guias\" />
     <Folder Include="Modules\Stocks\" />
     <Folder Include="Modules\Guias\Controllers\" />
     <Folder Include="Modules\Guias\DTOs\Responses\" />
@@ -59,6 +75,8 @@
     <Folder Include="Modules\Maestros\UnidadesMedida\Entities\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Views\" />
     <Folder Include="Modules\Seguridad\Permisos\" />
+    <Folder Include="wwwroot\js\modules\maestros\productos\" />
+    <Folder Include="wwwroot\libs\tabulator\dist\" />
   </ItemGroup>
 
   <ItemGroup>
