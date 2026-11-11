@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnGuardarAlmacen').addEventListener('click', guardarAlmacen);
 
     document.getElementById('btnActualizarAlmacen').addEventListener('click', actualizarAlmacen);
-})
+});
 
-// CREAR ALMACEN
+// INICIALIZACION
 async function guardarAlmacen() {
     const codigo = document.getElementById('txtCodigo').value.trim();
     const nombre = document.getElementById('txtNombre').value.trim();
