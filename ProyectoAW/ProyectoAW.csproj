@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.js.map" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js.map" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
+    <Content Remove="C:\Users\eduar\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
     <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
     <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
     <Content Remove="C:\Users\Fiorella Carbajal\.nuget\packages\bootstrap\5.3.8\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
@@ -67,7 +79,6 @@
     <Folder Include="Modules\Maestros\Ubicaciones\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Ubicaciones\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Ubicaciones\Entities\" />
-    <Folder Include="Modules\Maestros\Ubicaciones\Views\" />
     <Folder Include="Modules\Maestros\Ubicaciones\Services\" />
     <Folder Include="Modules\Maestros\Ubicaciones\Repositories\" />
     <Folder Include="Modules\Maestros\TipoDocumentos\" />

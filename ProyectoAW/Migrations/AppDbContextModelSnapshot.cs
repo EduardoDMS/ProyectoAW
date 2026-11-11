@@ -46,7 +46,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdProducto");
 
-                    b.ToTable("DetallesGuia", (string)null);
+                    b.ToTable("DetallesGuia");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
@@ -91,7 +91,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdTipoOperacionGuia");
 
-                    b.ToTable("Guias", (string)null);
+                    b.ToTable("Guias");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
@@ -130,7 +130,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Codigo")
                         .IsUnique();
 
-                    b.ToTable("Almacenes", (string)null);
+                    b.ToTable("Almacenes");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Categorias.Entities.Categoria", b =>
@@ -158,7 +158,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasKey("IdCategoria");
 
-                    b.ToTable("Categorias", (string)null);
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", b =>
@@ -215,7 +215,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("NumeroDocumento")
                         .IsUnique();
 
-                    b.ToTable("Clientes", (string)null);
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Estados.Entities.EstadoGuia", b =>
@@ -307,12 +307,6 @@ namespace ProyectoAW.Migrations
                             IdTipoOperacionGuia = 2,
                             Codigo = "SAL",
                             Nombre = "Salida"
-                        },
-                        new
-                        {
-                            IdTipoOperacionGuia = 3,
-                            Codigo = "TRA",
-                            Nombre = "Traslado"
                         });
                 });
 
@@ -374,7 +368,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdUnidadMedida");
 
-                    b.ToTable("Productos", (string)null);
+                    b.ToTable("Productos");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Proveedores.Entities.Proveedor", b =>
@@ -434,7 +428,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("NumeroDocumento")
                         .IsUnique();
 
-                    b.ToTable("Proveedores", (string)null);
+                    b.ToTable("Proveedores");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", b =>
@@ -455,7 +449,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Documento")
                         .IsUnique();
 
-                    b.ToTable("TipoDocument", (string)null);
+                    b.ToTable("TipoDocument");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", b =>
@@ -496,7 +490,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdAlmacen");
 
-                    b.ToTable("Ubicaciones", (string)null);
+                    b.ToTable("Ubicaciones");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.UbicacionDespacho", b =>
@@ -564,7 +558,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Nombre")
                         .IsUnique();
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", b =>
@@ -618,7 +612,7 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Usuarios", (string)null);
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.DetalleGuia", b =>
