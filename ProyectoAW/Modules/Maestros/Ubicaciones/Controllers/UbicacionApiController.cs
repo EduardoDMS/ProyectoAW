@@ -21,11 +21,11 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerTodos([FromQuery] int? idAlmacen, [FromQuery] bool soloActivas = false)
+        public async Task<IActionResult> ObtenerTodos()
         {
             try
             {
-                var ubicaciones = await _service.ObtenerUbicacionesAsync(idAlmacen, soloActivas);
+                var ubicaciones = await _service.ObtenerUbicacionesAsync();
                 return Ok(new Respuesta
                 {
                     Mensaje = "Ubicaciones obtenidas exitosamente.",

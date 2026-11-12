@@ -43,7 +43,11 @@ public class GuiaRepository : IGuiaRepository
         return _context.Guias
             .Include(guia => guia.TipoOperacion)
             .Include(guia => guia.Estado)
+            .Include(guia => guia.Motivo)
             .Include(guia => guia.Proveedor)
+            .Include(guia => guia.Cliente)
+            .Include(guia => guia.AlmacenOrigen)
+            .Include(guia => guia.AlmacenDestino)
             .Include(guia => guia.Detalles)
                 .ThenInclude(detalle => detalle.Producto);
     }

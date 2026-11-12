@@ -1,4 +1,5 @@
 ﻿using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
+using ProyectoAW.Modules.Stocks.Entities;
 //using ProyectoAW.Modules.Stocks.Entities;
 //using ProjectAW.Modules.Maestros.MovimientosStock.Entities;
 
@@ -18,8 +19,8 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Entities
 
         public ICollection<Ubicacion>? Ubicaciones { get; set; }
         public ICollection<UbicacionDespacho> UbicacionesDespacho { get; set; } = new List<UbicacionDespacho>();
-        //public ICollection<MovimientoStock>? MovimientoStock { get; set; }
-        //public ICollection<StockAlmacen>? StockAlmacen { get; set; }
+        public ICollection<MovimientoStock>? MovimientoStock { get; set; }
+        public ICollection<StockAlmacen>? StockAlmacen { get; set; }
 
 
     }

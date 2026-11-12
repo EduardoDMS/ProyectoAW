@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
@@ -13,7 +13,8 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
                    .IsRequired()
                    .HasMaxLength(100);
 
-            builder.Property(u => u.Descripcion)
+            builder.Property(u => u.Nombre)
+                   .HasColumnName("Descripcion")
                    .HasMaxLength(150);
 
             builder.Property(u => u.Activo)
@@ -44,4 +45,6 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
         }
     }
 }
+
+
 

@@ -4,8 +4,13 @@ namespace ProyectoAW.Modules.Guias.DTOs.Requests;
 
 public class CrearGuiaDto
 {
-    [Range(1, int.MaxValue, ErrorMessage = "Selecciona un proveedor.")]
-    public int IdProveedor { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Selecciona un motivo.")]
+    public int IdMotivoGuia { get; set; }
+
+    public int? IdProveedor { get; set; }
+    public int? IdCliente { get; set; }
+    public int? IdAlmacenOrigen { get; set; }
+    public int? IdAlmacenDestino { get; set; }
 
     public DateTime FechaProgramada { get; set; }
 

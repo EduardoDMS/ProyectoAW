@@ -1,4 +1,5 @@
 ﻿using ProyectoAW.Modules.Seguridad.Roles.Entities;
+using ProyectoAW.Modules.Stocks.Entities;
 //using ProyectoAW.Modules.Stocks.Entities;
 
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
@@ -17,6 +18,6 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
         public int IdRol { get; set; }
         public Rol? rol { get; set; }
 
-        //public ICollection<MovimientoStock>? MovimientoStock { get; set; }
+        public ICollection<MovimientoStock>? MovimientoStock { get; set; }
     }
 }

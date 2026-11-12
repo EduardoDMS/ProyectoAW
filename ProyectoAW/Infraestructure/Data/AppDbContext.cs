@@ -12,7 +12,7 @@ using ProyectoAW.Modules.Maestros.UnidadesMedida.Entities;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Seguridad.Roles.Entities;
 //using ProyectoAW.Modules.Guias.Entities;
-//using ProyectoAW.Modules.Stocks.Entities;
+using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 
 namespace ProyectoAW.Infrastructure.Data
@@ -32,16 +32,16 @@ namespace ProyectoAW.Infrastructure.Data
         public DbSet<Rol> Roles => Set<Rol>();
         public DbSet<Guia> Guias => Set<Guia>();
         public DbSet<DetalleGuia> DetallesGuia => Set<DetalleGuia>();
-        //public DbSet<MotivoGuia> MotivosGuia => Set<MotivoGuia>();
-        //public DbSet<TipoComportamientoGuia> TiposComportamientoGuia => Set<TipoComportamientoGuia>();
-        //public DbSet<DetalleGuia> DetalleGuia => Set<DetalleGuia>();
+        public DbSet<MotivoGuia> MotivosGuia => Set<MotivoGuia>();
+        public DbSet<TipoComportamientoGuia> TiposComportamientoGuia => Set<TipoComportamientoGuia>();
+        public DbSet<DetalleGuia> DetalleGuia => Set<DetalleGuia>();
         public DbSet<TipoOperacionGuia> TiposOperacionesGuia => Set<TipoOperacionGuia>();
         public DbSet<EstadoGuia> EstadosGuia => Set<EstadoGuia>();
         public DbSet<TipoDocumento> TipoDocument => Set<TipoDocumento>();
-        //public DbSet<StockAlmacen> StockAlmacen => Set<StockAlmacen>();
-        //public DbSet<MovimientoStock> MovimientoStock => Set<MovimientoStock>();
-        //public DbSet<StockUbicacion> StockUbicacion => Set<StockUbicacion>();
-        //public DbSet<LecturaGuia> LecturasGuia => Set<LecturaGuia>();
+        public DbSet<StockAlmacen> StockAlmacen => Set<StockAlmacen>();
+        public DbSet<MovimientoStock> MovimientoStock => Set<MovimientoStock>();
+        public DbSet<StockUbicacion> StockUbicacion => Set<StockUbicacion>();
+        public DbSet<LecturaGuia> LecturasGuia => Set<LecturaGuia>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

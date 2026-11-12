@@ -1,5 +1,7 @@
 ﻿//using ProyectoAW.Modules.Stocks.Entities;
 
+using ProyectoAW.Modules.Stocks.Entities;
+
 namespace ProyectoAW.Modules.Maestros.Operaciones.Entities
 {
     public class TipoOperacionGuia
@@ -8,7 +10,7 @@ namespace ProyectoAW.Modules.Maestros.Operaciones.Entities
         public string Codigo { get; set; } = string.Empty;
         public string Nombre { get; set; } = string.Empty;
 
-     //   public ICollection<MovimientoStock>? MovimientoSTock { get; set; }
+        public ICollection<MovimientoStock>? MovimientoSTock { get; set; }
     }
 
     public static class TipoOperacionGuiaIds

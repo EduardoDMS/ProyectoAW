@@ -4,6 +4,8 @@ using ProyectoAW.Infraestructure.MVC;
 // Guias
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Guias.Services;
+using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Stocks.Services;
 // Almacenes
 using ProyectoAW.Modules.Maestros.Almacenes.Repositories;
 using ProyectoAW.Modules.Maestros.Almacenes.Services;
@@ -80,6 +82,10 @@ builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IGuiaRepository, GuiaRepository>();
 builder.Services.AddScoped<IGuiaService, GuiaService>();
+builder.Services.AddScoped<IMotivoGuiaRepository, MotivoGuiaRepository>();
+builder.Services.AddScoped<IMotivoGuiaService, MotivoGuiaService>();
+builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
+builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
 
 
 var app = builder.Build();
@@ -113,3 +119,5 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
+
+

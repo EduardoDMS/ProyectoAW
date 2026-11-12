@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
 
@@ -26,16 +26,20 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Repositories
 
         public async Task<List<Ubicacion>> ListarUbicacionesAsync()
         {
-            return await _context.Ubicaciones.Include(u => u.UbicacionesDespacho).ToListAsync();
+            return await _context.Ubicaciones
+                .AsNoTracking()
+                .Include(u => u.Almacen) // ahora trae toda la propiedad de almacen ya en el service solitas oslolo que necestas pasar al json 
+                .Include(u => u.UbicacionesDespacho)
+                .ToListAsync();
         }
 
-        public Task<List<Ubicacion>> ListarUbicacionesAsync(int? idAlmacen, bool soloActivas)
-        {
-            var query = _context.Ubicaciones.AsNoTracking().Include(u => u.UbicacionesDespacho).AsQueryable();
-            if (idAlmacen.HasValue) query = query.Where(u => u.IdAlmacen == idAlmacen.Value);
-            if (soloActivas) query = query.Where(u => u.Activo);
-            return query.OrderBy(u => u.Codigo).ToListAsync();
-        }
+        //public Task<List<Ubicacion>> ListarUbicacionesAsync(int? idAlmacen, bool soloActivas)
+        //{
+        //    var query = _context.Ubicaciones.AsNoTracking().Include(u => u.UbicacionesDespacho).AsQueryable();
+        //    if (idAlmacen.HasValue) query = query.Where(u => u.IdAlmacen == idAlmacen.Value);
+        //    if (soloActivas) query = query.Where(u => u.Activo);
+        //    return query.OrderBy(u => u.Codigo).ToListAsync();
+        //}
 
         public async Task<Ubicacion?> ObtenerUbicacionPorCodigoAsync(string codigo)
         {
@@ -48,3 +52,4 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Repositories
         }
     }
 }
+
