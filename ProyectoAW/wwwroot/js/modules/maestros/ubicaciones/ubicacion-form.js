@@ -1,0 +1,12 @@
+﻿// INICIALIZACION
+document.addEventListener('DOMContentLoaded', () => {
+
+});
+
+// INICIALIZACION
+
+// LIMPIAR FORMULARIO
+
+// EDITAR ALMACEN
+
+// ACTUALIZAR ALMACEN
