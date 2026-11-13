@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoAW.Modules.Stocks.DTOs;
+namespace ProyectoAW.Modules.Stocks.Dtos.Response;
 
 public class RegistrarLecturaGuiaDto
 {

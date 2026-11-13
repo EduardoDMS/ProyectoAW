@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 
 namespace ProyectoAW.Modules.Guias.Entities;
 
@@ -19,6 +20,10 @@ public class GuiaConfiguration : IEntityTypeConfiguration<Guia>
 
         builder.Property(guia => guia.Observacion)
                .HasMaxLength(500);
+
+        builder.Property(x => x.FechaActualizada)
+               .HasColumnType("datetime2")
+               .IsRequired(false);
 
         builder.HasOne(guia => guia.TipoOperacion)
                .WithMany()
@@ -54,5 +59,17 @@ public class GuiaConfiguration : IEntityTypeConfiguration<Guia>
                .WithMany()
                .HasForeignKey(guia => guia.IdAlmacenDestino)
                .OnDelete(DeleteBehavior.Restrict);
+
+        // NUEVOS DATOS PARA SQL guia
+        builder.HasOne<Usuario>()
+                   .WithMany()
+                   .HasForeignKey(x => x.IdUsuarioRegistro)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Usuario>()
+               .WithMany()
+               .HasForeignKey(x => x.IdUsuarioModificacion)
+               .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

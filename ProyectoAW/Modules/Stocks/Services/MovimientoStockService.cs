@@ -1,75 +1,124 @@
+using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infraestructure.RP;
-using ProyectoAW.Modules.Guias.Entities;
+using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
-using ProyectoAW.Modules.Stocks.DTOs;
+using ProyectoAW.Modules.Seguridad.Security.HttpAuth;
+using ProyectoAW.Modules.Stocks.Dtos.Request;
+using ProyectoAW.Modules.Stocks.Dtos.Response;
 using ProyectoAW.Modules.Stocks.Entities;
+using ProyectoAW.Modules.Stocks.Factories;
 using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Stocks.Validacion;
 
 namespace ProyectoAW.Modules.Stocks.Services
 {
     public class MovimientoStockService : IMovimientoStockService
     {
-        private readonly IMovimientoStockRepository _repository;
+        private readonly ValidacionesGuia _validacionesGuia;
+        private readonly ValidacionesUbicacion _validacionesUbicacion;
+        private readonly ValidacionesStock _validacionesStock;
+        private readonly ILecturaGuiaRepository _repository;
+        private readonly ITransactionManager _transactions;
+        private readonly ICurrentUserService _currentUser;
 
-        public MovimientoStockService(IMovimientoStockRepository repository) => _repository = repository;
-
-        public Task<IReadOnlyList<Guia>> ListarGuiasParaLecturaAsync(int? idEstadoGuia)
+        public MovimientoStockService(
+            ValidacionesGuia validacionesGuia,
+            ValidacionesUbicacion validacionesUbicacion,
+            ValidacionesStock validacionesStock,
+            ILecturaGuiaRepository repository,
+            ITransactionManager transactions,
+            ICurrentUserService currentUser)
         {
-            if (idEstadoGuia.HasValue && !new[] { EstadoGuiasIds.Pendiente, EstadoGuiasIds.EnProceso }.Contains(idEstadoGuia.Value))
-                throw new NegocioException("Solo se pueden listar guías pendientes o en proceso para lectura.");
-            return _repository.ListarGuiasParaLecturaAsync(idEstadoGuia);
+            _validacionesGuia = validacionesGuia;
+            _validacionesUbicacion = validacionesUbicacion;
+            _validacionesStock = validacionesStock;
+            _repository = repository;
+            _transactions = transactions;
+            _currentUser = currentUser;
         }
 
-        public async Task<Guia> ObtenerGuiaParaLecturaAsync(int idGuia)
+        public Task<bool> EliminarLecturaAsync(int idGuia, long idLecturaGuia)
         {
-            var guia = await _repository.ObtenerGuiaParaLecturaAsync(idGuia);
-            if (guia == null)
-                throw new NegocioException($"No se encontró la guía {idGuia}.");
-            ValidarGuiaAbierta(guia);
-            return guia;
+            throw new NotImplementedException();
         }
 
-        public async Task RegistrarLecturaAsync(int idGuia, RegistrarLecturaGuiaDto request)
+        public Task FinalizarLecturaAsync(int idGuia)
         {
-            var guia = await _repository.ObtenerGuiaParaLecturaAsync(idGuia);
-            if (guia == null)
-                throw new NegocioException($"No se encontró la guía {idGuia}.");
-            ValidarGuiaAbierta(guia);
+            throw new NotImplementedException();
+        }
 
-            if (!guia.Detalles.Any(d => d.IdProducto == request.IdProducto))
-                throw new NegocioException("El producto leído no pertenece al detalle de la guía.");
-            if (!await _repository.ExisteOperadorAsync(request.IdUsuarioOperador))
-                throw new NegocioException("No se encontró el usuario operador.");
+        public Task<IReadOnlyList<MovimientoStockDto>> ListarAsync(int? idGuia, int? idAlmacen, int? idOperacion)
+        {
+            throw new NotImplementedException();
+        }
 
-            await ValidarUbicacion(request.IdUbicacionOrigen, guia.IdAlmacenOrigen, "origen");
-            await ValidarUbicacion(request.IdUbicacionDestino, guia.IdAlmacenDestino, "destino");
-            await _repository.RegistrarLecturaAsync(new LecturaGuia
+
+
+        public async Task<IReadOnlyList<GuiaOperadorDto>> ListarGuiasOperadorAsync(int? idEstadoGuia)
+        {
+            await _validacionesGuia.ExigirOperadorAsync();
+
+            var guia = await _repository.ListarGuiasParaOperadorAsync(_currentUser.IdUsuario, idEstadoGuia);
+            return guia.Select(GuiaMapper.ToGuiaOperadorDto).ToList();
+            
+        }
+
+        public async Task<GuiaOperadorDto> ObtenerMiGuiaAsync(int idGuia)
+        {
+            await _validacionesGuia.ExigirOperadorAsync();
+            var guia = await _repository.ObtenerGuiaOperadorAsync(idGuia, _currentUser.IdUsuario)
+                 ?? throw new NegocioException("La guia no existe en tus guias en proceso o en tus guias terminadas. . .");
+
+            ValidacionesGuia.ExigirOperacionesOperador(guia.IdTipoOperacionGuia);
+            return GuiaMapper.ToGuiaOperadorDto(guia);
+        }
+
+        public async Task<LecturaGuiaDto> RegistrarLecturaAsync(int idGuia, RegistrarLecturaGuiaRequest request)
+        {
+            await _validacionesGuia.ExigirOperadorAsync();
+            var lectura = await RegistrarLecturaEnTransaccionAsync(idGuia, request);
+            return GuiaMapper.ToLecturaDto(lectura);
+        }
+
+        public async Task TomarGuiaAsync(int idGuia)
+        {
+            await _validacionesGuia.ExigirOperadorAsync();
+            await _transactions.ExecuteSerializableAsync(async _ =>
             {
-                IdGuia = idGuia,
-                IdProducto = request.IdProducto,
-                IdUsuarioOperador = request.IdUsuarioOperador,
-                Cantidad = request.Cantidad,
-                CodigoLeido = request.CodigoLeido.Trim(),
-                Lote = request.Lote?.Trim(),
-                Serie = request.Serie?.Trim(),
-                Observacion = request.Observacion?.Trim(),
-                IdUbicacionOrigen = request.IdUbicacionOrigen,
-                IdUbicacionDestino = request.IdUbicacionDestino,
-                FechaRegistroUtc = DateTime.UtcNow
-            }, guia);
+                var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
+                ValidacionesGuia.ValidarGuiaPuedeSerTomada(guia);
+
+                guia.IdEstadoGuia = EstadoGuiasIds.EnProceso;
+                guia.IdUsuarioModificacion = _currentUser.IdUsuario;
+                guia.FechaActualizada = DateTime.UtcNow;
+                await _repository.GuardarCambiosAsync();
+            });
+
         }
 
-        private void ValidarGuiaAbierta(Guia guia)
-        {
-            if (guia.IdEstadoGuia != EstadoGuiasIds.Pendiente && guia.IdEstadoGuia != EstadoGuiasIds.EnProceso)
-                throw new NegocioException("La guía no está disponible para lectura.");
-        }
 
-        private async Task ValidarUbicacion(int? idUbicacion, int? idAlmacen, string extremo)
+
+       
+        private async Task<LecturaGuia> RegistrarLecturaEnTransaccionAsync(
+            int idGuia, RegistrarLecturaGuiaRequest request)
         {
-            if (!idUbicacion.HasValue) return;
-            if (!idAlmacen.HasValue || !await _repository.UbicacionPerteneceAlmacenAsync(idUbicacion.Value, idAlmacen.Value))
-                throw new NegocioException($"La ubicación de {extremo} no pertenece al almacén indicado en la guía.");
+            LecturaGuia? lectura = null;
+
+            await _transactions.ExecuteSerializableAsync(async _ =>
+            {
+                var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
+                ValidacionesGuia.ValidarGuiaEnProceso(guia, _currentUser.IdUsuario);
+                await _validacionesStock.ValidarProductoLeidoAsync(guia, request);
+                await _validacionesUbicacion.ValidarUbicacionesYDisponibilidadAsync(guia, idGuia, request);
+
+
+                lectura = LecturaGuiaFactory.Crear(idGuia, _currentUser.IdUsuario, request);
+
+                _repository.AgregarLectura(lectura);
+                await _repository.GuardarCambiosAsync();
+            });
+
+            return lectura ?? throw new NegocioException("La transaccion termino sin registrar la lectura");
         }
     }
 }
