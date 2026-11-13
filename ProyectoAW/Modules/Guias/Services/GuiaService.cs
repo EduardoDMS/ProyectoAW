@@ -4,40 +4,24 @@ using ProyectoAW.Modules.Guias.DTOs.Responses;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
-using ProyectoAW.Modules.Maestros.Operaciones.Entities;
 
 namespace ProyectoAW.Modules.Guias.Services;
 
 public class GuiaService : IGuiaService
 {
     private readonly IGuiaRepository _repository;
+    private readonly IMotivoGuiaRepository _motivoRepository;
 
-    public GuiaService(IGuiaRepository repository)
+    public GuiaService(IGuiaRepository repository, IMotivoGuiaRepository motivoRepository)
     {
         _repository = repository;
+        _motivoRepository = motivoRepository;
     }
 
     public async Task<List<GuiaDto>> ObtenerTodosAsync()
     {
         var guias = await _repository.ObtenerTodosAsync();
-
-        return guias.Select(g => new GuiaDto
-        {
-            IdGuia = g.IdGuia,
-            NumeroGuia = g.NumeroGuia,
-            TipoOperacion = g.TipoOperacion.Nombre,
-            Estado = g.Estado.Nombre,
-            IdProveedor = g.IdProveedor,
-            Proveedor = g.Proveedor.RazonSocial,
-            FechaProgramada = g.FechaProgramada,
-            Observacion = g.Observacion,
-            Detalles = g.Detalles.Select(d => new DetalleGuiaDto
-            {
-                IdProducto = d.IdProducto,
-                Producto = d.Producto.Nombre,
-                Cantidad = d.Cantidad
-            }).ToList()
-        }).ToList();
+        return guias.Select(ConvertirADto).ToList();
     }
 
     public async Task<GuiaDto?> ObtenerPorIdAsync(int id)
@@ -45,37 +29,33 @@ public class GuiaService : IGuiaService
         var guia = await _repository.ObtenerPorIdAsync(id);
 
         if (guia == null)
-            throw new NegocioException($"No se pudo encontrar la guia con id de {id}");
+            throw new NegocioException($"No se pudo encontrar la guia con id {id}.");
 
-        return new GuiaDto
-        {
-            IdGuia = guia.IdGuia,
-            NumeroGuia = guia.NumeroGuia,
-            TipoOperacion = guia.TipoOperacion.Nombre,
-            Estado = guia.Estado.Nombre,
-            IdProveedor = guia.IdProveedor,
-            Proveedor = guia.Proveedor.RazonSocial,
-            FechaProgramada = guia.FechaProgramada,
-            Observacion = guia.Observacion,
-            Detalles = guia.Detalles.Select(d => new DetalleGuiaDto
-            {
-                IdProducto = d.IdProducto,
-                Producto = d.Producto.Nombre,
-                Cantidad = d.Cantidad
-            }).ToList()
-        };
+        return ConvertirADto(guia);
     }
 
     public async Task<GuiaDto> CrearAsync(CrearGuiaDto request)
     {
+        var motivo = await ObtenerMotivoActivoAsync(request.IdMotivoGuia);
+        ValidarDatosMotivo(
+            motivo,
+            request.IdProveedor,
+            request.IdCliente,
+            request.IdAlmacenOrigen,
+            request.IdAlmacenDestino);
+
         var guia = new Guia
         {
             NumeroGuia = string.Empty,
-            IdTipoOperacionGuia = TipoOperacionGuiaIds.Entrada,
+            IdTipoOperacionGuia = motivo.IdTipoOperacionGuia,
+            IdMotivoGuia = motivo.IdMotivoGuia,
             IdEstadoGuia = EstadoGuiasIds.Pendiente,
-            IdProveedor = request.IdProveedor,
+            IdProveedor = motivo.RequiereProveedor ? request.IdProveedor : null,
+            IdCliente = motivo.RequiereCliente ? request.IdCliente : null,
+            IdAlmacenOrigen = motivo.RequiereAlmacenOrigen ? request.IdAlmacenOrigen : null,
+            IdAlmacenDestino = motivo.RequiereAlmacenDestino ? request.IdAlmacenDestino : null,
             FechaProgramada = request.FechaProgramada,
-            Observacion = request.Observacion,
+            Observacion = request.Observacion?.Trim(),
             Detalles = request.Detalles.Select(detalle => new DetalleGuia
             {
                 IdProducto = detalle.IdProducto,
@@ -85,31 +65,11 @@ public class GuiaService : IGuiaService
 
         await _repository.CrearAsync(guia);
 
-        // El ID lo genera la base de datos; con él armamos un número sencillo para mostrar.
-        guia.NumeroGuia = $"ENT-{guia.IdGuia:D6}";
+        guia.NumeroGuia = $"{motivo.TipoOperacionGuia!.Codigo}-{guia.IdGuia:D6}";
         await _repository.ActualizarAsync(guia);
 
-        // Se vuelve a consultar para traer TipoOperacion, Estado, Proveedor y Producto,
-        // que no están cargados en la entidad recién creada.
         var guiaCreada = await _repository.ObtenerPorIdAsync(guia.IdGuia);
-
-        return new GuiaDto
-        {
-            IdGuia = guiaCreada!.IdGuia,
-            NumeroGuia = guiaCreada.NumeroGuia,
-            TipoOperacion = guiaCreada.TipoOperacion.Nombre,
-            Estado = guiaCreada.Estado.Nombre,
-            IdProveedor = guiaCreada.IdProveedor,
-            Proveedor = guiaCreada.Proveedor.RazonSocial,
-            FechaProgramada = guiaCreada.FechaProgramada,
-            Observacion = guiaCreada.Observacion,
-            Detalles = guiaCreada.Detalles.Select(d => new DetalleGuiaDto
-            {
-                IdProducto = d.IdProducto,
-                Producto = d.Producto.Nombre,
-                Cantidad = d.Cantidad
-            }).ToList()
-        };
+        return ConvertirADto(guiaCreada!);
     }
 
     public async Task<bool> ActualizarAsync(int id, ActualizarGuiaDto request)
@@ -117,11 +77,25 @@ public class GuiaService : IGuiaService
         var guia = await _repository.ObtenerPorIdAsync(id);
 
         if (guia == null)
-            throw new NegocioException($"No se encontro la guia con el id de {id}");
-        
-        guia.IdProveedor = request.IdProveedor;
+            throw new NegocioException($"No se encontro la guia con id {id}.");
+
+        var motivo = await ObtenerMotivoActivoAsync(request.IdMotivoGuia);
+        ValidarDatosMotivo(
+            motivo,
+            request.IdProveedor,
+            request.IdCliente,
+            request.IdAlmacenOrigen,
+            request.IdAlmacenDestino);
+
+        guia.IdTipoOperacionGuia = motivo.IdTipoOperacionGuia;
+        guia.IdMotivoGuia = motivo.IdMotivoGuia;
+        guia.NumeroGuia = $"{motivo.TipoOperacionGuia!.Codigo}-{guia.IdGuia:D6}";
+        guia.IdProveedor = motivo.RequiereProveedor ? request.IdProveedor : null;
+        guia.IdCliente = motivo.RequiereCliente ? request.IdCliente : null;
+        guia.IdAlmacenOrigen = motivo.RequiereAlmacenOrigen ? request.IdAlmacenOrigen : null;
+        guia.IdAlmacenDestino = motivo.RequiereAlmacenDestino ? request.IdAlmacenDestino : null;
         guia.FechaProgramada = request.FechaProgramada;
-        guia.Observacion = request.Observacion;
+        guia.Observacion = request.Observacion?.Trim();
         guia.Detalles.Clear();
 
         foreach (var detalle in request.Detalles)
@@ -142,10 +116,69 @@ public class GuiaService : IGuiaService
         var guia = await _repository.ObtenerPorIdAsync(id);
 
         if (guia == null)
-            throw new NegocioException($"No se encontro la guia con el id solicitado: {id}");
+            throw new NegocioException($"No se encontro la guia con id {id}.");
 
         guia.IdEstadoGuia = EstadoGuiasIds.Cancelada;
         await _repository.ActualizarAsync(guia);
         return true;
+    }
+
+    private async Task<MotivoGuia> ObtenerMotivoActivoAsync(int id)
+    {
+        var motivo = await _motivoRepository.ObtenerAsync(id);
+
+        if (motivo == null || !motivo.Activo)
+            throw new NegocioException("El motivo seleccionado no existe o esta inactivo.");
+
+        return motivo;
+    }
+
+    private void ValidarDatosMotivo(
+        MotivoGuia motivo,
+        int? idProveedor,
+        int? idCliente,
+        int? idAlmacenOrigen,
+        int? idAlmacenDestino)
+    {
+        if (motivo.RequiereProveedor && (!idProveedor.HasValue || idProveedor <= 0))
+            throw new NegocioException("El motivo seleccionado requiere un proveedor.");
+
+        if (motivo.RequiereCliente && (!idCliente.HasValue || idCliente <= 0))
+            throw new NegocioException("El motivo seleccionado requiere un cliente.");
+
+        if (motivo.RequiereAlmacenOrigen && (!idAlmacenOrigen.HasValue || idAlmacenOrigen <= 0))
+            throw new NegocioException("El motivo seleccionado requiere un almacen de origen.");
+
+        if (motivo.RequiereAlmacenDestino && (!idAlmacenDestino.HasValue || idAlmacenDestino <= 0))
+            throw new NegocioException("El motivo seleccionado requiere un almacen de destino.");
+    }
+
+    private GuiaDto ConvertirADto(Guia guia)
+    {
+        return new GuiaDto
+        {
+            IdGuia = guia.IdGuia,
+            NumeroGuia = guia.NumeroGuia,
+            TipoOperacion = guia.TipoOperacion.Nombre,
+            IdMotivoGuia = guia.IdMotivoGuia,
+            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
+            Estado = guia.Estado.Nombre,
+            IdProveedor = guia.IdProveedor,
+            Proveedor = guia.Proveedor?.RazonSocial,
+            IdCliente = guia.IdCliente,
+            Cliente = guia.Cliente?.RazonSocial,
+            IdAlmacenOrigen = guia.IdAlmacenOrigen,
+            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
+            IdAlmacenDestino = guia.IdAlmacenDestino,
+            AlmacenDestino = guia.AlmacenDestino?.Nombre,
+            FechaProgramada = guia.FechaProgramada,
+            Observacion = guia.Observacion,
+            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
+            {
+                IdProducto = detalle.IdProducto,
+                Producto = detalle.Producto.Nombre,
+                Cantidad = detalle.Cantidad
+            }).ToList()
+        };
     }
 }

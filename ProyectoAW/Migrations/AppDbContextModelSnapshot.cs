@@ -46,7 +46,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdProducto");
 
-                    b.ToTable("DetallesGuia");
+                    b.ToTable("DetalleGuia");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
@@ -57,6 +57,9 @@ namespace ProyectoAW.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdGuia"));
 
+                    b.Property<DateTime?>("FechaActualizada")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("FechaProgramada")
                         .HasColumnType("datetime2");
 
@@ -65,13 +68,31 @@ namespace ProyectoAW.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<int?>("IdAlmacenDestino")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdAlmacenOrigen")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdCliente")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdEstadoGuia")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProveedor")
+                    b.Property<int?>("IdMotivoGuia")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdProveedor")
                         .HasColumnType("int");
 
                     b.Property<int>("IdTipoOperacionGuia")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUsuarioModificacion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioRegistro")
                         .HasColumnType("int");
 
                     b.Property<string>("NumeroGuia")
@@ -85,13 +106,109 @@ namespace ProyectoAW.Migrations
 
                     b.HasKey("IdGuia");
 
+                    b.HasIndex("IdAlmacenDestino");
+
+                    b.HasIndex("IdAlmacenOrigen");
+
+                    b.HasIndex("IdCliente");
+
                     b.HasIndex("IdEstadoGuia");
+
+                    b.HasIndex("IdMotivoGuia");
 
                     b.HasIndex("IdProveedor");
 
                     b.HasIndex("IdTipoOperacionGuia");
 
+                    b.HasIndex("IdUsuarioModificacion");
+
+                    b.HasIndex("IdUsuarioRegistro");
+
                     b.ToTable("Guias");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.MotivoGuia", b =>
+                {
+                    b.Property<int>("IdMotivoGuia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMotivoGuia"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("IdTipoComportamiento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTipoOperacionGuia")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreMotivo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("RequiereAlmacenDestino")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereAlmacenOrigen")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereCliente")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereProveedor")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdMotivoGuia");
+
+                    b.HasIndex("IdTipoComportamiento");
+
+                    b.HasIndex("IdTipoOperacionGuia", "NombreMotivo")
+                        .IsUnique();
+
+                    b.ToTable("MotivosGuia", (string)null);
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", b =>
+                {
+                    b.Property<int>("IdTipoComportamiento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipoComportamiento"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("IdTipoComportamiento");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("TiposComportamientoGuia", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            IdTipoComportamiento = 1,
+                            Descripcion = "Movimiento entre proveedor o cliente y un almacén.",
+                            Nombre = "Movimiento normal"
+                        },
+                        new
+                        {
+                            IdTipoComportamiento = 2,
+                            Descripcion = "Movimiento de existencias entre almacenes.",
+                            Nombre = "Traslado interno"
+                        });
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
@@ -468,10 +585,6 @@ namespace ProyectoAW.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Descripcion")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
                     b.Property<DateTime?>("FchModificacion")
                         .HasColumnType("datetime2");
 
@@ -482,6 +595,11 @@ namespace ProyectoAW.Migrations
 
                     b.Property<int>("IdAlmacen")
                         .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("Descripcion");
 
                     b.HasKey("IdUbicacion");
 
@@ -615,6 +733,207 @@ namespace ProyectoAW.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.LecturaGuia", b =>
+                {
+                    b.Property<long>("IdLecturaGuia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("IdLecturaGuia"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CodigoLeido")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FechaRegistroUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdGuia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProducto")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUbicacionDestino")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUbicacionOrigen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioOperador")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Lote")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Observacion")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Serie")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("IdLecturaGuia");
+
+                    b.HasIndex("IdProducto");
+
+                    b.HasIndex("IdUbicacionDestino");
+
+                    b.HasIndex("IdUbicacionOrigen");
+
+                    b.HasIndex("IdUsuarioOperador");
+
+                    b.HasIndex("IdGuia", "FechaRegistroUtc");
+
+                    b.ToTable("LecturaGuia", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LecturaGuia_Cantidad", "Cantidad >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.MovimientoStock", b =>
+                {
+                    b.Property<int>("IdMovimientoStock")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMovimientoStock"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CantidadDiferenciada")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FchMovimiento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdAlmacen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdGuia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProducto")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTipoOperacion")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUbicacionDestino")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUbicacionOrigen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioOpe")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacion")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.HasKey("IdMovimientoStock");
+
+                    b.HasIndex("IdAlmacen");
+
+                    b.HasIndex("IdProducto");
+
+                    b.HasIndex("IdTipoOperacion");
+
+                    b.HasIndex("IdUbicacionDestino");
+
+                    b.HasIndex("IdUbicacionOrigen");
+
+                    b.HasIndex("IdUsuarioOpe");
+
+                    b.HasIndex("IdGuia", "IdProducto")
+                        .IsUnique();
+
+                    b.ToTable("MovimientoStock", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_MovimientoStock_Cantidad", "Cantidad >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.StockAlmacen", b =>
+                {
+                    b.Property<int>("IdStockAlmacen")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdStockAlmacen"));
+
+                    b.Property<int>("CantidadActual")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaUltimoRegitro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<int>("IdAlmacen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProducto")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdStockAlmacen");
+
+                    b.HasIndex("IdProducto");
+
+                    b.HasIndex("IdAlmacen", "IdProducto")
+                        .IsUnique();
+
+                    b.ToTable("StockAlmacen", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_StockAlmacen_CantidadActual", "CantidadActual >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.StockUbicacion", b =>
+                {
+                    b.Property<int>("IdStockUbicacion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdStockUbicacion"));
+
+                    b.Property<int>("CantidadActual")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaUltimoRegistro")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<int>("IdProducto")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUbicacion")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdStockUbicacion");
+
+                    b.HasIndex("IdUbicacion");
+
+                    b.HasIndex("IdProducto", "IdUbicacion")
+                        .IsUnique();
+
+                    b.ToTable("StockUbicacion", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_StockUbicacion_Cantidad", "CantidadActual >= 0");
+                        });
+                });
+
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.DetalleGuia", b =>
                 {
                     b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "Guia")
@@ -636,17 +955,36 @@ namespace ProyectoAW.Migrations
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
                 {
+                    b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "AlmacenDestino")
+                        .WithMany()
+                        .HasForeignKey("IdAlmacenDestino")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "AlmacenOrigen")
+                        .WithMany()
+                        .HasForeignKey("IdAlmacenOrigen")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ProyectoAW.Modules.Maestros.Estados.Entities.EstadoGuia", "Estado")
                         .WithMany()
                         .HasForeignKey("IdEstadoGuia")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.MotivoGuia", "Motivo")
+                        .WithMany()
+                        .HasForeignKey("IdMotivoGuia")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ProyectoAW.Modules.Maestros.Proveedores.Entities.Proveedor", "Proveedor")
                         .WithMany()
                         .HasForeignKey("IdProveedor")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProyectoAW.Modules.Maestros.Operaciones.Entities.TipoOperacionGuia", "TipoOperacion")
                         .WithMany()
@@ -654,11 +992,49 @@ namespace ProyectoAW.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioModificacion")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioRegistro")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AlmacenDestino");
+
+                    b.Navigation("AlmacenOrigen");
+
+                    b.Navigation("Cliente");
+
                     b.Navigation("Estado");
+
+                    b.Navigation("Motivo");
 
                     b.Navigation("Proveedor");
 
                     b.Navigation("TipoOperacion");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.MotivoGuia", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", "TipoComportamiento")
+                        .WithMany("Motivos")
+                        .HasForeignKey("IdTipoComportamiento")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Operaciones.Entities.TipoOperacionGuia", "TipoOperacionGuia")
+                        .WithMany()
+                        .HasForeignKey("IdTipoOperacionGuia")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TipoComportamiento");
+
+                    b.Navigation("TipoOperacionGuia");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", b =>
@@ -743,13 +1119,160 @@ namespace ProyectoAW.Migrations
                     b.Navigation("rol");
                 });
 
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.LecturaGuia", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "Guia")
+                        .WithMany()
+                        .HasForeignKey("IdGuia")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", "UbicacionDestino")
+                        .WithMany()
+                        .HasForeignKey("IdUbicacionDestino")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", "UbicacionOrigen")
+                        .WithMany()
+                        .HasForeignKey("IdUbicacionOrigen")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", "UsuarioOperador")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioOperador")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Guia");
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("UbicacionDestino");
+
+                    b.Navigation("UbicacionOrigen");
+
+                    b.Navigation("UsuarioOperador");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.MovimientoStock", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "Almacen")
+                        .WithMany("MovimientoStock")
+                        .HasForeignKey("IdAlmacen")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "Guia")
+                        .WithMany("MovimientoStocks")
+                        .HasForeignKey("IdGuia")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", "Producto")
+                        .WithMany("MovimientoStocks")
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Operaciones.Entities.TipoOperacionGuia", "OperacionGuias")
+                        .WithMany("MovimientoSTock")
+                        .HasForeignKey("IdTipoOperacion")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", "UbicacionDestino")
+                        .WithMany()
+                        .HasForeignKey("IdUbicacionDestino")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", "UbicacionOrigen")
+                        .WithMany()
+                        .HasForeignKey("IdUbicacionOrigen")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", "Usuario")
+                        .WithMany("MovimientoStock")
+                        .HasForeignKey("IdUsuarioOpe")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Almacen");
+
+                    b.Navigation("Guia");
+
+                    b.Navigation("OperacionGuias");
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("UbicacionDestino");
+
+                    b.Navigation("UbicacionOrigen");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.StockAlmacen", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "Almacen")
+                        .WithMany("StockAlmacen")
+                        .HasForeignKey("IdAlmacen")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", "Producto")
+                        .WithMany("StockAlmacen")
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Almacen");
+
+                    b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Stocks.Entities.StockUbicacion", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Maestros.Ubicaciones.Entities.Ubicacion", "Ubicacion")
+                        .WithMany()
+                        .HasForeignKey("IdUbicacion")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("Ubicacion");
+                });
+
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
                 {
                     b.Navigation("Detalles");
+
+                    b.Navigation("MovimientoStocks");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", b =>
+                {
+                    b.Navigation("Motivos");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
                 {
+                    b.Navigation("MovimientoStock");
+
+                    b.Navigation("StockAlmacen");
+
                     b.Navigation("Ubicaciones");
 
                     b.Navigation("UbicacionesDespacho");
@@ -758,6 +1281,18 @@ namespace ProyectoAW.Migrations
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Categorias.Entities.Categoria", b =>
                 {
                     b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.Operaciones.Entities.TipoOperacionGuia", b =>
+                {
+                    b.Navigation("MovimientoSTock");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", b =>
+                {
+                    b.Navigation("MovimientoStocks");
+
+                    b.Navigation("StockAlmacen");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", b =>
@@ -775,6 +1310,11 @@ namespace ProyectoAW.Migrations
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.UnidadesMedida.Entities.UnidadMedida", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", b =>
+                {
+                    b.Navigation("MovimientoStock");
                 });
 #pragma warning restore 612, 618
         }

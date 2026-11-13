@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Maestros.Almacenes.Entities;
+using ProyectoAW.Modules.Maestros.Almacenes.Entities;
 
 namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
 {
@@ -6,7 +6,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
     {
         public int IdUbicacion { get; set; }
         public string Codigo { get; set; } = string.Empty;
-        public string? Descripcion { get; set; }
+        public string? Nombre { get; set; }
         public bool Activo { get; set; } = true;
         public DateTime FchRegistro { get; set; } = DateTime.Now;
         public DateTime? FchModificacion { get; set; }
@@ -16,3 +16,5 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
         public ICollection<UbicacionDespacho> UbicacionesDespacho { get; set; } = new List<UbicacionDespacho>();
     }
 }
+
+

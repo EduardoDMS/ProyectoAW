@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Repositories;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
@@ -32,7 +32,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             }
 
             ubicacion.Codigo = codigo;
-            ubicacion.Descripcion = dto.Descripcion?.Trim();
+            ubicacion.Nombre = dto.Nombre?.Trim();
             ubicacion.Activo = dto.Activo;
             ubicacion.FchModificacion = DateTime.Now;
             ubicacion.IdAlmacen = dto.IdAlmacen;
@@ -55,7 +55,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             var ubicacion = new Ubicacion
             {
                 Codigo = codigo,
-                Descripcion = dto.Descripcion?.Trim(),
+                Nombre = dto.Nombre?.Trim(),
                 Activo = dto.Activo,
                 FchRegistro = DateTime.Now,
                 IdAlmacen = dto.IdAlmacen
@@ -67,7 +67,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             {
                 IdUbicacion = ubicacion.IdUbicacion,
                 Codigo = ubicacion.Codigo,
-                Descripcion = ubicacion.Descripcion,
+                Nombre = ubicacion.Nombre,
                 Activo = ubicacion.Activo,
                 IdAlmacen = ubicacion.IdAlmacen,
                 EsUbicacionDespacho = ubicacion.UbicacionesDespacho.Any(x => x.IdAlmacen == ubicacion.IdAlmacen)
@@ -95,19 +95,20 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             {
                 IdUbicacion = u.IdUbicacion,
                 Codigo = u.Codigo,
-                Descripcion = u.Descripcion,
+                Nombre = u.Nombre,
                 Activo = u.Activo,
                 IdAlmacen = u.IdAlmacen,
+                NombreAlmacen = u.Almacen?.Nombre ?? string.Empty,
                 EsUbicacionDespacho = u.UbicacionesDespacho.Any(x => x.IdAlmacen == u.IdAlmacen)
             }).ToList();
 
         }
 
-        public async Task<List<UbicacionDto>> ObtenerUbicacionesAsync(int? idAlmacen, bool soloActivas)
-        {
-            var ubicaciones = await _repository.ListarUbicacionesAsync(idAlmacen, soloActivas);
-            return ubicaciones.Select(u => new UbicacionDto { IdUbicacion = u.IdUbicacion, Codigo = u.Codigo, Descripcion = u.Descripcion, Activo = u.Activo, EsUbicacionDespacho = u.UbicacionesDespacho.Any(x => x.IdAlmacen == u.IdAlmacen), IdAlmacen = u.IdAlmacen }).ToList();
-        }
+        //public async Task<List<UbicacionDto>> ObtenerUbicacionesAsync(int? idAlmacen, bool soloActivas)
+        //{
+        //    var ubicaciones = await _repository.ListarUbicacionesAsync(idAlmacen, soloActivas);
+        //    return ubicaciones.Select(u => new UbicacionDto { IdUbicacion = u.IdUbicacion, Codigo = u.Codigo, Descripcion = u.Descripcion, Activo = u.Activo, EsUbicacionDespacho = u.UbicacionesDespacho.Any(x => x.IdAlmacen == u.IdAlmacen), IdAlmacen = u.IdAlmacen }).ToList();
+        //}
 
         public async Task<UbicacionDto?> ObtenerUbicacionPorCodigoAsync(string codigo)
         {
@@ -120,7 +121,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             {
                 IdUbicacion = ubicacion.IdUbicacion,
                 Codigo = ubicacion.Codigo,
-                Descripcion = ubicacion.Descripcion,
+                Nombre = ubicacion.Nombre,
                 Activo = ubicacion.Activo,
                 IdAlmacen = ubicacion.IdAlmacen,
                 EsUbicacionDespacho = ubicacion.UbicacionesDespacho.Any(x => x.IdAlmacen == ubicacion.IdAlmacen)
@@ -137,7 +138,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             {
                 IdUbicacion = ubicacion.IdUbicacion,
                 Codigo = ubicacion.Codigo,
-                Descripcion = ubicacion.Descripcion,
+                Nombre = ubicacion.Nombre,
                 Activo = ubicacion.Activo,
                 IdAlmacen = ubicacion.IdAlmacen,
                 EsUbicacionDespacho = ubicacion.UbicacionesDespacho.Any(x => x.IdAlmacen == ubicacion.IdAlmacen)
@@ -146,3 +147,4 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
         }
     }
 }
+

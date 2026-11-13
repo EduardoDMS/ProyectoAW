@@ -111,39 +111,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
             }
 }
 
-        [HttpPatch("{id:int}")]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
-        {
-            try
-            {
-                var cambiado = await _service.CambiarEstadoAlmacenAsync(id, activo);
-                if (!cambiado)
-                    throw new NegocioException("No se pudo realizar el cambio de estado , ERROR");
-
-                return Ok(new Respuesta
-                {
-                    Exito = true,
-                    Mensaje = activo ? "Almacen Activado correctamente" : "Almacen Desactivado Correctamente"
-                });
-            }
-            catch (NegocioException EX)
-            {
-                return BadRequest(new Respuesta
-                {
-                    Exito = false,
-                    Mensaje = EX.Message
-                });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new Respuesta
-                {
-                    Exito = false,
-                    Mensaje = "Ocurrio un error ineperado , debe esperar e intentarlo nuevamente"
-                });
-            }
-
-        }
+       
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarAlmacenDto request)
@@ -175,6 +143,51 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
                 });
             }
         }
+
+
+
+
+
+
+
+
+
+        #region METODOS NO USADOS
+
+        //[HttpPatch("{id:int}")]
+        //public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
+        //{
+        //    try
+        //    {
+        //        var cambiado = await _service.CambiarEstadoAlmacenAsync(id, activo);
+        //        if (!cambiado)
+        //            throw new NegocioException("No se pudo realizar el cambio de estado , ERROR");
+
+        //        return Ok(new Respuesta
+        //        {
+        //            Exito = true,
+        //            Mensaje = activo ? "Almacen Activado correctamente" : "Almacen Desactivado Correctamente"
+        //        });
+        //    }
+        //    catch (NegocioException EX)
+        //    {
+        //        return BadRequest(new Respuesta
+        //        {
+        //            Exito = false,
+        //            Mensaje = EX.Message
+        //        });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, new Respuesta
+        //        {
+        //            Exito = false,
+        //            Mensaje = "Ocurrio un error ineperado , debe esperar e intentarlo nuevamente"
+        //        });
+        //    }
+
+        //}
+        #endregion
 
     }
 }

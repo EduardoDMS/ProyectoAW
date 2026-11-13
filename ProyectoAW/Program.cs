@@ -4,6 +4,9 @@ using ProyectoAW.Infraestructure.MVC;
 // Guias
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Guias.Services;
+//Stocks
+using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Stocks.Services;
 // Almacenes
 using ProyectoAW.Modules.Maestros.Almacenes.Repositories;
 using ProyectoAW.Modules.Maestros.Almacenes.Services;
@@ -31,11 +34,10 @@ using ProyectoAW.Modules.Maestros.UnidadesMedida.Services;
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
-using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 // Usuarios
 using ProyectoAW.Modules.Seguridad.Usuarios.Repositories;
 using ProyectoAW.Modules.Seguridad.Usuarios.Services;
-
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,7 +82,11 @@ builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IGuiaRepository, GuiaRepository>();
 builder.Services.AddScoped<IGuiaService, GuiaService>();
-
+builder.Services.AddScoped<IMotivoGuiaRepository, MotivoGuiaRepository>();
+builder.Services.AddScoped<IMotivoGuiaService, MotivoGuiaService>();
+builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
+builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
+builder.Services.AddScoped<ILecturaGuiaRepository, LecturaGuiaRepository>();
 
 var app = builder.Build();
 
@@ -113,3 +119,5 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
+
+
