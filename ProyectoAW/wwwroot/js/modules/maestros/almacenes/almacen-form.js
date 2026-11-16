@@ -144,7 +144,7 @@ async function actualizarAlmacen() {
 }
 
 function eliminarAlmacen(almacen) {
-    console.log("Eliminar almacen: ", almacen)
+    console.log("Eliminar almacen: ", almacen);
 
     // confirmacion de eliminar
 }

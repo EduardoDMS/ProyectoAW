@@ -5,7 +5,13 @@ let tablaUbicaciones;
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
     cargarUbicaciones();
+    cargarAlmacenesSelect();
     inicializarEventos();
+
+    // Escucha el evento desde almacen-form
+    document.addEventListener('ubicacion:guardado', () => {
+        cargarUbicaciones();
+    });
 });
 
 // CONFIGURACIÓN DE TABULATOR: Tabulator y sus columnas
@@ -21,8 +27,8 @@ function inicializarTabla() {
 
         columns: [
             { title: 'Código', field: 'codigo' },
-            { title: 'Ubicación', field: 'descripcion' },
-            { title: 'Almacen', field: 'idAlmacen' },
+            { title: 'Ubicación', field: 'nombre' },
+            { title: 'Almacen', field: 'nombreAlmacen' },
             {
                 title: 'Estado',
                 field: 'activo',
@@ -51,11 +57,11 @@ function inicializarTabla() {
                     const fila = cell.getRow().getData();
 
                     if (e.target.closest('.btn-editar')) {
-                        editarAlmacen(fila);
+                        editarUbicacion(fila);
                     }
 
                     if (e.target.closest('.btn-eliminar')) {
-                        eliminarAlmacen(fila);
+                        eliminarUbicacion(fila);
                     }
                 }
             }
@@ -81,8 +87,45 @@ async function cargarUbicaciones() {
 
             tablaUbicaciones.setData(ubicaciones);
         }
+    } catch (error) {
+        console.error('Error: ', error.message);
     }
-    catch (error) {
+}
+
+// Select de crear y editar
+async function cargarAlmacenesSelect() {
+    try {
+        const response = await fetch('/api/AlmacenApi');
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los almacenes');
+        }
+
+        if (resultado.exito) {
+            const almacenes = resultado.datos;
+            const selects = [
+                document.getElementById('slcAlmacen'),
+                document.getElementById('slcAlmacenEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                almacenes.forEach(almacen => {
+                    const option = document.createElement('option');
+
+                    option.value = almacen.idAlmacen;
+                    option.textContent = almacen.nombre;
+
+                    select.appendChild(option);
+                });
+            });  
+        }
+    } catch (error) {
         console.error('Error: ', error.message);
     }
 }
