@@ -68,7 +68,7 @@ function inicializarTabla() {
     });
 }
 
-// CARGO DE DATOS: Consumo de endpoints mediante Fetch
+// CARGA DE DATOS: Consumo de endpoints mediante Fetch
 
 async function cargarAlmacenes() {
     try {

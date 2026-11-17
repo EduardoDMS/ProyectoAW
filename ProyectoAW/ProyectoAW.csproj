@@ -48,7 +48,6 @@
     <Folder Include="Modules\Maestros\Categorias\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Categorias\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Categorias\Entities\" />
-    <Folder Include="Modules\Maestros\Categorias\Views\" />
     <Folder Include="Modules\Maestros\Categorias\Services\" />
     <Folder Include="Modules\Maestros\Categorias\Repositories\" />
     <Folder Include="Modules\Maestros\Clientes\Controllers\" />
