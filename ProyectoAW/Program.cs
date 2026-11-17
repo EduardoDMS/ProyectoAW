@@ -90,8 +90,8 @@ builder.Services.AddScoped<IGuiaRepository, GuiaRepository>();
 builder.Services.AddScoped<IGuiaService, GuiaService>();
 builder.Services.AddScoped<IMotivoGuiaRepository, MotivoGuiaRepository>();
 builder.Services.AddScoped<IMotivoGuiaService, MotivoGuiaService>();
-builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
-builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
+//builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
+//builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
 builder.Services.AddScoped<ILecturaGuiaRepository, LecturaGuiaRepository>();
 builder.Services.AddHttpContextAccessor(); // no
 builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
