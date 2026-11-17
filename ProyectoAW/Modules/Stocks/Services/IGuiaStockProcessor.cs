@@ -1,7 +1,7 @@
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Migrations;
 
-namespace ProjectAW.Modules.Stocks.Services;
+namespace ProyectoAW.Modules.Stocks.Services;
 
 public interface IGuiaStockProcessor
 {
@@ -16,6 +16,6 @@ public interface IGuiaStockProcessor
     Task AplicarProductoAsync(
         Guia guia,
         DetalleGuia detalle,
-        IReadOnlyList<LecturaGuia> lecturas,
-        CancellationToken ct = default);
+        IReadOnlyList<ProyectoAW.Modules.Stocks.Entities.LecturaGuia> lecturas
+       );
 }

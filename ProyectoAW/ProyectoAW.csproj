@@ -82,7 +82,6 @@
     <Folder Include="Modules\Maestros\UnidadesMedida\Controllers\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Entities\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Views\" />
-    <Folder Include="Modules\Seguridad\Permisos\" />
     <Folder Include="wwwroot\js\modules\maestros\productos\" />
     <Folder Include="wwwroot\libs\tabulator\dist\" />
   </ItemGroup>
