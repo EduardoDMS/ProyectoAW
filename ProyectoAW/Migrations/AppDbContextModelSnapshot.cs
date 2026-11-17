@@ -68,6 +68,9 @@ namespace ProyectoAW.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<int?>("GuiaRelacionadaIdGuia")
+                        .HasColumnType("int");
+
                     b.Property<int?>("IdAlmacenDestino")
                         .HasColumnType("int");
 
@@ -78,6 +81,9 @@ namespace ProyectoAW.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("IdEstadoGuia")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdGuiaRelacionada")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdMotivoGuia")
@@ -95,6 +101,10 @@ namespace ProyectoAW.Migrations
                     b.Property<int>("IdUsuarioRegistro")
                         .HasColumnType("int");
 
+                    b.Property<string>("NumeroDocumentoReferencia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NumeroGuia")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -104,7 +114,13 @@ namespace ProyectoAW.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("TipoDocumentoReferencia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("IdGuia");
+
+                    b.HasIndex("GuiaRelacionadaIdGuia");
 
                     b.HasIndex("IdAlmacenDestino");
 
@@ -833,7 +849,7 @@ namespace ProyectoAW.Migrations
                     b.Property<int?>("IdUbicacionOrigen")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdUsuarioOpe")
+                    b.Property<int>("IdUsuarioOperador")
                         .HasColumnType("int");
 
                     b.Property<string>("Observacion")
@@ -853,7 +869,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasIndex("IdUbicacionOrigen");
 
-                    b.HasIndex("IdUsuarioOpe");
+                    b.HasIndex("IdUsuarioOperador");
 
                     b.HasIndex("IdGuia", "IdProducto")
                         .IsUnique();
@@ -955,6 +971,10 @@ namespace ProyectoAW.Migrations
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
                 {
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "GuiaRelacionada")
+                        .WithMany("GuiasRelacionadas")
+                        .HasForeignKey("GuiaRelacionadaIdGuia");
+
                     b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "AlmacenDestino")
                         .WithMany()
                         .HasForeignKey("IdAlmacenDestino")
@@ -1010,6 +1030,8 @@ namespace ProyectoAW.Migrations
                     b.Navigation("Cliente");
 
                     b.Navigation("Estado");
+
+                    b.Navigation("GuiaRelacionada");
 
                     b.Navigation("Motivo");
 
@@ -1198,7 +1220,7 @@ namespace ProyectoAW.Migrations
 
                     b.HasOne("ProyectoAW.Modules.Seguridad.Usuarios.Entitites.Usuario", "Usuario")
                         .WithMany("MovimientoStock")
-                        .HasForeignKey("IdUsuarioOpe")
+                        .HasForeignKey("IdUsuarioOperador")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1258,6 +1280,8 @@ namespace ProyectoAW.Migrations
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
                 {
                     b.Navigation("Detalles");
+
+                    b.Navigation("GuiasRelacionadas");
 
                     b.Navigation("MovimientoStocks");
                 });

@@ -2,8 +2,10 @@
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Maestros.Almacenes.Entities;
 using ProyectoAW.Modules.Maestros.Operaciones.Entities;
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 using ProyectoAW.Modules.Stocks.Dtos.Response;
 using ProyectoAW.Modules.Stocks.Entities;
+using ProyectoAW.Modules.Stocks.Services;
 
 namespace ProyectoAW.Modules.Stocks.Factories
 {
@@ -60,7 +62,31 @@ namespace ProyectoAW.Modules.Stocks.Factories
                         detalle.IdDetalleGuia, detalle.IdProducto, detalle.Cantidad))
                 .ToList());
 
-
+        public static MovimientoStockDto ToMovimientoDto(MovimientoStock movimiento) => new(
+        IdMovimientoStock: movimiento.IdMovimientoStock,
+        IdGuia: movimiento.IdGuia,
+        NumeroGuia: movimiento.Guia?.NumeroGuia ?? string.Empty,
+        MotivoGuia: movimiento.Guia?.Motivo?.NombreMotivo ?? "—",
+        IdTipoOperacion: movimiento.IdTipoOperacion,
+        Operacion: movimiento.OperacionGuias?.Nombre ?? string.Empty,
+        IdProducto: movimiento.IdProducto,
+        CodigoProducto: movimiento.Producto?.Codigo ?? string.Empty,
+        Producto: movimiento.Producto?.Nombre ?? string.Empty,
+        IdAlmacen: movimiento.IdAlmacen,
+        Origen: NombreOrigen(movimiento),
+        Destino: NombreDestino(movimiento),
+        CantidadEsperada: movimiento.Guia?.Detalles
+            .FirstOrDefault(detalle => detalle.IdProducto == movimiento.IdProducto)?.Cantidad ?? 0,
+        Cantidad: movimiento.Cantidad,
+        CantidadDiferenciada: movimiento.CantidadDiferenciada,
+        Observacion: movimiento.Observacion,
+        IdUsuarioOperador: movimiento.IdUsuarioOperador,
+        Operador: NombreOperador(movimiento.Usuario),
+        IdUbicacionOrigen: movimiento.IdUbicacionOrigen,
+        UbicacionOrigen: movimiento.UbicacionOrigen?.Codigo ?? string.Empty,
+        IdUbicacionDestino: movimiento.IdUbicacionDestino,
+        UbicacionDestino: movimiento.UbicacionDestino?.Codigo ?? string.Empty,
+        FchMovimiento: movimiento.FchMovimiento);
 
 
 
@@ -73,7 +99,18 @@ namespace ProyectoAW.Modules.Stocks.Factories
         private static string? NombreAlmacen(Almacen? almacen) => almacen is null ? null : string.Join(" · ", new[] { almacen.Codigo, almacen.Nombre }
                           .Where(x => !string.IsNullOrWhiteSpace(x)));
 
+        private static string NombreOperador(Usuario? usuario) =>
+                usuario is null ? string.Empty : $"{usuario.Nombre} {usuario.Apellido}".Trim();
 
+        private static string NombreOrigen(MovimientoStock movimiento) =>
+            movimiento.IdTipoOperacion == TipoOperacionGuiaIds.Entrada
+                ? movimiento.Guia?.Proveedor?.RazonSocial ?? "Cliente"
+                : movimiento.Guia?.AlmacenDestino?.Nombre ?? "Almacen";
+
+        private static string NombreDestino(MovimientoStock movimiento) =>
+            movimiento.IdTipoOperacion == TipoOperacionGuiaIds.Salida
+                ? movimiento.Guia?.Proveedor?.RazonSocial ?? "Cliente"
+                : movimiento.Guia?.AlmacenDestino?.Nombre ?? "Almacen";
 
 
 

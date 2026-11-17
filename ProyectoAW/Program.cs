@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProyectoAW.Infraestructure.MVC;
+using ProyectoAW.Infrastructure.Data;
+
 // Guias
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Guias.Services;
-//Stocks
-using ProyectoAW.Modules.Stocks.Repositories;
-using ProyectoAW.Modules.Stocks.Services;
 // Almacenes
 using ProyectoAW.Modules.Maestros.Almacenes.Repositories;
 using ProyectoAW.Modules.Maestros.Almacenes.Services;
@@ -31,13 +30,20 @@ using ProyectoAW.Modules.Maestros.Ubicaciones.Services;
 // Unidad de Medida
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Repositories;
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Services;
+using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
+
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 // Usuarios
 using ProyectoAW.Modules.Seguridad.Usuarios.Repositories;
 using ProyectoAW.Modules.Seguridad.Usuarios.Services;
-using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
+//Stocks
+using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Stocks.Services;
+using ProyectoAW.Modules.Stocks.Validacion;
+using System.Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +93,16 @@ builder.Services.AddScoped<IMotivoGuiaService, MotivoGuiaService>();
 builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
 builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
 builder.Services.AddScoped<ILecturaGuiaRepository, LecturaGuiaRepository>();
+builder.Services.AddHttpContextAccessor(); // no
+builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
+builder.Services.AddScoped<ITransactionManager, TransactionManager>();
+builder.Services.AddScoped<IGuiaStockProcessor, EntradaStockProcessor>();
+
+
+builder.Services.AddScoped<ValidacionesBase>();
+builder.Services.AddScoped<ValidacionesGuia>();
+builder.Services.AddScoped<ValidacionesStock>();
+builder.Services.AddScoped<ValidacionesUbicacion>();
 
 var app = builder.Build();
 

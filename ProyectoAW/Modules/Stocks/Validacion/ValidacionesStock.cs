@@ -1,13 +1,12 @@
-﻿using ProjectAW.Modules.Stocks.Services;
+﻿using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Infrastructure.Data;
-using ProyectoAW.Migrations;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
 using ProyectoAW.Modules.Maestros.Operaciones.Entities;
-using ProyectoAW.Modules.Seguridad.Security.HttpAuth;
 using ProyectoAW.Modules.Stocks.Dtos.Request;
 using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
 
 namespace ProyectoAW.Modules.Stocks.Validacion
 {

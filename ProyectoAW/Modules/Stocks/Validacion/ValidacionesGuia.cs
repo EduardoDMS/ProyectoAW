@@ -1,17 +1,21 @@
-﻿using ProjectAW.Modules.Stocks.Services;
+﻿using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
 using ProyectoAW.Modules.Maestros.Operaciones.Entities;
-using ProyectoAW.Modules.Seguridad.Security.HttpAuth;
 using ProyectoAW.Modules.Stocks.Dtos.Request;
+using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Stocks.Factories;
+using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
 
 namespace ProyectoAW.Modules.Stocks.Validacion
 {
     public class ValidacionesGuia : ValidacionesBase
     {
+
+
         public ValidacionesGuia(ILecturaGuiaRepository repository, ICurrentUserService currentUser, ITransactionManager transactions, IEnumerable<IGuiaStockProcessor> stockProcessors) : base(repository, currentUser, transactions, stockProcessors)
         {
         }
@@ -69,6 +73,69 @@ namespace ProyectoAW.Modules.Stocks.Validacion
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private static void ValidarDetallesDeGuia(Guia guia)
+        {
+            var noTieneDetalles = guia.Detalles.Count == 0;
+            var tieneProductosDuplicados = guia.Detalles
+                .GroupBy(detalle => detalle.IdProducto)
+                .Any(grupo => grupo.Count() > 1);
+
+            if (noTieneDetalles || tieneProductosDuplicados)
+                throw new NegocioException("La guía no tiene productos válidos para procesar.");
+        }
+
+
+        private IGuiaStockProcessor ObtenerProcesador(int idTipoOperacionGuia) =>
+            _stockProcessors.TryGetValue(idTipoOperacionGuia, out var processor)
+                ? processor
+                : throw new NegocioException("La guía tiene un tipo de operación inválido.");
+
+
+        private static void ValidarCantidadesEnteras(Guia guia)
+        {
+            var contieneCantidadNoEntera = guia.Detalles.Any(detalle =>
+                detalle.Cantidad != decimal.Truncate(detalle.Cantidad) ||
+                detalle.Cantidad > int.MaxValue);
+
+            if (contieneCantidadNoEntera)
+                throw new NegocioException("Esta guía contiene cantidades fraccionarias, pero el stock actual registra unidades enteras. No se aplicó ningún movimiento.");
+        }
+
+        private static void ValidarAsignacionEnProceso(Guia guia, int idOperador)
+        {
+            if (guia.IdEstadoGuia != EstadoGuiasIds.EnProceso)
+                throw new NegocioException("La guía no está en proceso.");
+            if (guia.IdUsuarioModificacion != idOperador)
+                throw new NegocioException("La guía está asignada a otro operador.");
+        }
+
+        public IGuiaStockProcessor ValidarGuiaParaFinalizar(Guia guia)
+        {
+            ExigirOperacionesOperador(guia.IdTipoOperacionGuia);
+            ValidarDetallesDeGuia(guia);
+
+            var processor = ObtenerProcesador(guia.IdTipoOperacionGuia);
+            processor.ValidarGuia(guia);
+            ValidarCantidadesEnteras(guia);
+            ValidarAsignacionEnProceso(guia, _currentUser.IdUsuario);
+            return processor;
+        }
 
 
 

@@ -1,7 +1,7 @@
-﻿using ProjectAW.Modules.Stocks.Services;
+﻿using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infrastructure.Data;
-using ProyectoAW.Modules.Seguridad.Security.HttpAuth;
 using ProyectoAW.Modules.Stocks.Repositories;
+using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
 
 namespace ProyectoAW.Modules.Stocks.Validacion
 {
@@ -16,6 +16,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                                     ILecturaGuiaRepository repository,
                                     ICurrentUserService currentUser,
                                     ITransactionManager transactions,
+                                   
                                     IEnumerable<IGuiaStockProcessor> stockProcessors)
         {
             _repository = repository;

@@ -48,7 +48,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
 
             builder.HasOne(m => m.Usuario)
                    .WithMany(u => u.MovimientoStock)
-                   .HasForeignKey(m => m.IdUsuarioOpe)
+                   .HasForeignKey(m => m.IdUsuarioOperador)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(m => m.UbicacionOrigen).WithMany()
