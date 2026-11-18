@@ -26,7 +26,7 @@ function inicializarTabla() {
 
         columns: [
             { title: 'Código', field: 'codigo' },
-            { title: 'Almacén', field: 'nombre' },
+            { title: 'Nombre', field: 'nombre' },
             { title: 'Fecha de registro', field: 'fchRegistro' },
             {
                 title: 'Estado',
@@ -68,7 +68,7 @@ function inicializarTabla() {
     });
 }
 
-// CARGO DE DATOS: Consumo de endpoints mediante Fetch
+// CARGA DE DATOS: Consumo de endpoints mediante Fetch
 
 async function cargarAlmacenes() {
     try {

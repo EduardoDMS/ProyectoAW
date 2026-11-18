@@ -69,7 +69,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
 
             return new UnidadMedidaDTO
             {
-                IdUnidadUnidad = unidadMedida.IdUnidadMedida,
+                IdUnidadMedida = unidadMedida.IdUnidadMedida,
                 Codigo = unidadMedida.Codigo,
                 Nombre = unidadMedida.Nombre,
                 Activo = unidadMedida.Activo
@@ -101,7 +101,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
 
             return new UnidadMedidaDTO
             {
-                IdUnidadUnidad = unidadMedida.IdUnidadMedida,
+                IdUnidadMedida = unidadMedida.IdUnidadMedida,
                 Codigo = unidadMedida.Codigo,
                 Nombre = unidadMedida.Nombre,
                 Activo = unidadMedida.Activo
@@ -117,7 +117,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
 
             return new UnidadMedidaDTO
             {
-                IdUnidadUnidad = unidadMedida.IdUnidadMedida,
+                IdUnidadMedida = unidadMedida.IdUnidadMedida,
                 Nombre = unidadMedida.Nombre,
                 Codigo = unidadMedida.Codigo,
                 Activo = unidadMedida.Activo
@@ -131,7 +131,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
 
             return unidadMedida.Select(u => new UnidadMedidaDTO
             {
-                IdUnidadUnidad = u.IdUnidadMedida,
+                IdUnidadMedida = u.IdUnidadMedida,
                 Nombre = u.Nombre,
                 Codigo = u.Codigo,
                 Activo = u.Activo

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnActualizarUbicacion').addEventListener('click', actualizarUbicacion);
 });
 
-// INICIALIZACION
+// GUARDAR UBICACION
 async function guardarUbicacion() {
     const codigo = document.getElementById('txtCodigo').value.trim();
     const nombre = document.getElementById('txtNombre').value.trim();
@@ -42,7 +42,6 @@ async function guardarUbicacion() {
         // Cerrar modal
         const modalElement = document.getElementById('modalCrearUbicacion');
         const modal = bootstrap.Modal.getInstance(modalElement);
-
         modal.hide();
 
         // Limpiar formulario
@@ -94,6 +93,7 @@ async function editarUbicacion(ubicacion) {
             const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
             modal.show();
         }
+
     } catch (error) {
         console.error('Error: ', error.message);
         alert(error.message);
@@ -135,7 +135,6 @@ async function actualizarUbicacion() {
         // Cerrar modal
         const modalElement = document.getElementById('modalEditarUbicacion');
         const modal = bootstrap.Modal.getInstance(modalElement);
-
         modal.hide();
 
         // Notificar que se actualizo una ubicacion

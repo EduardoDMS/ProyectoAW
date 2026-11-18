@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnActualizarAlmacen').addEventListener('click', actualizarAlmacen);
 });
 
-// INICIALIZACION
+// GUARDAR ALMACEN
 async function guardarAlmacen() {
     const codigo = document.getElementById('txtCodigo').value.trim();
     const nombre = document.getElementById('txtNombre').value.trim();
@@ -39,7 +39,6 @@ async function guardarAlmacen() {
         // Cerrar modal
         const modalElement = document.getElementById('modalCrearAlmacen');
         const modal = bootstrap.Modal.getInstance(modalElement);
-
         modal.hide();
 
         // Limpiar formulario
@@ -89,6 +88,7 @@ async function editarAlmacen(almacen) {
             const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
             modal.show();
         }
+
     } catch (error) {
         console.error('Error: ', error.message);
         alert(error.message);
@@ -129,7 +129,6 @@ async function actualizarAlmacen() {
         // Cerrar modal
         const modalElement = document.getElementById('modalEditarAlmacen');
         const modal = bootstrap.Modal.getInstance(modalElement);
-
         modal.hide();
 
         // Notificar que se actualizo un almacen
@@ -143,6 +142,7 @@ async function actualizarAlmacen() {
     }
 }
 
+// ELIMINAR ALMACEN
 function eliminarAlmacen(almacen) {
     console.log("Eliminar almacen: ", almacen);
 

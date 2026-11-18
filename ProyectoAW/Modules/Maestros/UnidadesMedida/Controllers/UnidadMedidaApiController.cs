@@ -88,7 +88,7 @@ public class UnidadMedidaApiController : ControllerBase
             var unidadMedida = await _service.CrearAsync(request);
             return CreatedAtAction(
                                     nameof(ObtenerPorId),
-                                    new { id = unidadMedida.IdUnidadUnidad },
+                                    new { id = unidadMedida.IdUnidadMedida },
                                     new Respuesta
                                     {
                                         Mensaje = "Unidad de Medida Creada Correctamente",

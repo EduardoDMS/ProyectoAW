@@ -48,21 +48,18 @@
     <Folder Include="Modules\Maestros\Categorias\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Categorias\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Categorias\Entities\" />
-    <Folder Include="Modules\Maestros\Categorias\Views\" />
     <Folder Include="Modules\Maestros\Categorias\Services\" />
     <Folder Include="Modules\Maestros\Categorias\Repositories\" />
     <Folder Include="Modules\Maestros\Clientes\Controllers\" />
     <Folder Include="Modules\Maestros\Clientes\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Clientes\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Clientes\Entities\" />
-    <Folder Include="Modules\Maestros\Clientes\Views\" />
     <Folder Include="Modules\Maestros\Clientes\Services\" />
     <Folder Include="Modules\Maestros\Clientes\Repositories\" />
     <Folder Include="Modules\Maestros\Productos\Controllers\" />
     <Folder Include="Modules\Maestros\Productos\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Productos\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Productos\Entities\" />
-    <Folder Include="Modules\Maestros\Productos\Views\" />
     <Folder Include="Modules\Maestros\Productos\Services\" />
     <Folder Include="Modules\Maestros\Productos\Repositories\" />
     <Folder Include="Modules\Maestros\Proveedores\Controllers\" />
@@ -81,8 +78,6 @@
     <Folder Include="Modules\Maestros\TipoDocumentos\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Controllers\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Entities\" />
-    <Folder Include="Modules\Maestros\UnidadesMedida\Views\" />
-    <Folder Include="wwwroot\js\modules\maestros\productos\" />
     <Folder Include="wwwroot\libs\tabulator\dist\" />
   </ItemGroup>
 

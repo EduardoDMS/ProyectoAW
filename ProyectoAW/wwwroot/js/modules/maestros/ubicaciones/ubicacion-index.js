@@ -125,6 +125,7 @@ async function cargarAlmacenesSelect() {
                 });
             });  
         }
+
     } catch (error) {
         console.error('Error: ', error.message);
     }
