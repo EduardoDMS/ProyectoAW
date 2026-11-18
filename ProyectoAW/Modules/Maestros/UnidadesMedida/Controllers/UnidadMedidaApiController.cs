@@ -88,7 +88,7 @@ public class UnidadMedidaApiController : ControllerBase
             var unidadMedida = await _service.CrearAsync(request);
             return CreatedAtAction(
                                     nameof(ObtenerPorId),
-                                    new { id = unidadMedida.IdUnidadUnidad },
+                                    new { id = unidadMedida.IdUnidadMedida },
                                     new Respuesta
                                     {
                                         Mensaje = "Unidad de Medida Creada Correctamente",
@@ -139,12 +139,12 @@ public class UnidadMedidaApiController : ControllerBase
                 Exito = false
             });
         }
-        catch (Exception)
+        catch (Exception e)
         {
             return StatusCode(500, new Respuesta
             {
                 Exito = false,
-                Mensaje = "Hubo un problema intenta mas tarde actualizar tuunidad de medida "
+                Mensaje = e.Message
             });
         }
 

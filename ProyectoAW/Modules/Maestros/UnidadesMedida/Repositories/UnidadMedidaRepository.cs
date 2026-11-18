@@ -28,7 +28,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Repositories
 
         public async Task<UnidadMedida?> ObtenerPorCodigoAsync(string codigo)
         {
-            return await _context.UnidadesMedida.AsTracking().FirstOrDefaultAsync(u => u.Codigo == codigo);
+            return await _context.UnidadesMedida.AsNoTracking().FirstOrDefaultAsync(u => u.Codigo == codigo);
         }
 
         public async Task<UnidadMedida?> ObtenerPorIdAsync(int id)

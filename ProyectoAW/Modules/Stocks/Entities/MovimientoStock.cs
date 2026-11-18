@@ -17,7 +17,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
         public DateTime FchMovimiento { get; set; } = DateTime.Now;
 
         public int IdGuia { get; set; }
-        public int IdUsuarioOpe { get; set; }
+        public int IdUsuarioOperador { get; set; }
         public string Observacion { get; set; } = string.Empty;
         public int CantidadDiferenciada { get; set; }
         public int? IdUbicacionOrigen { get; set; }

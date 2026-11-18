@@ -70,7 +70,7 @@
 					<!-- Descripción -->
 					<div class="col-md-6 mb-3">
 						<label for="txtDescripcion" class="form-label">
-							Código <span class="text-danger">*</span>
+							Descripción <span class="text-danger">*</span>
 						</label>
 						<input type="text" id="txtDescripcion" class="form-control" placeholder="Ej: Accesorios de computadora" maxlength="50" required />
 					</div>
@@ -129,9 +129,9 @@
 					<!-- Descripción -->
 					<div class="col-md-6 mb-3">
 						<label for="txtDescripcionEditar" class="form-label">
-							Código
+							Descripción
 						</label>
-						<input type="text" id="txtDescripcionEditar" class="form-control" maxlength="50" disabled />
+						<input type="text" id="txtDescripcionEditar" class="form-control" maxlength="50" required />
 					</div>
 
 					<!-- Estado -->
@@ -162,3 +162,8 @@
 		</div>
 	</div>
 </div>
+
+@section Scripts{
+	<script src="~/js/modules/maestros/categorias/categoria-index.js"></script>
+	<script src="~/js/modules/maestros/categorias/categoria-form.js"></script>
+}

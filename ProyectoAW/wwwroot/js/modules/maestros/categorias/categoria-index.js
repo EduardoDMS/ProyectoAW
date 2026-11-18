@@ -3,7 +3,13 @@ let tablaCategorias;
 
 // INICIALIZACION
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarTabla();
+    cargarCategorias();
+    inicializarEventos();
 
+    document.addEventListener('categoria:guardado', () => {
+        cargarCategorias();
+    });
 });
 
 // CONFIGURACIÓN DE TABULATOR
@@ -75,7 +81,7 @@ async function cargarCategorias() {
             const categorias = resultado.datos;
 
             console.log(categorias);
-            console.log(resultado.datos);
+            console.log(resultado.mensaje);
 
             tablaCategorias.setData(categorias);
         }
