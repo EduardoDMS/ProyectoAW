@@ -1,4 +1,5 @@
-﻿using ProyectoAW.Infraestructure.RP;
+﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Almacenes.Entities;
@@ -88,6 +89,20 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Services
                 IdUbicacionesDespacho = []
             };
 
+        }
+
+        public async Task EliminarAsync(int id)
+        {
+            var almacen = await _repository.ObtenerAlmacenPorIdAsync(id);
+
+            if (almacen == null)
+                throw new NegocioException("No se encontro un almacen con ese id");
+
+            var ubicacionesAsociadas = await _repository.TieneUbicacionesAsociadasAsync(id);
+            if (ubicacionesAsociadas)
+                throw new NegocioException("No se puede eliminar aun tiene ubicaciones arraigadas a este almacen");
+
+            await _repository.EliminarAlmacenAsync(almacen);
         }
 
         public async Task<List<AlmacenDTO>> ObtenerAlmacenesTodosAsync()

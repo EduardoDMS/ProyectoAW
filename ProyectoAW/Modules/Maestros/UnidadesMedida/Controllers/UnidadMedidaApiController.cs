@@ -184,4 +184,36 @@ public class UnidadMedidaApiController : ControllerBase
         }
     }
 
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> EliminarUnidadMedidaAsync(int id)
+    {
+        try
+        {
+            await _service.EliminarUnidadMedidaAsync(id);
+            return Ok(new Respuesta
+            {
+                Exito = true,
+                Mensaje = "Se elimino la unidad de medida",
+            });
+        }
+        catch(NegocioException ex)
+        {
+            return BadRequest(new Respuesta
+            {
+                Exito = false,
+                Mensaje = ex.Message
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new Respuesta
+            {
+                Exito = false,
+                Mensaje = "No se pudo resolver el error contactanos"
+            });
+        }
+    }
+
+
+
 }

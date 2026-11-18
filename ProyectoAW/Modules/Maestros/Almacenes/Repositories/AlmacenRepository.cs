@@ -124,5 +124,19 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
             _context.Almacenes.Update(almacen);
             await _context.SaveChangesAsync();
         }
+
+        public async Task EliminarAlmacenAsync(Almacen almacen)
+        {
+            _context.Almacenes.Remove(almacen);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> TieneUbicacionesAsociadasAsync(int idAlmacen)
+        {
+            return await _context.Ubicaciones
+                                 .AnyAsync(a => a.IdAlmacen == idAlmacen);
+        }
+
+
     }
 }

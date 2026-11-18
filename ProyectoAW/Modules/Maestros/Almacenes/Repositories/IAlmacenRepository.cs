@@ -13,5 +13,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
         Task<List<int>> ListarUbicacionesDelAlmacenAsync(int idAlmacen, IReadOnlyCollection<int> idsUbicaciones);
         Task EliminarUbicacionesDespachoAsync(int idAlmacen);
         Task ActualizarAsync(Almacen almacen);
+        Task EliminarAlmacenAsync(Almacen almacen);
+        Task<bool> TieneUbicacionesAsociadasAsync (int idAlmacen);
     }
 }

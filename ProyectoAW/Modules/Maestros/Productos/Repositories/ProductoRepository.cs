@@ -4,7 +4,7 @@ using ProyectoAW.Modules.Maestros.Productos.Entities;
 
 namespace ProyectoAW.Modules.Maestros.Productos.Repositories;
 
-public class ProductoRepository:IProductoRepository
+public class ProductoRepository : IProductoRepository
 {
     private readonly AppDbContext _context;
 
@@ -15,7 +15,11 @@ public class ProductoRepository:IProductoRepository
 
     public async Task<List<Producto>> ObtenerTodosAsync()
     {
-        return await _context.Productos.AsNoTracking().ToListAsync();
+        return await _context.Productos
+                             .AsNoTracking()
+                             .Include(u => u.UnidadMedida)
+                             .Include(c => c.Categoria)
+                             .ToListAsync();
     }
 
     public async Task<Producto?> ObtenerPorIdAsync(int id)
@@ -37,6 +41,28 @@ public class ProductoRepository:IProductoRepository
     public async Task ActualizarAsync(Producto producto)
     {
         _context.Productos.Update(producto);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ProductoTieneUnidadDeMedidaAsociado(int idProducto)
+    {
+        return await _context.Productos
+                             .AnyAsync(p => p.IdUnidadMedida == idProducto);
+    }
+
+    public async Task<bool> TieneMovimientosAsociadosAsync(int idProducto)
+    {
+        return await _context.MovimientoStock.AnyAsync(m => m.IdProducto == idProducto);
+    }
+
+    public async Task<bool> TieneStockAsociadoAsync(int idProducto)
+    {
+        return await _context.StockUbicacion.AnyAsync(s => s.IdProducto == idProducto);
+    }
+
+    public async Task EliminarProductoAsync(Producto producto)
+    {
+        _context.Productos.Remove(producto);
         await _context.SaveChangesAsync();
     }
 }

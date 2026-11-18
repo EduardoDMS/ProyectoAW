@@ -1,4 +1,4 @@
-﻿namespace ProyectoAW.Modules.Seguridad.Permisos.HttpAuth
+﻿namespace ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth
 {
     public interface ICurrentUserService
     {

@@ -9,4 +9,7 @@ public interface IProductoRepository
     Task<Producto?> ObtenerPorCodigoAsync(string codigo);
     Task CrearAsync(Producto producto);
     Task ActualizarAsync(Producto producto);
+    Task<bool> TieneMovimientosAsociadosAsync(int idProducto);
+    Task<bool> TieneStockAsociadoAsync(int idProducto);
+    Task EliminarProductoAsync(Producto producto);
 }

@@ -181,5 +181,35 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
                 });
             }
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarCategoria(int id)
+        {
+            try
+            {
+                await _service.EliminarCategoriaAsync(id);
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se elimino con exito la categoria"
+                });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno en el servidor , comuniquese con dms inmediatamente"
+                });
+            }
+        }
     }
 }
