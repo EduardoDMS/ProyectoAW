@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProyectoAW.Infraestructure.MVC;
 using ProyectoAW.Infrastructure.Data;
-
 // Guias
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Guias.Services;
@@ -30,19 +33,23 @@ using ProyectoAW.Modules.Maestros.Ubicaciones.Services;
 // Unidad de Medida
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Repositories;
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Services;
-using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
-
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
-using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
+//Security(ni se por que lo pongo)
+using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
+using ProyectoAW.Modules.Seguridad.Security_Session.Repositories;
+using ProyectoAW.Modules.Seguridad.Security_Session.Services;
 // Usuarios
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 using ProyectoAW.Modules.Seguridad.Usuarios.Repositories;
 using ProyectoAW.Modules.Seguridad.Usuarios.Services;
 //Stocks
 using ProyectoAW.Modules.Stocks.Repositories;
 using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Modules.Stocks.Validacion;
+//System
+using System.Text;
 using System.Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +64,27 @@ builder.Services.AddControllersWithViews().AddRazorOptions(options =>
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Ingrese: Bearer {token}"
+        });
+
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] =
+                new List<string>()
+        });
+});
 
 // EF Core
 builder.Services.AddDbContext<ProyectoAW.Infrastructure.Data.AppDbContext>(options =>
@@ -97,14 +124,50 @@ builder.Services.AddHttpContextAccessor(); // no
 builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<IGuiaStockProcessor, EntradaStockProcessor>();
-
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 builder.Services.AddScoped<ValidacionesBase>();
 builder.Services.AddScoped<ValidacionesGuia>();
 builder.Services.AddScoped<ValidacionesStock>();
 builder.Services.AddScoped<ValidacionesUbicacion>();
 
+
+
+builder.Services
+        .AddAuthentication(JwtBearerDefaults
+        .AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters =
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                                                Encoding.UTF8.GetBytes(
+                                                    builder.Configuration["Jwt:Key"]!))
+                    };
+        });
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
+
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -122,6 +185,7 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

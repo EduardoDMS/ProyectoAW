@@ -76,12 +76,28 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
             };
         }
 
+        public async Task EliminarUnidadMedidaAsync(int id)
+        {
+            var unidadMedida = await _repository.ObtenerPorIdAsync(id);
+
+            if (unidadMedida == null)
+                throw new NegocioException("No se encontro una unidad de medida con ese id");
+
+            var ProductosAsociados = await _repository.ValidarProductosAsociados(id);
+
+            if (ProductosAsociados)
+                throw new NegocioException("No sepuede eliminar tiene prodcutos que aun estan asociados a esta Unidad de Medida");
+
+            await _repository.EliminarUnidadMedidaAsync(unidadMedida);
+        }
+
         public async Task<UnidadMedidaDTO?> ObtenerPorCodigoAsync(string codigo)
         {
             var unidadMedida = await _repository.ObtenerPorCodigoAsync(codigo);
 
-            if (codigo == null)
-                throw new NegocioException($"No se pudo encontrar la unidad de medida con el codigo: {codigo}");
+            if (unidadMedida == null)
+                throw new NegocioException(
+                    $"No se pudo encontrar la unidad de medida con el código: {codigo}");
 
             return new UnidadMedidaDTO
             {

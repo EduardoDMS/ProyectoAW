@@ -144,6 +144,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
                 IdCliente = c.IdCliente,
                 RazonSocial = c.RazonSocial,
                 IdTipoDocumento = c.IdTipoDocumento,
+                NombreDocumento = c.TipoDocumento?.Documento?? string.Empty,
                 NumeroDocumento = c.NumeroDocumento,
                 Correo = c.Correo,
                 Telefono = c.Telefono,

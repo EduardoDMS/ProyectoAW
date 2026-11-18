@@ -150,6 +150,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
                 IdProveedor=p.IdProveedor,
                 RazonSocial=p.RazonSocial,
                 IdTipoDocumento=p.IdTipoDocumento,
+                NombreDocumento=p.TipoDocumento?.Documento ?? string.Empty,
                 NumeroDocumento=p.NumeroDocumento,
                 Direccion=p.Direccion,
                 NombreContacto=p.NombreContacto,

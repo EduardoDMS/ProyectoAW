@@ -8,7 +8,7 @@ using ProyectoAW.Modules.Maestros.Productos.Repositories;
 
 namespace ProyectoAW.Modules.Maestros.Productos.Services;
 
-public class ProductoService:IProductoService
+public class ProductoService : IProductoService
 {
     private readonly IProductoRepository _repository;
 
@@ -22,16 +22,18 @@ public class ProductoService:IProductoService
     {
         var productos=await _repository.ObtenerTodosAsync();
 
-        return productos.Select(p=>new ProductoDto
+        return productos.Select(p => new ProductoDto
         {
-            IdProducto=p.IdProducto,
-            Codigo=p.Codigo,
-            Nombre=p.Nombre,
+            IdProducto = p.IdProducto,
+            Codigo = p.Codigo,
+            Nombre = p.Nombre,
             Lote = p.Lote,
             Serie = p.Serie,
-            Activo =p.Activo,
+            Activo = p.Activo,
             IdCategoria = p.IdCategoria,
-            IdUnidadMedida = p.IdUnidadMedida
+            NombreCategoria = p.Categoria?.Nombre ?? string.Empty,
+            IdUnidadMedida = p.IdUnidadMedida,
+            NombreUnidadMedida = p.UnidadMedida?.Nombre ?? string.Empty
         }).ToList();
     }
 
@@ -153,5 +155,23 @@ public class ProductoService:IProductoService
         await _repository.ActualizarAsync(producto);
 
         return true;
+    }
+
+    public async Task EliminarProductoAsync(int id)
+    {
+        var producto = await _repository.ObtenerPorIdAsync(id);
+
+        if (producto == null)
+            throw new NegocioException("No se encontro un producto con ese id para eliminar");
+
+        var productoMovimientosValidos = await _repository.TieneMovimientosAsociadosAsync(id);
+        if (productoMovimientosValidos)
+            throw new Exception("No se puede borrar el producto se encuentra en un registro de un movimiento actual");
+
+        var productoStockValido = await _repository.TieneStockAsociadoAsync(id);
+        if (productoStockValido)
+            throw new Exception("No se puede borrar si esta asociado a un stock <0");
+
+        await _repository.EliminarProductoAsync(producto);
     }
 }

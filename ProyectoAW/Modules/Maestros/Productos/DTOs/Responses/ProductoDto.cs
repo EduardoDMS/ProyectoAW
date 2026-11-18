@@ -11,5 +11,7 @@ public class ProductoDto
     public string Serie { get; set; } = string.Empty;
     public bool Activo { get; set; } 
     public int IdCategoria { get; set; }
+    public string NombreCategoria { get; set; } = string.Empty;
     public int IdUnidadMedida { get; set; }
+    public string NombreUnidadMedida { get; set; } = string.Empty;
 }

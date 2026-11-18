@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Almacenes.Services;
 using ProyectoAW.Infraestructure.RP;
+using Microsoft.AspNetCore.Authorization;
+using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Responses;
 
 namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
 {
@@ -111,8 +113,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
             }
 }
 
-       
-
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarAlmacenDto request)
         {
@@ -145,7 +145,35 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
         }
 
 
-
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            try
+            {
+                await _service.EliminarAsync(id);
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se elimino el almacen Exitosamente"
+                });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno: " + e.Message
+                });
+            }
+        }
 
 
 

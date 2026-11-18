@@ -12,4 +12,5 @@ public interface IProductoService
     Task<ProductoDto> CrearAsync(CrearProductoDto dto);
     Task<bool> ActualizarAsync(int id, ActualizarProductoDto dto);
     Task<bool> CambiarEstadoAsync(int id, bool activo);
+    Task EliminarProductoAsync(int id);
 }

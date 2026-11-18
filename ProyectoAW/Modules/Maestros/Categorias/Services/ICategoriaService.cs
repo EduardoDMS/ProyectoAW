@@ -9,6 +9,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
         Task<CategoriaDto?> ObtenerCategoriaPorIdAsync(int id);
         Task<CategoriaDto?> ObtenerCategoriaPorNombreAsync(string nombre);
         Task<CategoriaDto> CrearCategoriaAsync(CrearCategoriaDto dto);
+        Task EliminarCategoriaAsync(int id);
 
         Task<bool> ActualizarCategoriaAsync(int id,ActualizarCategoriaDto dto );
         Task<bool> CambiarEstadoCategoriaAsync(int id, bool activo);

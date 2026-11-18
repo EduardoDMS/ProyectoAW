@@ -15,7 +15,10 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Repositories
 
         public async Task<List<Cliente>> ObtenerTodosAsync()
         {
-            return await _context.Clientes.AsNoTracking().ToListAsync();
+            return await _context.Clientes
+                                 .AsNoTracking()
+                                 .Include(c => c.TipoDocumento)
+                                 .ToListAsync();
         }
 
         public async Task<Cliente?> ObtenerPorIdAsync(int id)

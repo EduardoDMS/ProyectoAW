@@ -13,8 +13,6 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
         Task<UnidadMedidaDTO?> CrearAsync(CrearUnidadMedidaDto dto);
         Task<bool> ActualizarAsync(int id, ActualizarUnidadMedidaDto dto);
         Task<bool> CambiarEstadoAsync(int id, bool Activo);
-
-
-
+        Task EliminarUnidadMedidaAsync(int id);
     }
 }

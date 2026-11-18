@@ -5,6 +5,7 @@
         public int IdProveedor { get; set; }
         public string RazonSocial { get; set; } = string.Empty;
         public int IdTipoDocumento { get; set; }
+        public string NombreDocumento { get; set; } = string.Empty;
         public string NumeroDocumento { get; set; } = string.Empty;
         public string? Direccion { get; set; }
         public string? NombreContacto { get; set; }
