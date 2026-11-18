@@ -24,7 +24,9 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, sesion.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Name, sesion.Username),
-                new Claim(ClaimTypes.Role, sesion.IdRol.ToString())
+                new Claim(ClaimTypes.Role, sesion.Rol),
+                new Claim("IdRol", sesion.IdRol.ToString())
+
             };
 
             var token = new JwtSecurityToken(

@@ -38,6 +38,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             return Ok(usuario);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CrearUsuario([FromBody] CrearUsuarioDto request)
         {
