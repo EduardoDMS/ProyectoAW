@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 //using ProyectoAW.Modules.Seguridad.Autenticacion;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Usuarios.Services;
+using ProyectoAW.Infraestructure.RP;
 
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
 {
@@ -22,57 +23,158 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
-            var usuarios = await _service.ListarUsuariosAsync();
+            try
+            {
 
-            return Ok(usuarios);
+                var usuarios = await _service.ListarUsuariosAsync();
+
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se Obtuvieron todos los usuarios",
+                    Datos = usuarios
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error en el servidor comuniquese con Dms o vuelva a intentarlo"
+                });
+            }
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var usuario = await _service.ObtenerUsuarioPorIdAsync(id);
 
-            if (usuario == null)
-                return NotFound();
+            try
+            {
+                var usuario = await _service.ObtenerUsuarioPorIdAsync(id);
 
-            return Ok(usuario);
+                if (usuario == null)
+                    return NotFound();
+
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se obtuvo el usuario por id",
+                    Datos = usuario
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "No se pudo encontrar ,solicite apoyo"
+                });
+            }
+
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CrearUsuario([FromBody] CrearUsuarioDto request)
         {
-            var usuario = await _service.CrearUsuarioAsync(request);
-            return CreatedAtAction(nameof(ObtenerPorId), new { id = usuario!.IdUsuario }, usuario);
+            try
+            {
+                var usuario = await _service.CrearUsuarioAsync(request);
+                return CreatedAtAction(nameof(ObtenerPorId),
+                                       new { id = usuario!.IdUsuario },
+                                       new Respuesta
+                                       {
+                                           Exito = true,
+                                           Mensaje = " Se logro crear el usuario",
+                                           Datos = usuario
+                                       });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno contacte con el equipo de DMS"
+                });
+            }
         }
 
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Actualizar(int id , [FromBody] ActualizarUsuarioDto request)
+        public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarUsuarioDto request)
         {
-            var actualizado = await _service.ActualizarUsuarioAsync(id, request);
-            if (!actualizado)
-                return NotFound();
+            try
+            {
+                var actualizado = await _service.ActualizarUsuarioAsync(id, request);
+                if (!actualizado)
+                    return NotFound(new Respuesta { Exito = false, Mensaje = "El Usuario no Existe :v" });
 
-            return NoContent();
+                //return NoContent();
+
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se logro Actualizar el Usuario",
+                    Datos = actualizado
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error en el servidor"
+                });
+            }
+
+
         }
 
 
-        [HttpPatch("{id:int}/estado")]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
-        {
-            var actualizado = await _service.CambiarEstadoAsync(id, activo);
+        //[HttpPatch("{id:int}/estado")]
+        //public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
+        //{
+        //    var actualizado = await _service.CambiarEstadoAsync(id, activo);
 
-            if (!actualizado)
-                return NotFound();
+        //    if (!actualizado)
+        //        return NotFound();
 
-            return NoContent();
+        //    return NoContent();
 
-        }
-
-
-
-
-
+        // }
     }
 }

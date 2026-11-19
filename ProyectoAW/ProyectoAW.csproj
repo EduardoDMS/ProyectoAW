@@ -34,9 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\Guias\Controllers\" />
     <Folder Include="Modules\Guias\DTOs\Requests\" />
-    <Folder Include="Modules\Guias\Views\" />
     <Folder Include="Modules\Guias\Services\" />
     <Folder Include="Modules\Maestros\Almacenes\Controllers\" />
     <Folder Include="Modules\Maestros\Almacenes\DTOs\Requests\" />

@@ -28,8 +28,8 @@ function inicializarTabla() {
         columns: [
             { title: 'Código', field: 'codigo' },
             { title: 'Nombre', field: 'nombre' },
-            { title: 'Categoría', field: 'idCategoria' },
-            { title: 'Unidad de medida', field: 'idUnidadMedida' },
+            { title: 'Categoría', field: 'nombreCategoria' },
+            { title: 'Unidad de medida', field: 'nombreUnidadMedida' },
             {
                 title: 'Estado',
                 field: 'activo',
