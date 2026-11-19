@@ -79,6 +79,20 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Services
 
         }
 
+        public async Task EliminarCategoriaAsync(int id)
+        {
+            var categoria = await _repository.GetByIdAsync(id);
+
+            if (categoria == null)
+                throw new NegocioException("No se encontro un almacen con ese id");
+
+            var productosAsociados = await _repository.ValidarProductosRelacionadosAsync(id);
+            if (productosAsociados)
+                throw new NegocioException("No se puede eliminar la categoria aun hay productos que dependen de ella");
+
+            await _repository.EliminarAsync(categoria);
+        }
+
         public async Task<List<CategoriaDto>> ListarCategoriasAsync()
         {
             var categorias = await _repository.GetAllAsync();

@@ -9,5 +9,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Repositories
         Task<UnidadMedida?> ObtenerPorCodigoAsync(string codigo);
         Task CrearAsync(UnidadMedida unidadMed);
         Task ActualizarAsync(UnidadMedida unidadMed);
+        Task EliminarUnidadMedidaAsync(UnidadMedida unidadMedida);
+        Task<bool> ValidarProductosAsociados(int idUnidadMedida);    
     }
 }

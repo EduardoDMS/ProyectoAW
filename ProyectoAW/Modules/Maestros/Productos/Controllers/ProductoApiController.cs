@@ -185,5 +185,36 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
                 });
             }
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> EliminarProducto(int idProducto)
+        {
+            try
+            {
+                await _service.EliminarProductoAsync(idProducto);
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Se logro eliminar el producto seleccionado"
+                });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch(Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno del servido contactese de inmediato con DMS"
+                    // prueba ex.Message para rasterear el error
+                });
+            }
+        }
     }
 }

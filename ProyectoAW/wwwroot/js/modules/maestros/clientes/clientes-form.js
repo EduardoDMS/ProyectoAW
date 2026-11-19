@@ -23,7 +23,7 @@ async function guardarCliente() {
 
     const request = {
         razonSocial: razonSocial,
-        tipoDocumento: tipoDocumento,
+        idTipoDocumento: tipoDocumento,
         numeroDocumento: numeroDocumento,
         correo: correo,
         telefono: telefono,
@@ -75,7 +75,7 @@ function limpiarFormularioCliente() {
 async function editarCliente(cliente) {
     try {
         // Consultar los datos actualizados por ID
-        const response = await fetch(`/api/ProductoApi/${cliente.idCliente}`);
+        const response = await fetch(`/api/ClienteApi/${cliente.idCliente}`);
 
         const resultado = await response.json();
 
@@ -91,12 +91,12 @@ async function editarCliente(cliente) {
 
             // Cargar datos en el formulario
             document.getElementById('txtIdClienteEditar').value = cliente.idCliente;
-            document.getElementById('txtRazonSocial').value = cliente.razonSocial;
-            document.getElementById('slcTipoDocumento').value = String(cliente.idTipoDocumento);
-            document.getElementById('txtNumeroDocumento').value = cliente.numeroDocumento;
-            document.getElementById('txtCorreo').value = cliente.correo;
-            document.getElementById('txtTelefono').value = cliente.telefono;
-            document.getElementById('txtDireccion').value = cliente.direccion;
+            document.getElementById('txtRazonSocialEditar').value = cliente.razonSocial;
+            document.getElementById('slcTipoDocumentoEditar').value = String(cliente.idTipoDocumento);
+            document.getElementById('txtNumeroDocumentoEditar').value = cliente.numeroDocumento;
+            document.getElementById('txtCorreoEditar').value = cliente.correo;
+            document.getElementById('txtTelefonoEditar').value = cliente.telefono;
+            document.getElementById('txtDireccionEditar').value = cliente.direccion;
             document.getElementById('chkActivoEditar').checked = cliente.activo;
 
             // Abrir modal
@@ -116,17 +116,17 @@ async function actualizarCliente() {
     const id = document.getElementById('txtIdClienteEditar').value;
 
     const request = {
-        razonSocial: document.getElementById('txtRazonSocial').value.trim(),
-        tipoDocumento: parseInt(document.getElementById('slcTipoDocumento').value),
-        numeroDocumento: document.getElementById('txtRazonSocial').value.trim(),
-        correo: document.getElementById('txtRazonSocial').value.trim(),
-        telefono: document.getElementById('txtRazonSocial').value.trim(),
-        direccion: document.getElementById('txtRazonSocial').value.trim(),
+        razonSocial: document.getElementById('txtRazonSocialEditar').value.trim(),
+        idTipoDocumento: parseInt(document.getElementById('slcTipoDocumentoEditar').value),
+        numeroDocumento: document.getElementById('txtNumeroDocumentoEditar').value.trim(),
+        correo: document.getElementById('txtCorreoEditar').value.trim(),
+        telefono: document.getElementById('txtTelefonoEditar').value.trim(),
+        direccion: document.getElementById('txtDireccionEditar').value.trim(),
         activo: document.getElementById('chkActivoEditar').checked
     };
 
     // Validaciones
-    if (!request.razonSocial || tipoDocumento == 0 || !request.numeroDocumento) {
+    if (!request.razonSocial || request.tipoDocumento == 0 || !request.numeroDocumento) {
         alert("Complete los campos obligatorios.");
         return;
     }
@@ -164,7 +164,7 @@ async function actualizarCliente() {
 
 // ELIMINAR CLIENTE
 function eliminarCliente(cliente) {
-    console.log("Eliminar cliente: ", producto);
+    console.log("Eliminar cliente: ", cliente);
 
     // confirmacion de eliminar
 }

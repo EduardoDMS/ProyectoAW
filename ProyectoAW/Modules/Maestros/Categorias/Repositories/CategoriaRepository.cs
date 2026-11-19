@@ -39,5 +39,16 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Repositories
             _context.Categorias.Update(categoria);
             await _context.SaveChangesAsync();
         }
+
+        public async Task EliminarAsync(Categoria categoria)
+        {
+            _context.Categorias.Remove(categoria);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ValidarProductosRelacionadosAsync(int idCategoria)
+        {
+            return await _context.Productos.AnyAsync(p => p.IdCategoria == idCategoria);
+        }
     }
 }

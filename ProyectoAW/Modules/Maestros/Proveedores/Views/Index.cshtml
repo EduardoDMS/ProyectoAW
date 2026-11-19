@@ -9,7 +9,7 @@
 		<div class="col-12">
 			<div class="d-sm-flex align-items-center justify-content-between">
 				<div>
-					<h4 class="card-title">Clientes</h4>
+					<h4 class="card-title">Proveedores</h4>
 					<p>Organiza y crea proveedores para las guías</p>
 				</div>
 				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearProveedor">
@@ -20,3 +20,236 @@
 		</div>
 	</div>
 </div>
+
+<div class="card card-body">
+	<div class="row mb-3">
+		<div class="col">
+			<label class="form-label">Proveedor</label>
+			<div class="input-group">
+				<input id="txtBuscarProveedor" class="form-control" placeholder="Buscar proveedor..." />
+				<button id="btnLimpiarFiltros" class="btn btn-outline-secondary"><i class="ti ti-eraser fs-5"></i></button>
+			</div>
+
+		</div>
+		<div class="col">
+			<label class="form-label">Estado</label>
+			<select id="slcEstado" class="form-select">
+				<option value="0">Todos</option>
+				<option value="1">Activo</option>
+				<option value="2">Inactivo</option>
+			</select>
+		</div>
+	</div>
+
+	<div id="tblProveedores" class="table-striped">
+
+	</div>
+</div>
+
+<!-- MODAL CREAR PROVEEDOR -->
+<div class="modal fade" id="modalCrearProveedor" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">
+					Crear proveedor
+				</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<!-- Razón social -->
+					<div class="col-md-12 mb-3">
+						<label for="txtRazonSocial" class="form-label">
+							Razón social <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtRazonSocial" class="form-control" placeholder="Ej: Repuestos SAC" maxlength="50" required />
+					</div>
+
+					<!-- Tipo documento -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo de documento <span class="text-danger">*</span>
+						</label>
+						<select id="slcTipoDocumento" class="form-select" required>
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Número documento -->
+					<div class="col-md-6 mb-3">
+						<label for="txtNumeroDocumento" class="form-label">
+							Número de documento <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtNumeroDocumento" class="form-control" placeholder="Ej: 20605899481" maxlength="50" required />
+					</div>
+
+					<!-- Dirección -->
+					<div class="col-md-6 mb-3">
+						<label for="txtDireccion" class="form-label">
+							Dirección
+						</label>
+						<input type="text" id="txtDireccion" class="form-control" placeholder="Ej: Av. Arequipa 185" maxlength="50" />
+					</div>
+
+					<label class="form-label mt-2 fs-4">Contacto</label>
+					<!-- Nombre contacto -->
+					<div class="col-md-6 mb-3">
+						<label for="txtNombreContacto" class="form-label">
+							Nombre
+						</label>
+						<input type="text" id="txtNombreContacto" class="form-control" placeholder="Ej: Jorge Torres" maxlength="50" />
+					</div>
+
+					<!-- Correo contacto-->
+					<div class="col-md-6 mb-3">
+						<label for="txtCorreoContacto" class="form-label">
+							Correo
+						</label>
+						<input type="text" id="txtCorreoContacto" class="form-control" placeholder="Ej: jorge@repuestos.com" maxlength="50" />
+					</div>
+
+					<!-- Teléfono contacto-->
+					<div class="col-md-6 mb-3">
+						<label for="txtTelefonoContacto" class="form-label">
+							Teléfono
+						</label>
+						<input type="text" id="txtTelefonoContacto" class="form-control" placeholder="Ej: 984 524 662" maxlength="50" />
+					</div>
+
+					<!-- Estado -->
+					<div class="col-12 mb-3">
+						<div class="form-check form-switch">
+							<input type="checkbox" id="chkActivo" class="form-check-input" checked />
+							<label for="chkActivo" class="form-check-label">
+								Activo
+							</label>
+						</div>
+						<small class="text-muted">
+							Indica si el proveedor estará habilitado para su utilización
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnGuardarProveedor" class="btn bg-primary-subtle text-primary">
+						Guardar proveedor
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL EDITAR PROVEEDOR -->
+<div class="modal fade" id="modalEditarProveedor" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">
+					Editar proveedor
+				</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<input type="hidden" id="txtIdProveedorEditar"/>
+				<div class="row">
+					<!-- Razón social -->
+					<div class="col-md-12 mb-3">
+						<label for="txtRazonSocialEditar" class="form-label">
+							Razón social <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtRazonSocialEditar" class="form-control" placeholder="Ej: Repuestos SAC" maxlength="50" required />
+					</div>
+
+					<!-- Tipo documento -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo de documento <span class="text-danger">*</span>
+						</label>
+						<select id="slcTipoDocumentoEditar" class="form-select" required>
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Número documento -->
+					<div class="col-md-6 mb-3">
+						<label for="txtNumeroDocumentoEditar" class="form-label">
+							Número de documento <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtNumeroDocumentoEditar" class="form-control" placeholder="Ej: 20605899481" maxlength="50" required />
+					</div>
+
+					<!-- Dirección -->
+					<div class="col-md-6 mb-3">
+						<label for="txtDireccionEditar" class="form-label">
+							Dirección
+						</label>
+						<input type="text" id="txtDireccionEditar" class="form-control" placeholder="Ej: Av. Arequipa 185" maxlength="50" />
+					</div>
+
+					<label class="form-label mt-2 fs-4">Contacto</label>
+					<!-- Nombre contacto -->
+					<div class="col-md-6 mb-3">
+						<label for="txtNombreContactoEditar" class="form-label">
+							Nombre
+						</label>
+						<input type="text" id="txtNombreContactoEditar" class="form-control" placeholder="Ej: Jorge Torres" maxlength="50" />
+					</div>
+
+					<!-- Correo contacto-->
+					<div class="col-md-6 mb-3">
+						<label for="txtCorreoContactoEditar" class="form-label">
+							Correo
+						</label>
+						<input type="text" id="txtCorreoContactoEditar" class="form-control" placeholder="Ej: jorge@repuestos.com" maxlength="50" />
+					</div>
+
+					<!-- Teléfono contacto-->
+					<div class="col-md-6 mb-3">
+						<label for="txtTelefonoContactoEditar" class="form-label">
+							Teléfono
+						</label>
+						<input type="text" id="txtTelefonoContactoEditar" class="form-control" placeholder="Ej: 984 524 662" maxlength="50" />
+					</div>
+
+					<!-- Estado -->
+					<div class="col-12 mb-3">
+						<div class="form-check form-switch">
+							<input type="checkbox" id="chkActivoEditar" class="form-check-input" checked />
+							<label for="chkActivoEditar" class="form-check-label">
+								Activo
+							</label>
+						</div>
+						<small class="text-muted">
+							Indica si el proveedor estará habilitado para su utilización
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnActualizarProveedor" class="btn bg-primary-subtle text-primary">
+						Actualizar proveedor
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/modules/maestros/proveedores/proveedores-index.js"></script>
+	<script src="~/js/modules/maestros/proveedores/proveedores-form.js"></script>
+}

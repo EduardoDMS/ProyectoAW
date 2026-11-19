@@ -1,20 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor;
+﻿
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace ProyectoAW.Infraestructure.MVC
 {
-    public class ModuleViewLocationExpander:IViewLocationExpander
+    public class ModuleViewLocationExpander : IViewLocationExpander
     {
         public void PopulateValues(ViewLocationExpanderContext context)
         {
-            var viewModule = context.ActionContext.RouteData.Values["viewModule"]?.ToString();
+            var controllerDescriptor =
+                context.ActionContext.ActionDescriptor
+                as ControllerActionDescriptor;
 
-            if (!string.IsNullOrEmpty(viewModule))
-            {
-                context.Values["viewModule"] = viewModule;
-            }
+            var controllerNamespace =
+                controllerDescriptor?.ControllerTypeInfo.Namespace;
+
+            const string marker = ".Modules.";
+            const string suffix = ".Controllers";
+
+            if (string.IsNullOrEmpty(controllerNamespace))
+                return;
+
+            var start = controllerNamespace.IndexOf(marker);
+
+            if (start < 0)
+                return;
+
+            start += marker.Length;
+
+            var end = controllerNamespace.IndexOf(suffix, start);
+
+            if (end <= start)
+                return;
+
+            var module = controllerNamespace.Substring(
+                start,
+                end - start
+            ).Replace('.', '/');
+
+            context.Values["viewModule"] = module;
         }
 
-        public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
+        public IEnumerable<string> ExpandViewLocations(
+            ViewLocationExpanderContext context,
+            IEnumerable<string> viewLocations)
         {
             if (context.Values.TryGetValue("viewModule", out var viewModule))
             {

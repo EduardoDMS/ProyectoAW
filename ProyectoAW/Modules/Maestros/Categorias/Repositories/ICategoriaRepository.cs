@@ -9,6 +9,8 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Repositories
         Task<Categoria?> GetByNombreAsync(string nombre);
         Task CreateAsync(Categoria categoria);
         Task UpdateAsync(Categoria categoria);
+        Task EliminarAsync(Categoria categoria);
+        Task<bool> ValidarProductosRelacionadosAsync(int idCategoria);
 
     }
 }

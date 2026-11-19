@@ -1,7 +1,7 @@
 ﻿using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Stocks.Repositories;
-using ProyectoAW.Modules.Seguridad.Permisos.HttpAuth;
+using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
 
 namespace ProyectoAW.Modules.Stocks.Validacion
 {

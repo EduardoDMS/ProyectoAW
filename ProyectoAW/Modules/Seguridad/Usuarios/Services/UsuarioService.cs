@@ -52,6 +52,7 @@ public class UsuarioService : IUsuarioService
         usuario.Apellido = dto.Apellido.Trim();
         usuario.IdRol = dto.IdRol;
         usuario.FechaActualizada = DateTime.UtcNow;
+        usuario.Activo = dto.Activo;
 
         // Una contraseña vacía significa conservar la actual; si llega una nueva, se guarda hasheada.
         if (!string.IsNullOrWhiteSpace(dto.Password))
