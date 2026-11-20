@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProyectoAW.Infrastructure.Data;
+using ProyectoAW.Modules.Seguridad.Perfiles.Entites;
+using ProyectoAW.Modules.Seguridad.Roles.Entities;
 
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
 {
@@ -50,6 +53,60 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
                    .WithMany(perfil => perfil.Usuarios)
                    .HasForeignKey(usuario => usuario.IdPerfilUsuario)
                    .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        public static async Task CrearAdminSiUsuariosVacioAsync(AppDbContext context)
+        {
+            if (await context.Usuarios.AnyAsync())
+                return;
+
+            var roles = await context.Roles.ToListAsync();
+            var rolAdmin = roles.FirstOrDefault(rol =>
+                rol.Nombre.Equals("Administrador", System.StringComparison.OrdinalIgnoreCase) ||
+                rol.Nombre.Equals("Administrador inicial", System.StringComparison.OrdinalIgnoreCase) ||
+                rol.Nombre.Equals("Admin", System.StringComparison.OrdinalIgnoreCase));
+
+            if (rolAdmin is null)
+            {
+                rolAdmin = new Rol { Nombre = "Administrador" };
+                context.Roles.Add(rolAdmin);
+                await context.SaveChangesAsync();
+            }
+
+            var perfilAdmin = await context.Perfiles
+                .Where(perfil => perfil.IdRol == rolAdmin.IdRol)
+                .OrderBy(perfil => perfil.IdPerfil)
+                .FirstOrDefaultAsync();
+
+            if (perfilAdmin is null)
+            {
+                var nombrePerfil = "Perfil administrador inicial";
+                var nombreOcupado = await context.Perfiles.AnyAsync(perfil => perfil.NombrePerfil == nombrePerfil);
+                if (nombreOcupado)
+                    nombrePerfil = $"Perfil administrador {rolAdmin.IdRol}";
+
+                perfilAdmin = new Perfil
+                {
+                    NombrePerfil = nombrePerfil,
+                    IdRol = rolAdmin.IdRol
+                };
+                context.Perfiles.Add(perfilAdmin);
+                await context.SaveChangesAsync();
+            }
+
+            context.Usuarios.Add(new Usuario
+            {
+                Nombre = "Administrador",
+                Apellido = "Sistema",
+                Username = "admin",
+                Password = "admin",
+                FechaRegistro = DateTimeText.From(System.DateTime.Now),
+                Activo = true,
+                IdRol = rolAdmin.IdRol,
+                IdPerfilUsuario = perfilAdmin.IdPerfil
+            });
+
+            await context.SaveChangesAsync();
         }
     }
 }

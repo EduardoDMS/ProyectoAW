@@ -24,15 +24,14 @@ public class UsuarioService : IUsuarioService
     private readonly IRolService _rolService;
     private readonly IPerfilService _perfilService;
 
-    public UsuarioService(
-        IUsuarioRepository repository,
-        IRolService rolService,
-        IPerfilService perfilService)
-    {
-        _repository = repository;
-        _rolService = rolService;
-        _perfilService = perfilService;
-    }
+    public UsuarioService(IUsuarioRepository repository,
+                          IRolService rolService,
+                          IPerfilService perfilService)
+        {
+            _repository = repository;
+            _rolService = rolService;
+            _perfilService = perfilService;
+        }
 
     public async Task<bool> ActualizarUsuarioAsync(int id, ActualizarUsuarioDto dto)
     {
@@ -46,6 +45,7 @@ public class UsuarioService : IUsuarioService
         await ValidarPerfilAsync(dto.IdPerfilUsuario, dto.IdRol);
         var username = dto.Username.Trim();
         var usuarioConElmismoNombre = await _repository.ObtenerPorUsernameAsync(username);
+        
         if (usuarioConElmismoNombre is not null && usuarioConElmismoNombre.IdUsuario != id)
             throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
 
@@ -57,9 +57,7 @@ public class UsuarioService : IUsuarioService
         usuario.Activo = dto.Activo;
         usuario.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
         usuario.Password = dto.Password;
-        // Una contraseña vacía significa conservar la actual; si llega una nueva, se guarda hasheada.
-  //
-
+        
         await _repository.ActualizarAsync(usuario);
         return true;
     }
@@ -97,7 +95,7 @@ public class UsuarioService : IUsuarioService
             FechaRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
             Password = dto.Password
         };
-       //
+       
         await _repository.CrearAsync(usuario);
         return await ObtenerUsuarioPorIdAsync(usuario.IdUsuario);
     }

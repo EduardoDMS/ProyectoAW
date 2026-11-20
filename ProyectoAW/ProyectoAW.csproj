@@ -54,6 +54,7 @@
     <Folder Include="Modules\Maestros\Clientes\Entities\" />
     <Folder Include="Modules\Maestros\Clientes\Services\" />
     <Folder Include="Modules\Maestros\Clientes\Repositories\" />
+    <Folder Include="Modules\Maestros\MotivosGuia\Views\" />
     <Folder Include="Modules\Maestros\Productos\Controllers\" />
     <Folder Include="Modules\Maestros\Productos\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Productos\DTOs\Responses\" />
@@ -67,6 +68,7 @@
     <Folder Include="Modules\Maestros\Proveedores\Views\" />
     <Folder Include="Modules\Maestros\Proveedores\Services\" />
     <Folder Include="Modules\Maestros\Proveedores\Repositories\" />
+    <Folder Include="Modules\Maestros\TipoComportamientos\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Ubicaciones\Controllers\" />
     <Folder Include="Modules\Maestros\Ubicaciones\DTOs\Requests\" />
     <Folder Include="Modules\Maestros\Ubicaciones\DTOs\Responses\" />

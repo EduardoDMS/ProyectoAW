@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoAW.Infrastructure.Data;
-using ProyectoAW.Modules.Guias.Entities;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Entities;
 
-namespace ProyectoAW.Modules.Guias.Repositories;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 public class MotivoGuiaRepository : IMotivoGuiaRepository
 {

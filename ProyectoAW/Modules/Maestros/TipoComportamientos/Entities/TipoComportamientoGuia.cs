@@ -1,4 +1,6 @@
-﻿namespace ProyectoAW.Modules.Guias.Entities
+﻿using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
+
+namespace ProyectoAW.Modules.Maestros.TipoComportamientos.Entities
 {
     public class TipoComportamientoGuia
     {

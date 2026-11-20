@@ -53,10 +53,15 @@ using ProyectoAW.Modules.Stocks.Repositories;
 using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Modules.Stocks.Validacion;
 //Fecha_Hora
-
+//Tipo ComportamientoGuia
+using ProyectoAW.Modules.Maestros.Operaciones.Entities;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Repositories;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Services;
 //System
 using System.Text;
 using System.Transactions;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Services;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -137,6 +142,8 @@ builder.Services.AddScoped<IGuiaStockProcessor, SalidaStockProcessor>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ITipoComportamientosRepository, TipoComportamientosRepository>();
+builder.Services.AddScoped<ITipoComportamientoService, TipoComportamientoService>();
 
 builder.Services.AddScoped<ValidacionesBase>();
 builder.Services.AddScoped<ValidacionesGuia>();
@@ -225,6 +232,13 @@ builder.Services.AddAuthorization(options =>
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+    await UsuarioConfiguration.CrearAdminSiUsuariosVacioAsync(dbContext);
+}
 
 
 // Configure the HTTP request pipeline.

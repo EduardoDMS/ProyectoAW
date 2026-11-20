@@ -25,7 +25,10 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
 
             var usuario = await _repo.ObtenerPorUsernameAsync(request.Username.Trim());
 
-            if (usuario is null || !usuario.Activo || string.IsNullOrWhiteSpace(usuario.Password))
+            if (usuario is null ||
+                !usuario.Activo ||
+                string.IsNullOrWhiteSpace(usuario.Password) ||
+                !string.Equals(usuario.Password, request.Password, StringComparison.Ordinal))
                 return null;
 
             var rol = usuario.rol?.Nombre ?? string.Empty;

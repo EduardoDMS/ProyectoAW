@@ -10,6 +10,35 @@ namespace ProyectoAW.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"
+IF NOT EXISTS (
+    SELECT 1 FROM dbo.Roles
+    WHERE Nombre IN (N'Administrador', N'Administrador inicial', N'Admin')
+)
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.Roles WHERE IdRol = 1)
+    BEGIN
+        SET IDENTITY_INSERT dbo.Roles ON;
+        INSERT INTO dbo.Roles (IdRol, Nombre) VALUES (1, N'Administrador');
+        SET IDENTITY_INSERT dbo.Roles OFF;
+    END
+    ELSE
+        INSERT INTO dbo.Roles (Nombre) VALUES (N'Administrador');
+END;
+
+IF NOT EXISTS (SELECT 1 FROM dbo.Roles WHERE Nombre = N'Operador')
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.Roles WHERE IdRol = 2)
+    BEGIN
+        SET IDENTITY_INSERT dbo.Roles ON;
+        INSERT INTO dbo.Roles (IdRol, Nombre) VALUES (2, N'Operador');
+        SET IDENTITY_INSERT dbo.Roles OFF;
+    END
+    ELSE
+        INSERT INTO dbo.Roles (Nombre) VALUES (N'Operador');
+END;
+");
+
             migrationBuilder.AddColumn<bool>(
                 name: "Todos",
                 table: "PermisosPerfil",

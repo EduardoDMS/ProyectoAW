@@ -4,9 +4,12 @@ using ProyectoAW.Modules.Guias.DTOs.Responses;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Guias.Repositories;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
-using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 namespace ProyectoAW.Modules.Guias.Services;
+
+using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
 
 public class GuiaService : IGuiaService
 {
