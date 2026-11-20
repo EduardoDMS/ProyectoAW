@@ -12,7 +12,8 @@ public class CrearGuiaDto
     public int? IdAlmacenOrigen { get; set; }
     public int? IdAlmacenDestino { get; set; }
 
-    public DateTime FechaProgramada { get; set; }
+    [Required]
+    public string FechaProgramada { get; set; } = string.Empty;
 
     [StringLength(500)]
     public string? Observacion { get; set; }

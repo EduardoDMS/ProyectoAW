@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Guias.Entities;
+using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Maestros.Productos.Entities;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
 using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
@@ -18,7 +18,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
         public string? Observacion { get; set; }
         public int? IdUbicacionOrigen { get; set; }
         public int? IdUbicacionDestino { get; set; }
-        public DateTime FechaRegistroUtc { get; set; }
+        public string FechaRegistroUtc { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
         public Guia? Guia { get; set; }
         public Producto? Producto { get; set; }

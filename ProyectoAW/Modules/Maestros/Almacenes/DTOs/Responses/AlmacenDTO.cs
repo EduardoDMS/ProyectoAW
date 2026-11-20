@@ -8,7 +8,7 @@
         public bool Activo { get; set; } = true;
         public List<int> IdUbicacionesDespacho { get; set; } = [];
 
-        public DateTime FchRegistro { get; set; }
+        public string FchRegistro { get; set; } = string.Empty;
 
     }
 }

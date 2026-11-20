@@ -6,6 +6,7 @@ namespace ProyectoAW.Modules.Guias.Services;
 public interface IGuiaService
 {
     Task<List<GuiaDto>> ObtenerTodosAsync();
+    Task<List<GuiaDto>> ListarGuiasXtipoOperacionAsync(int idTipoOperacionGuia);
     Task<GuiaDto?> ObtenerPorIdAsync(int id);
     Task<GuiaDto> CrearAsync(CrearGuiaDto request);
     Task<bool> ActualizarAsync(int id, ActualizarGuiaDto request);

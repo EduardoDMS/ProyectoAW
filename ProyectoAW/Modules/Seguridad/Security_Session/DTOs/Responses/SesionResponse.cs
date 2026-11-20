@@ -6,7 +6,8 @@
             string Username,
             string NombreCompleto,
             int IdRol,
-            string Rol
+            string Rol,
+            List<string> Permisos
         );
     
 }

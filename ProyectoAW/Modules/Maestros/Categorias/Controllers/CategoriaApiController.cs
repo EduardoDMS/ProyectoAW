@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Categorias.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Categorias.Services;
@@ -18,6 +19,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Categorias.Ver")]
         public async Task<IActionResult> ObtenerTodasCategorias()
         {
             try
@@ -49,6 +51,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "Categorias.Ver")]
         public async Task<IActionResult> ObtenerCategiriaId(int id)
         {
             try
@@ -80,6 +83,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Categorias.Crear")]
         public async Task<IActionResult> CrearCategoria([FromBody] CrearCategoriaDto dto)
         {
             try 
@@ -115,6 +119,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "Categorias.Actualizar")]
         public async Task<IActionResult> ActualizarCategoria(int id ,[FromBody] ActualizarCategoriaDto request)
         {
             try
@@ -149,6 +154,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpPatch("{id:int}/estado")]
+        [Authorize(Policy = "Categorias.Actualizar")]
         public async Task<IActionResult> CambiarEstadoCategoria(int id, [FromBody] bool activo)
         {
             try
@@ -183,6 +189,7 @@ namespace ProyectoAW.Modules.Maestros.Categorias.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "Categorias.Eliminar")]
         public async Task<IActionResult> EliminarCategoria(int id)
         {
             try

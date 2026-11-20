@@ -19,6 +19,7 @@ public class Guia
     public int IdTipoOperacionGuia { get; set; } = TipoOperacionGuiaIds.Entrada;
     public TipoOperacionGuia TipoOperacion { get; set; } = null!;
 
+
     public int IdEstadoGuia { get; set; } = EstadoGuiasIds.Pendiente;
     public EstadoGuia Estado { get; set; } = null!;
 
@@ -41,10 +42,12 @@ public class Guia
     public int? IdGuiaRelacionada { get; set; }
     public Guia? GuiaRelacionada { get; set; }
 
-    public DateTime FechaProgramada { get; set; }
+
+
+    public string FechaProgramada { get; set; } = string.Empty;
     public string? Observacion { get; set; }
-    public DateTime FechaRegistro { get; set; }
-    public DateTime? FechaActualizada { get; set; }
+    public string FechaRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+    public string? FechaActualizada { get; set; }
 
     public string TipoDocumentoReferencia { get; set; } = string.Empty;
     public string NumeroDocumentoReferencia { get; set; } = string.Empty;

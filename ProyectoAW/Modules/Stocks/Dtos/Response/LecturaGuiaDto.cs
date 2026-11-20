@@ -15,5 +15,5 @@
      string? UbicacionOrigen,
      int? IdUbicacionDestino,
      string? UbicacionDestino,
-     DateTime FechaRegistroUtc);
+     string FechaRegistroUtc);
 }

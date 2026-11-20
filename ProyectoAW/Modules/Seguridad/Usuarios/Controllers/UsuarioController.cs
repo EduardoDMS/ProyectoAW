@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers;
 
 [Route("Maestros/Usuario")]
+    [Authorize(Policy = "Usuarios.Ver")]
 //[Authorize(Policy = SeguridadPolicies.Admin)]
 public class UsuarioController : Controller
 {

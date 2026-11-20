@@ -25,6 +25,13 @@ public class AuthController : Controller
         return View();
     }
 
+    [Authorize]
+    [HttpGet]
+    public IActionResult LogoutPrueba()
+    {
+        return View();
+    }
+
     [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -52,6 +59,7 @@ public class AuthController : Controller
             new Claim(ClaimTypes.Role, sesion.Rol),
             new Claim("IdRol", sesion.IdRol.ToString())
         };
+        claims.AddRange(sesion.Permisos.Select(permiso => new Claim("Permiso", permiso)));
 
         var identity = new ClaimsIdentity(
             claims,

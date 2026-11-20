@@ -8,7 +8,7 @@ public class CrearProductoDto
     public string Serie { get; set; } = string.Empty;
     public bool Activo { get; set; }
 
-    public DateTime FchRegistro { get; set; } = DateTime.Now;
+    public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
     public int IdCategoria { get; set; }
     public int IdUnidadMedida { get; set; }

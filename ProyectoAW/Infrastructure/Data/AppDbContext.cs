@@ -11,6 +11,7 @@ using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Entities;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Seguridad.Roles.Entities;
+using ProyectoAW.Modules.Seguridad.Perfiles.Entites;
 //using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
@@ -30,6 +31,8 @@ namespace ProyectoAW.Infrastructure.Data
         public DbSet<Proveedor> Proveedores => Set<Proveedor>();
         public DbSet<Usuario> Usuarios => Set<Usuario>();
         public DbSet<Rol> Roles => Set<Rol>();
+        public DbSet<Perfil> Perfiles => Set<Perfil>();
+        public DbSet<PermisoPerfil> PermisosPerfil => Set<PermisoPerfil>();
         public DbSet<Guia> Guias => Set<Guia>();
         public DbSet<DetalleGuia> DetallesGuia => Set<DetalleGuia>();
         public DbSet<MotivoGuia> MotivosGuia => Set<MotivoGuia>();

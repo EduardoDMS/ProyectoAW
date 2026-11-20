@@ -26,6 +26,36 @@ public class GuiaRepository : IGuiaRepository
             .FirstOrDefaultAsync(guia => guia.IdGuia == id);
     }
 
+    public async Task<string?> ValidarReferenciasAsync(Guia guia)
+    {
+        if (!await _context.Usuarios.AnyAsync(usuario => usuario.IdUsuario == guia.IdUsuarioRegistro))
+            return "No existe el usuario que registra la guía. Vuelve a iniciar sesión.";
+
+        if (guia.IdProveedor.HasValue &&
+            !await _context.Proveedores.AnyAsync(proveedor => proveedor.IdProveedor == guia.IdProveedor.Value))
+            return $"No existe el proveedor con ID {guia.IdProveedor.Value}.";
+
+        if (guia.IdCliente.HasValue &&
+            !await _context.Clientes.AnyAsync(cliente => cliente.IdCliente == guia.IdCliente.Value))
+            return $"No existe el cliente con ID {guia.IdCliente.Value}.";
+
+        if (guia.IdAlmacenOrigen.HasValue &&
+            !await _context.Almacenes.AnyAsync(almacen => almacen.IdAlmacen == guia.IdAlmacenOrigen.Value))
+            return $"No existe el almacén de origen con ID {guia.IdAlmacenOrigen.Value}.";
+
+        if (guia.IdAlmacenDestino.HasValue &&
+            !await _context.Almacenes.AnyAsync(almacen => almacen.IdAlmacen == guia.IdAlmacenDestino.Value))
+            return $"No existe el almacén de destino con ID {guia.IdAlmacenDestino.Value}.";
+
+        foreach (var idProducto in guia.Detalles.Select(detalle => detalle.IdProducto).Distinct())
+        {
+            if (!await _context.Productos.AnyAsync(producto => producto.IdProducto == idProducto))
+                return $"No existe el producto con ID {idProducto}.";
+        }
+
+        return null;
+    }
+
     public async Task CrearAsync(Guia guia)
     {
         await _context.Guias.AddAsync(guia);
@@ -50,5 +80,14 @@ public class GuiaRepository : IGuiaRepository
             .Include(guia => guia.AlmacenDestino)
             .Include(guia => guia.Detalles)
                 .ThenInclude(detalle => detalle.Producto);
+    }
+
+    public async Task<List<Guia>> ListarGuiasTipoOperacionAsync(int idTipoOperacion)
+    {
+        return await ConsultaGuias()
+                    .Where(g => g.IdTipoOperacionGuia == idTipoOperacion)
+                    .AsNoTracking()
+                    .ToListAsync();
+                
     }
 }

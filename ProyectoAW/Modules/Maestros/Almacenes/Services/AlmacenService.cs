@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Almacenes.DTOs.Responses;
@@ -34,7 +34,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Services
             almacen.Codigo = codigo;
             almacen.Nombre = dto.Nombre?.Trim();
             almacen.Activo = dto.Activo;
-            almacen.FchModificacion = DateTime.UtcNow;
+            almacen.FchModificacion = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
             await _repository.ActualizarAlmacenYUbicacionesDespachoAsync(
                 almacen, ubicacionesSeleccionadas);
@@ -52,7 +52,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Services
                 throw new NegocioException($"No se encontró el almacén con ID {id}.");
 
             almacen.Activo = activo;
-            almacen.FchModificacion = DateTime.UtcNow;
+            almacen.FchModificacion = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
             await _repository.ActualizarAlmacenAsync(almacen);
 
             return true;
@@ -74,7 +74,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Services
                 Codigo = codigo,
                 Nombre = dto.Nombre?.Trim(),
                 Activo = dto.Activo,
-                FchRegistro = DateTime.UtcNow
+                FchRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now)
             };
 
             await _repository.CrearAlmacenAsync(almacen);

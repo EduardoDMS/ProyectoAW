@@ -8,7 +8,7 @@
         public string Serie { get; set; } = string.Empty;
         public bool Activo { get; set; }
 
-        public DateTime FchModificacion { get; set; } = DateTime.Now;
+        public string FchModificacion { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
         public int IdCategoria { get; set; }
         public int IdUnidadMedida { get; set; }

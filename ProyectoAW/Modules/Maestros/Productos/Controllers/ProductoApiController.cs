@@ -5,6 +5,8 @@ using ProyectoAW.Modules.Maestros.Productos.Services;
 using ProyectoAW.Infraestructure.RP;
 
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Maestros.Productos.Controllers
 {
     [ApiController]
@@ -19,6 +21,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
             _service = service;
         }
 
+        [Authorize(Policy = "Productos.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -51,6 +54,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
             }
         }
 
+        [Authorize(Policy = "Productos.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -82,6 +86,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
             }
         }
 
+        [Authorize(Policy = "Productos.Crear")]
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearProductoDto request)
         {
@@ -117,6 +122,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
             }
         }
 
+        [Authorize(Policy = "Productos.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarProductoDto request)
         {
@@ -152,6 +158,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
 
         }
 
+        [Authorize(Policy = "Productos.Actualizar")]
         [HttpPatch("{id:int}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo) 
         {
@@ -186,6 +193,7 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
             }
         }
 
+        [Authorize(Policy = "Productos.Eliminar")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> EliminarProducto(int idProducto)
         {

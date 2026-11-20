@@ -1,4 +1,5 @@
-﻿using ProyectoAW.Modules.Seguridad.Roles.Entities;
+using ProyectoAW.Modules.Seguridad.Perfiles.Entites;
+using ProyectoAW.Modules.Seguridad.Roles.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
 //using ProyectoAW.Modules.Stocks.Entities;
 
@@ -11,12 +12,15 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
         public string Apellido { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
-        public DateTime? FechaActualizada { get; set; }
+        public string FechaRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+        public string? FechaActualizada { get; set; }
         public bool Activo { get; set; } = true;
 
         public int IdRol { get; set; }
         public Rol? rol { get; set; }
+
+        public int IdPerfilUsuario { get; set; }
+        public Perfil? PerfilUsuario { get; set; }
 
         public ICollection<MovimientoStock>? MovimientoStock { get; set; }
     }

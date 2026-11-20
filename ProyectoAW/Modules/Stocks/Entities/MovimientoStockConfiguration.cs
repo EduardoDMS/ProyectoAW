@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProyectoAW.Modules.Seguridad.Perfiles.Entites;
 
 namespace ProyectoAW.Modules.Stocks.Entities
 {
@@ -17,6 +18,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
                    .IsRequired();
 
             builder.Property(m => m.FchMovimiento)
+                   .HasMaxLength(16)
                    .ValueGeneratedOnAdd();
 
             builder.Property(m => m.Observacion)

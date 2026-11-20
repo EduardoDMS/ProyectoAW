@@ -22,6 +22,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Almacenes.Ver")]
         public async Task<IActionResult> ObtenerTodos()
         {
             try
@@ -52,7 +53,9 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
             
             }
         }
-            
+
+
+        [Authorize(Policy = "Almacenes.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -88,6 +91,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Almacenes.Crear")]
         public async Task<IActionResult> Crear([FromBody] CrearAlmacenDto request)
         {
             try 
@@ -114,6 +118,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
 }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "Almacenes.Actualizar")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarAlmacenDto request)
         {
             try
@@ -146,6 +151,7 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
 
 
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "Almacenes.Eliminar")]
         public async Task<IActionResult> Eliminar(int id)
         {
             try

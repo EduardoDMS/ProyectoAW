@@ -78,6 +78,11 @@
     <Folder Include="Modules\Maestros\TipoDocumentos\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Controllers\" />
     <Folder Include="Modules\Maestros\UnidadesMedida\Entities\" />
+    <Folder Include="Modules\Seguridad\Perfiles\Dtos\Request\" />
+    <Folder Include="Modules\Seguridad\Perfiles\Dtos\Response\" />
+    <Folder Include="Modules\Seguridad\Perfiles\Controllers\" />
+    <Folder Include="Modules\Seguridad\Perfiles\Repositories\" />
+    <Folder Include="Modules\Seguridad\Perfiles\Services\" />
     <Folder Include="wwwroot\libs\tabulator\dist\" />
   </ItemGroup>
 

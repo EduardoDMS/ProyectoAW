@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Maestros.Clientes.Entities
@@ -36,8 +36,11 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Entities
                     .HasDefaultValue(true);
 
             builder.Property(c => c.FchRegistro)
-                    .HasDefaultValueSql("GETDATE()")
+                    .HasMaxLength(16)
+                    .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                     .ValueGeneratedOnAdd();
+
+            builder.Property(x => x.FchModificacion).HasMaxLength(16);
 
             builder.Property(c => c.FchModificacion)
                     .IsRequired(false);

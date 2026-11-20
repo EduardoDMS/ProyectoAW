@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
@@ -31,8 +31,11 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
                    .HasDefaultValue(true);
 
             builder.Property(u => u.FechaRegistro)
-                   .HasDefaultValueSql("GETDATE()")
+                   .HasMaxLength(16)
+                   .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                    .ValueGeneratedOnAdd();
+
+            builder.Property(x => x.FechaActualizada).HasMaxLength(16);
 
             builder.Property(u => u.FechaActualizada)
                    .IsRequired(false);
@@ -43,6 +46,10 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
                    .HasForeignKey(u => u.IdRol)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(usuario => usuario.PerfilUsuario)
+                   .WithMany(perfil => perfil.Usuarios)
+                   .HasForeignKey(usuario => usuario.IdPerfilUsuario)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

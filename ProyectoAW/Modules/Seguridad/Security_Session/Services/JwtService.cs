@@ -20,7 +20,7 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, sesion.IdUsuario.ToString()),
                 new Claim(ClaimTypes.Name, sesion.Username),
@@ -28,6 +28,7 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
                 new Claim("IdRol", sesion.IdRol.ToString())
 
             };
+            claims.AddRange(sesion.Permisos.Select(permiso => new Claim("Permiso", permiso)));
 
             var token = new JwtSecurityToken(
                     issuer: _config["Jwt:Issuer"],

@@ -15,8 +15,8 @@ public class Producto
     public string Serie { get; set; } = string.Empty;
     public bool Activo { get; set; } = true;
 
-    public DateTime FchRegistro { get; set; } = DateTime.Now;
-    public DateTime? FchModificacion { get; set; }
+    public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+    public string? FchModificacion { get; set; }
 
 
     public int IdCategoria { get; set; }

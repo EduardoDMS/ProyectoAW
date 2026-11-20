@@ -10,6 +10,6 @@
         public string Direccion { get; set; } = string.Empty;
         public bool Activo { get; set; } = true;
 
-        public DateTime FchModificacion { get; set; } = DateTime.Now;
+        public string FchModificacion { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
     }
 }

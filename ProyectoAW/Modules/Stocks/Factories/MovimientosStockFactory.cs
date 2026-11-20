@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Guias.Entities;
+using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Stocks.Services;
 
@@ -30,7 +30,7 @@ namespace ProyectoAW.Modules.Stocks.Factories
                 Cantidad = totalLeido,
                 CantidadDiferenciada = checked(totalLeido - cantidadEsperada),
                 Observacion = observacion,
-                FchMovimiento = DateTime.UtcNow,
+                FchMovimiento = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
                 IdUbicacionOrigen = ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionOrigen)),
                 IdUbicacionDestino = ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionDestino))
             };

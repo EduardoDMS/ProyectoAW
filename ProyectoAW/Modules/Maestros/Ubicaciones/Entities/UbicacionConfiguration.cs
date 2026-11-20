@@ -23,8 +23,11 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Entities
 
             builder.Property(u => u.FchRegistro)
                    .IsRequired()
-                   .HasDefaultValueSql("GETDATE()")
+                   .HasMaxLength(16)
+                   .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                    .ValueGeneratedOnAdd();
+
+            builder.Property(x => x.FchModificacion).HasMaxLength(16);
 
             builder.HasIndex(u => u.Codigo)
                    .IsUnique();

@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Stocks.Services;
+using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Guias.Entities;
@@ -67,7 +67,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
 
             guia.IdEstadoGuia = EstadoGuiasIds.EnProceso;
             guia.IdUsuarioModificacion = _currentUser.IdUsuario;
-            guia.FechaActualizada = DateTime.UtcNow;
+                guia.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
             await _repository.GuardarCambiosAsync();
 
         }

@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
+using ProyectoAW.Modules.Maestros.Ubicaciones.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
 //using ProyectoAW.Modules.Stocks.Entities;
 //using ProjectAW.Modules.Maestros.MovimientosStock.Entities;
@@ -10,10 +10,10 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Entities
     {
         public int IdAlmacen { get; set; }
         public string Codigo { get; set; } = string.Empty;
-        public string? Nombre { get; set; } // cambiar todos los maestros con a variable descripcion pase a llamarse Nombre 
+        public string? Nombre { get; set; } 
         public bool Activo { get; set; } = true;
-        public DateTime FchRegistro { get; set; } = DateTime.UtcNow;
-        public DateTime? FchModificacion { get; set; }
+        public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+        public string? FchModificacion { get; set; }
 
         // conexion a la nueva tabla
 

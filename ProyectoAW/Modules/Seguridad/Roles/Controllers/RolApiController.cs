@@ -2,6 +2,8 @@
 using ProyectoAW.Modules.Seguridad.Roles.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
 {
     [ApiController]
@@ -16,6 +18,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
         }
 
 
+        [Authorize(Policy = "Roles.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodas()
         {
@@ -23,6 +26,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
             return Ok(roles);
         }
 
+        [Authorize(Policy = "Roles.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -34,6 +38,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
             return Ok(rol);
         }
 
+        [Authorize(Policy = "Roles.Crear")]
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearRolDto request)
         {
@@ -41,6 +46,7 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
             return CreatedAtAction(nameof(ObtenerPorId), new { id = rol.IdRol }, rol);
         }
 
+        [Authorize(Policy = "Roles.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarRolDto request)
         {
