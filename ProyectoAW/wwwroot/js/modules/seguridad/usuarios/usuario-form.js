@@ -61,7 +61,7 @@ async function guardarUsuario() {
 // LIMPIAR FORMULARIO
 function limpiarFormularioUsuario() {
     document.getElementById('txtNombre').value = "";
-    document.getElementById('txtApellidos').value = "";
+    document.getElementById('txtApellido').value = "";
     document.getElementById('txtUsuario').value = "";
     document.getElementById('txtContrasena').value = "";
     document.getElementById('slcRol').value = "0";

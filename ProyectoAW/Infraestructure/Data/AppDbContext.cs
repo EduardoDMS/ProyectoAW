@@ -14,6 +14,8 @@ using ProyectoAW.Modules.Seguridad.Roles.Entities;
 //using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Entities;
 
 namespace ProyectoAW.Infrastructure.Data
 {

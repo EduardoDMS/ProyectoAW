@@ -1,10 +1,11 @@
 using ProyectoAW.Infraestructure.RP;
-using ProyectoAW.Modules.Guias.DTOs.Requests;
-using ProyectoAW.Modules.Guias.DTOs.Responses;
-using ProyectoAW.Modules.Guias.Entities;
-using ProyectoAW.Modules.Guias.Repositories;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
+using ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Responses;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.DTOs.Responses;
 
-namespace ProyectoAW.Modules.Guias.Services;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.Services;
 
 public class MotivoGuiaService : IMotivoGuiaService
 {

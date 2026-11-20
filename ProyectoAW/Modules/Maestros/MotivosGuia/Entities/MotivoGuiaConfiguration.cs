@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ProyectoAW.Modules.Guias.Entities;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
 
 public class MotivoGuiaConfiguration : IEntityTypeConfiguration<MotivoGuia>
 {

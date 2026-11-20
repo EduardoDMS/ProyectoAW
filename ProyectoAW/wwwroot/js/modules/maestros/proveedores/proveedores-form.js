@@ -68,9 +68,9 @@ function limpiarFormularioProveedor() {
     document.getElementById('slcTipoDocumento').value = "0";
     document.getElementById('txtNumeroDocumento').value = "";
     document.getElementById('txtDireccion').value = "";
-    document.getElementById('txtNombre').value = "";
-    document.getElementById('txtCorreo').value = "";
-    document.getElementById('txtTelefono').value = "";  
+    document.getElementById('txtNombreContacto').value = "";
+    document.getElementById('txtCorreoContacto').value = "";
+    document.getElementById('txtTelefonoContacto').value = "";  
     document.getElementById('chkActivo').checked = true;
 }
 

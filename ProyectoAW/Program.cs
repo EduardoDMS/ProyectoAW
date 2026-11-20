@@ -53,6 +53,8 @@ using ProyectoAW.Modules.Stocks.Validacion;
 //System
 using System.Text;
 using System.Transactions;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Services;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
