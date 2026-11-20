@@ -25,7 +25,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
                    .HasMaxLength(300);
             
             builder.Property(x => x.FechaRegistroUtc)
-                   .HasColumnType("datetime2");
+                   .HasMaxLength(16);
             
             builder.HasIndex(x => new { x.IdGuia, x.FechaRegistroUtc });
   

@@ -1,0 +1,6 @@
+<h1>Prueba de cierre de sesión</h1>
+
+<form action="/Auth/Logout" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit">Cerrar sesión</button>
+</form>

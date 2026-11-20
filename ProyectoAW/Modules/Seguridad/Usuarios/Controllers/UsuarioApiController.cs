@@ -20,6 +20,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             _service = service;
         }
 
+        [Authorize(Policy = "Usuarios.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -35,7 +36,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Datos = usuarios
                 });
             }
-            catch (NegocioException ex)
+            catch(NegocioException ex)
             {
                 return BadRequest(new Respuesta
                 {
@@ -54,6 +55,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             }
         }
 
+        [Authorize(Policy = "Usuarios.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -72,7 +74,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Datos = usuario
                 });
             }
-            catch (NegocioException ex)
+            catch(NegocioException ex)
             {
                 return BadRequest(new Respuesta
                 {
@@ -88,10 +90,10 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Mensaje = "No se pudo encontrar ,solicite apoyo"
                 });
             }
-
+            
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = "Usuarios.Crear")]
         [HttpPost]
         public async Task<IActionResult> CrearUsuario([FromBody] CrearUsuarioDto request)
         {
@@ -101,13 +103,11 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                 return CreatedAtAction(nameof(ObtenerPorId),
                                        new { id = usuario!.IdUsuario },
                                        new Respuesta
-                                       {
-                                           Exito = true,
-                                           Mensaje = " Se logro crear el usuario",
-                                           Datos = usuario
-                                       });
+                                       {    Exito = true,
+                                            Mensaje = " Se logro crear el usuario",
+                                            Datos = usuario });
             }
-            catch (NegocioException ex)
+            catch(NegocioException ex)
             {
                 return BadRequest(new Respuesta
                 {
@@ -115,7 +115,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Mensaje = ex.Message
                 });
             }
-            catch (Exception)
+            catch(Exception)
             {
                 return StatusCode(500, new Respuesta
                 {
@@ -126,14 +126,15 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
         }
 
 
+        [Authorize(Policy = "Usuarios.Actualizar")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarUsuarioDto request)
+        public async Task<IActionResult> Actualizar(int id , [FromBody] ActualizarUsuarioDto request)
         {
             try
             {
                 var actualizado = await _service.ActualizarUsuarioAsync(id, request);
                 if (!actualizado)
-                    return NotFound(new Respuesta { Exito = false, Mensaje = "El Usuario no Existe :v" });
+                    return NotFound(new Respuesta { Exito = false, Mensaje = "El Usuario no Existe :v"});
 
                 //return NoContent();
 
@@ -143,8 +144,8 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Mensaje = "Se logro Actualizar el Usuario",
                     Datos = actualizado
                 });
-            }
-            catch (NegocioException ex)
+            }  
+            catch(NegocioException ex)
             {
                 return BadRequest(new Respuesta
                 {
@@ -160,9 +161,22 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                     Mensaje = "Error en el servidor"
                 });
             }
-
-
+            
+            
         }
+
+
+        //[HttpPatch("{id:int}/estado")]
+        //public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
+        //{
+        //    var actualizado = await _service.CambiarEstadoAsync(id, activo);
+
+        //    if (!actualizado)
+        //        return NotFound();
+
+        //    return NoContent();
+
+       // }
 
 
         //[HttpPatch("{id:int}/estado")]

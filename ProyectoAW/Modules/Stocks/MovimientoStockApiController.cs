@@ -3,6 +3,8 @@ using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Stocks.Dtos.Request;
 using ProyectoAW.Modules.Stocks.Services;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Stocks.Controllers;
 
 [ApiController]
@@ -17,6 +19,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // GET: api/movimientos-stock
+    [Authorize(Policy = "Stocks.Ver")]
     [HttpGet]
     public async Task<IActionResult> Listar(
         [FromQuery] int? idGuia,
@@ -53,6 +56,7 @@ public class MovimientoStockApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "Stocks.Ver")]
     [HttpGet("guias-operador")]
     public async Task<IActionResult> ListarGuiasOperador(
         [FromQuery] int? idEstadoGuia)
@@ -87,6 +91,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // GET: api/movimientos-stock/guias/15
+    [Authorize(Policy = "Stocks.Ver")]
     [HttpGet("guias/{idGuia:int}")]
     public async Task<IActionResult> ObtenerMiGuia(int idGuia)
     {
@@ -120,6 +125,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // POST: api/movimientos-stock/guias/15/tomar
+    [Authorize(Policy = "Stocks.Actualizar")]
     [HttpPost("guias/{idGuia:int}/tomar")]
     public async Task<IActionResult> TomarGuia(int idGuia)
     {
@@ -153,6 +159,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // POST: api/movimientos-stock/guias/15/lecturas
+    [Authorize(Policy = "Stocks.Crear")]
     [HttpPost("guias/{idGuia:int}/lecturas")]
     public async Task<IActionResult> RegistrarLectura(
         int idGuia,
@@ -188,6 +195,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // DELETE: api/movimientos-stock/guias/15/lecturas/100
+    [Authorize(Policy = "Stocks.Eliminar")]
     [HttpDelete("guias/{idGuia:int}/lecturas/{idLecturaGuia:long}")]
     public async Task<IActionResult> EliminarLectura(
         int idGuia,
@@ -233,6 +241,7 @@ public class MovimientoStockApiController : ControllerBase
     }
 
     // POST: api/movimientos-stock/guias/15/finalizar
+    [Authorize(Policy = "Stocks.Actualizar")]
     [HttpPost("guias/{idGuia:int}/finalizar")]
     public async Task<IActionResult> FinalizarLectura(int idGuia)
     {

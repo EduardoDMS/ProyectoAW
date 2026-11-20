@@ -1,4 +1,4 @@
-﻿// Archivo: Factories/LecturaGuiaFactory.cs
+// Archivo: Factories/LecturaGuiaFactory.cs
 using ProyectoAW.Modules.Stocks.Dtos.Request;
 using ProyectoAW.Modules.Stocks.Entities;
 
@@ -18,7 +18,7 @@ namespace ProyectoAW.Modules.Stocks.Factories
             Observacion = Normalizar(request.Observacion),
             IdUbicacionOrigen = request.IdUbicacionOrigen is > 0 ? request.IdUbicacionOrigen : null,
             IdUbicacionDestino = request.IdUbicacionDestino is > 0 ? request.IdUbicacionDestino : null,
-            FechaRegistroUtc = DateTime.UtcNow
+            FechaRegistroUtc = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now)
         };
 
         private static string? Normalizar(string? valor) =>

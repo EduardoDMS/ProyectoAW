@@ -5,6 +5,8 @@ using ProyectoAW.Modules.Maestros.Ubicaciones.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Ubicaciones.Services;
 using ProyectoAW.Infraestructure.RP;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
 {
     
@@ -20,6 +22,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
             _service = service;
         }
 
+        [Authorize(Policy = "Ubicaciones.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -51,6 +54,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
             }
         }
 
+        [Authorize(Policy = "Ubicaciones.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -82,6 +86,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
             }
         }
 
+        [Authorize(Policy = "Ubicaciones.Crear")]
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearUbicacionDto request)
         {
@@ -116,6 +121,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
             }
         }
 
+        [Authorize(Policy = "Ubicaciones.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarUbicacionDto request)
         {
@@ -149,6 +155,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Controllers
             }
         }
 
+        [Authorize(Policy = "Ubicaciones.Actualizar")]
         [HttpPatch("{id:int}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromQuery] bool activo)
         {

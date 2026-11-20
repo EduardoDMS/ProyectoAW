@@ -7,7 +7,7 @@
             int IdAlmacen,
             int IdTipoOperacion,
             int Cantidad,
-            DateTime FchMovimiento,
+            string FchMovimiento,
             int IdGuia,
             string Observacion,
             int CantidadDiferenciada,

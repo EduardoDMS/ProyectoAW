@@ -29,7 +29,7 @@ namespace ProyectoAW.Modules.Stocks.Repositories
 
         public async Task AñadiendoStockUbicacionAsync(StockUbicacion saldo)
         {
-            _context.StockUbicacion.Update(saldo);
+            await _context.StockUbicacion.AddAsync(saldo);
             await _context.SaveChangesAsync();
         }
 
@@ -49,7 +49,7 @@ namespace ProyectoAW.Modules.Stocks.Repositories
         public Task<List<StockUbicacion>> ObtenerStockUbicacionAlmacenAsync(int idAlmacen, int isProducto)
         {
             return _context.StockUbicacion
-                    .Include(stock => stock.IdUbicacion)
+                    .Include(stock => stock.Ubicacion)
                     .Where(stock => stock.IdProducto == isProducto &&
                                     stock.Ubicacion!.IdAlmacen == idAlmacen)
                     .ToListAsync();

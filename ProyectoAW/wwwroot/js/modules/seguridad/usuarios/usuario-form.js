@@ -12,10 +12,11 @@ async function guardarUsuario() {
     const usuario = document.getElementById('txtUsuario').value.trim();
     const contrasena = document.getElementById('txtContrasena').value.trim();
     const idRol = parseInt(document.getElementById('slcRol').value);
+    const idPerfilUsuario = parseInt(document.getElementById('slcPerfil').value);
     const activo = document.getElementById('chkActivo').checked;
 
     // Validaciones
-    if (!nombre || !apellido || !usuario || !contrasena || idRol == 0) {
+    if (!nombre || !apellido || !usuario || !contrasena || idRol == 0 || idPerfilUsuario == 0) {
         alert("Complete los campos obligatorios");
         return;
     }
@@ -26,6 +27,7 @@ async function guardarUsuario() {
         username: usuario,
         password: contrasena,
         idRol: idRol,
+        idPerfilUsuario: idPerfilUsuario,
         activo: activo
     };
 
@@ -65,6 +67,7 @@ function limpiarFormularioUsuario() {
     document.getElementById('txtUsuario').value = "";
     document.getElementById('txtContrasena').value = "";
     document.getElementById('slcRol').value = "0";
+    document.getElementById('slcPerfil').innerHTML = '<option value="0">Selecciona primero un rol</option>';
     document.getElementById('chkActivo').checked = true;
 }
 
@@ -93,6 +96,8 @@ async function editarUsuario(usuario) {
             document.getElementById('txtUsuarioEditar').value = usuario.username;
             document.getElementById('txtContrasenaEditar').value = "*******";
             document.getElementById('slcRolEditar').value = String(usuario.idRol);
+            await cargarPerfilesSelect();
+            actualizarPerfilesSelect(usuario.idRol, 'slcPerfilEditar', usuario.idPerfilUsuario);
             document.getElementById('chkActivoEditar').checked = usuario.activo;
 
             // Abrir modal
@@ -117,11 +122,12 @@ async function actualizarUsuario() {
         username: document.getElementById('txtUsuarioEditar').value.trim(),
         password: document.getElementById('txtContrasenaEditar').value.trim(),
         idRol: parseInt(document.getElementById('slcRolEditar').value),
+        idPerfilUsuario: parseInt(document.getElementById('slcPerfilEditar').value),
         activo: document.getElementById('chkActivoEditar').checked
     };
     console.log(request);
     // Validaciones
-    if (!request.nombre || !request.apellido || !request.username || !request.password || request.idRol == 0) {
+    if (!request.nombre || !request.apellido || !request.username || !request.password || request.idRol == 0 || request.idPerfilUsuario == 0) {
         alert("Complete los campos obligatorios");
         return;
     }

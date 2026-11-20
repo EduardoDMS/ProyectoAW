@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Maestros.Productos.Entities;
@@ -30,8 +30,11 @@ public class ProductoConfiguration:IEntityTypeConfiguration<Producto>
                .IsUnique();
         
         builder.Property(p => p.FchRegistro)
-               .HasDefaultValueSql("GETDATE()")
+               .HasMaxLength(16)
+               .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                .ValueGeneratedOnAdd();
+
+        builder.Property(x => x.FchModificacion).HasMaxLength(16);
 
         builder.Property(p => p.FchModificacion)
                .IsRequired(false);

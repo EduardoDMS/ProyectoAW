@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
+using ProyectoAW.Modules.Seguridad.Perfiles.Services;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Responses;
 using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
@@ -20,18 +21,17 @@ public class UsuarioService : IUsuarioService
     ];
 
     private readonly IUsuarioRepository _repository;
-    private readonly IPasswordHasher<Usuario> _hasher;
     private readonly IRolService _rolService;
+    private readonly IPerfilService _perfilService;
 
-    public UsuarioService(
-        IUsuarioRepository repository,
-        IPasswordHasher<Usuario> hasher,
-        IRolService rolService)
-    {
-        _repository = repository;
-        _hasher = hasher;
-        _rolService = rolService;
-    }
+    public UsuarioService(IUsuarioRepository repository,
+                          IRolService rolService,
+                          IPerfilService perfilService)
+        {
+            _repository = repository;
+            _rolService = rolService;
+            _perfilService = perfilService;
+        }
 
     public async Task<bool> ActualizarUsuarioAsync(int id, ActualizarUsuarioDto dto)
     {
@@ -42,8 +42,10 @@ public class UsuarioService : IUsuarioService
 
         // Confirma que el rol sea asignable y que el nombre de usuario no pertenezca a otra cuenta.
         await ValidarRolAsync(dto.IdRol);
+        await ValidarPerfilAsync(dto.IdPerfilUsuario, dto.IdRol);
         var username = dto.Username.Trim();
         var usuarioConElmismoNombre = await _repository.ObtenerPorUsernameAsync(username);
+        
         if (usuarioConElmismoNombre is not null && usuarioConElmismoNombre.IdUsuario != id)
             throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
 
@@ -51,13 +53,11 @@ public class UsuarioService : IUsuarioService
         usuario.Nombre = dto.Nombre.Trim();
         usuario.Apellido = dto.Apellido.Trim();
         usuario.IdRol = dto.IdRol;
-        usuario.FechaActualizada = DateTime.UtcNow;
+        usuario.IdPerfilUsuario = dto.IdPerfilUsuario;
         usuario.Activo = dto.Activo;
-
-        // Una contraseña vacía significa conservar la actual; si llega una nueva, se guarda hasheada.
-        if (!string.IsNullOrWhiteSpace(dto.Password))
-            usuario.Password = _hasher.HashPassword(usuario, dto.Password);
-
+        usuario.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+        usuario.Password = dto.Password;
+        
         await _repository.ActualizarAsync(usuario);
         return true;
     }
@@ -79,6 +79,7 @@ public class UsuarioService : IUsuarioService
             throw new NegocioException("La contraseña es obligatoria.");
 
         await ValidarRolAsync(dto.IdRol);
+        await ValidarPerfilAsync(dto.IdPerfilUsuario, dto.IdRol);
         var username = dto.Username.Trim();
         if (await _repository.ObtenerPorUsernameAsync(username) is not null)
             throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
@@ -89,10 +90,12 @@ public class UsuarioService : IUsuarioService
             Nombre = dto.Nombre.Trim(),
             Apellido = dto.Apellido.Trim(),
             IdRol = dto.IdRol,
-            Activo = true,
-            FechaRegistro = DateTime.Now
+            IdPerfilUsuario = dto.IdPerfilUsuario,
+            Activo = dto.Activo,
+            FechaRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
+            Password = dto.Password
         };
-        usuario.Password = _hasher.HashPassword(usuario, dto.Password);
+       
         await _repository.CrearAsync(usuario);
         return await ObtenerUsuarioPorIdAsync(usuario.IdUsuario);
     }
@@ -119,6 +122,16 @@ public class UsuarioService : IUsuarioService
             throw new NegocioException("Solo se puede asignar el rol Administrador o Operador.");
     }
 
+    private async Task ValidarPerfilAsync(int idPerfilUsuario, int idRol)
+    {
+        if (idPerfilUsuario <= 0)
+            throw new NegocioException("Selecciona un perfil válido.");
+
+        var perfil = await _perfilService.ObtenerPorIdAsync(idPerfilUsuario);
+        if (perfil.IdRol != idRol)
+            throw new NegocioException("El perfil seleccionado no corresponde al rol del usuario.");
+    }
+
     private static void ValidarDatos(string nombre, string apellido, string username)
     {
         if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(apellido) ||
@@ -134,8 +147,11 @@ public class UsuarioService : IUsuarioService
         Nombre = usuario.Nombre,
         Apellido = usuario.Apellido,
         Username = usuario.Username,
+        Password = usuario.Password,
         IdRol = usuario.IdRol,
         NombreRol = usuario.rol?.Nombre ?? string.Empty,
+        IdPerfilUsuario = usuario.IdPerfilUsuario,
+        NombrePerfil = usuario.PerfilUsuario?.NombrePerfil ?? string.Empty,
         Activo = usuario.Activo
     };
 }

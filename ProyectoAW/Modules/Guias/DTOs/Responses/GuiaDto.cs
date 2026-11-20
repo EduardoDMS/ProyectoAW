@@ -4,6 +4,7 @@ public class GuiaDto
 {
     public int IdGuia { get; set; }
     public string NumeroGuia { get; set; } = string.Empty;
+    public int IdTipoOperacionGuia { get; set; } 
     public string TipoOperacion { get; set; } = string.Empty;
     public int? IdMotivoGuia { get; set; }
     public string Motivo { get; set; } = string.Empty;
@@ -16,7 +17,7 @@ public class GuiaDto
     public string? AlmacenOrigen { get; set; }
     public int? IdAlmacenDestino { get; set; }
     public string? AlmacenDestino { get; set; }
-    public DateTime FechaProgramada { get; set; }
+    public string FechaProgramada { get; set; } = string.Empty;
     public string? Observacion { get; set; }
     public List<DetalleGuiaDto> Detalles { get; set; } = new();
 }

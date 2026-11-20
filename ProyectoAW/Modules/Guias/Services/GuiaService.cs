@@ -9,15 +9,22 @@ using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 namespace ProyectoAW.Modules.Guias.Services;
 
+using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
+
 public class GuiaService : IGuiaService
 {
     private readonly IGuiaRepository _repository;
     private readonly IMotivoGuiaRepository _motivoRepository;
+    private readonly ICurrentUserService _currentUser;
 
-    public GuiaService(IGuiaRepository repository, IMotivoGuiaRepository motivoRepository)
+    public GuiaService(
+        IGuiaRepository repository,
+        IMotivoGuiaRepository motivoRepository,
+        ICurrentUserService currentUser)
     {
         _repository = repository;
         _motivoRepository = motivoRepository;
+        _currentUser = currentUser;
     }
 
     public async Task<List<GuiaDto>> ObtenerTodosAsync()
@@ -25,6 +32,13 @@ public class GuiaService : IGuiaService
         var guias = await _repository.ObtenerTodosAsync();
         return guias.Select(ConvertirADto).ToList();
     }
+
+    public async Task<List<GuiaDto>> ListarGuiasXtipoOperacionAsync(int idTipoOperacionGuia)
+    {
+        var guiasOperacion = await _repository.ListarGuiasTipoOperacionAsync(idTipoOperacionGuia);
+        return guiasOperacion.Select(ConvertirADto).ToList();
+    }
+
 
     public async Task<GuiaDto?> ObtenerPorIdAsync(int id)
     {
@@ -38,6 +52,13 @@ public class GuiaService : IGuiaService
 
     public async Task<GuiaDto> CrearAsync(CrearGuiaDto request)
     {
+        var idUsuarioRegistro = _currentUser.IdUsuario;
+        if (idUsuarioRegistro <= 0)
+            throw new NegocioException("No se pudo identificar al usuario que registra la guía. Inicia sesión nuevamente.");
+
+        if (!ProyectoAW.Infrastructure.Data.DateTimeText.TryNormalize(request.FechaProgramada, out var fechaProgramada))
+            throw new NegocioException("La fecha programada no tiene un formato válido.");
+
         var motivo = await ObtenerMotivoActivoAsync(request.IdMotivoGuia);
         ValidarDatosMotivo(
             motivo,
@@ -48,6 +69,7 @@ public class GuiaService : IGuiaService
 
         var guia = new Guia
         {
+            IdUsuarioRegistro = idUsuarioRegistro,
             NumeroGuia = string.Empty,
             IdTipoOperacionGuia = motivo.IdTipoOperacionGuia,
             IdMotivoGuia = motivo.IdMotivoGuia,
@@ -56,7 +78,7 @@ public class GuiaService : IGuiaService
             IdCliente = motivo.RequiereCliente ? request.IdCliente : null,
             IdAlmacenOrigen = motivo.RequiereAlmacenOrigen ? request.IdAlmacenOrigen : null,
             IdAlmacenDestino = motivo.RequiereAlmacenDestino ? request.IdAlmacenDestino : null,
-            FechaProgramada = request.FechaProgramada,
+            FechaProgramada = fechaProgramada,
             Observacion = request.Observacion?.Trim(),
             Detalles = request.Detalles.Select(detalle => new DetalleGuia
             {
@@ -64,6 +86,10 @@ public class GuiaService : IGuiaService
                 Cantidad = detalle.Cantidad
             }).ToList()
         };
+
+        var errorReferencias = await _repository.ValidarReferenciasAsync(guia);
+        if (errorReferencias != null)
+            throw new NegocioException(errorReferencias);
 
         await _repository.CrearAsync(guia);
 
@@ -76,6 +102,9 @@ public class GuiaService : IGuiaService
 
     public async Task<bool> ActualizarAsync(int id, ActualizarGuiaDto request)
     {
+        if (!ProyectoAW.Infrastructure.Data.DateTimeText.TryNormalize(request.FechaProgramada, out var fechaProgramada))
+            throw new NegocioException("La fecha programada no tiene un formato válido.");
+
         var guia = await _repository.ObtenerPorIdAsync(id);
 
         if (guia == null)
@@ -96,7 +125,7 @@ public class GuiaService : IGuiaService
         guia.IdCliente = motivo.RequiereCliente ? request.IdCliente : null;
         guia.IdAlmacenOrigen = motivo.RequiereAlmacenOrigen ? request.IdAlmacenOrigen : null;
         guia.IdAlmacenDestino = motivo.RequiereAlmacenDestino ? request.IdAlmacenDestino : null;
-        guia.FechaProgramada = request.FechaProgramada;
+        guia.FechaProgramada = fechaProgramada;
         guia.Observacion = request.Observacion?.Trim();
         guia.Detalles.Clear();
 
@@ -183,4 +212,6 @@ public class GuiaService : IGuiaService
             }).ToList()
         };
     }
+
+
 }

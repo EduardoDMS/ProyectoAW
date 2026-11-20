@@ -34,7 +34,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
             ubicacion.Codigo = codigo;
             ubicacion.Nombre = dto.Nombre?.Trim();
             ubicacion.Activo = dto.Activo;
-            ubicacion.FchModificacion = DateTime.Now;
+            ubicacion.FchModificacion = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
             ubicacion.IdAlmacen = dto.IdAlmacen;
 
             await _repository.ActualizarUbicacionAsync(ubicacion);
@@ -57,7 +57,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
                 Codigo = codigo,
                 Nombre = dto.Nombre?.Trim(),
                 Activo = dto.Activo,
-                FchRegistro = DateTime.Now,
+                FchRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
                 IdAlmacen = dto.IdAlmacen
             };
 
@@ -82,7 +82,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
                 throw new NegocioException($"No se encontró la ubicación con ID {id}.");
 
             ubicacion.Activo = activo;
-            ubicacion.FchModificacion = DateTime.UtcNow;// estaria buena evaluar aqui el cambio tambien de fecha 
+            ubicacion.FchModificacion = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);// estaria buena evaluar aqui el cambio tambien de fecha
 
             await _repository.ActualizarUbicacionAsync(ubicacion);
             return true;

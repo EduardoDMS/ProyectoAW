@@ -1,11 +1,14 @@
 ﻿// VARIABLES GLOBALES
 let tablaUsuarios;
+let perfilesDisponibles = [];
+let perfilesCargados = false;
 
 // INICIALIZACION
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
     cargarUsuarios();
     cargarRolesSelect();
+    cargarPerfilesSelect();
     inicializarEventos();
 
     document.addEventListener('usuario:guardado', () => {
@@ -126,6 +129,8 @@ async function cargarRolesSelect() {
                     select.appendChild(option);
                 });
             });
+            actualizarPerfilesSelect(document.getElementById('slcRol').value, 'slcPerfil');
+            actualizarPerfilesSelect(document.getElementById('slcRolEditar').value, 'slcPerfilEditar');
         }
 
     } catch (error) {
@@ -133,11 +138,47 @@ async function cargarRolesSelect() {
     }
 }
 
+async function cargarPerfilesSelect() {
+    if (!perfilesCargados) {
+        const response = await fetch('/api/perfiles');
+        const resultado = await response.json();
+        if (!response.ok || !resultado.exito)
+            throw new Error(resultado.mensaje || 'Error al cargar los perfiles');
+        perfilesDisponibles = resultado.datos || [];
+        perfilesCargados = true;
+    }
+
+    actualizarPerfilesSelect(document.getElementById('slcRol').value, 'slcPerfil');
+    actualizarPerfilesSelect(document.getElementById('slcRolEditar').value, 'slcPerfilEditar');
+}
+
+function actualizarPerfilesSelect(idRol, idSelect, idPerfilSeleccionado = 0) {
+    const select = document.getElementById(idSelect);
+    if (!select) return;
+
+    select.innerHTML = '<option value="0">Selecciona un perfil</option>';
+    const perfilesRol = perfilesDisponibles.filter(perfil => Number(perfil.idRol) === Number(idRol));
+
+    perfilesRol.forEach(perfil => {
+        const option = document.createElement('option');
+        option.value = perfil.idPerfil;
+        option.textContent = perfil.nombrePerfil;
+        select.appendChild(option);
+    });
+
+    if (idPerfilSeleccionado && perfilesRol.some(perfil => Number(perfil.idPerfil) === Number(idPerfilSeleccionado)))
+        select.value = String(idPerfilSeleccionado);
+}
+
 // EVENTOS
 function inicializarEventos() {
     document.getElementById('txtBuscarUsuario').addEventListener('input', filtrarUsuarios);
     document.getElementById('slcEstado').addEventListener('change', filtrarUsuarios);
     document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
+    document.getElementById('slcRol').addEventListener('change', event =>
+        actualizarPerfilesSelect(event.target.value, 'slcPerfil'));
+    document.getElementById('slcRolEditar').addEventListener('change', event =>
+        actualizarPerfilesSelect(event.target.value, 'slcPerfilEditar'));
 }
 
 // FILTROS

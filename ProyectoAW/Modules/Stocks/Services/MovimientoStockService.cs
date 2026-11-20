@@ -116,7 +116,7 @@ namespace ProyectoAW.Modules.Stocks.Services
 
                 guia.IdEstadoGuia = EstadoGuiasIds.EnProceso;
                 guia.IdUsuarioModificacion = _currentUser.IdUsuario;
-                guia.FechaActualizada = DateTime.UtcNow;
+                guia.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
                 await _repository.GuardarCambiosAsync();
             });
 
@@ -138,7 +138,7 @@ namespace ProyectoAW.Modules.Stocks.Services
             // Marca la guía como atendida únicamente después de preparar el stock y el historial.
             guia.IdEstadoGuia = EstadoGuiasIds.Atendida;
             guia.IdUsuarioModificacion = _currentUser.IdUsuario;
-            guia.FechaActualizada = DateTime.UtcNow;
+            guia.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
             await _repository.GuardarCambiosAsync();
         }
@@ -186,7 +186,7 @@ namespace ProyectoAW.Modules.Stocks.Services
                 Cantidad = totalLeido,
                 CantidadDiferenciada = checked(totalLeido - cantidadEsperada),
                 Observacion = observacion,
-                FchMovimiento = DateTime.UtcNow,
+                FchMovimiento = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
                 IdUbicacionOrigen = MovimientosStockFactory.ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionOrigen)),
                 IdUbicacionDestino = MovimientosStockFactory.ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionDestino))
             };

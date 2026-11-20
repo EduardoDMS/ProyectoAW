@@ -13,8 +13,8 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Entities
         public string? CorreoContacto { get; set; }
         public string? TelefonoContacto { get; set; }      
         public bool Activo { get; set; }
-        public DateTime FchRegistro { get; set; } = DateTime.Now;
-        public DateTime? FchModificacion { get; set; }
+        public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
+        public string? FchModificacion { get; set; }
 
         public TipoDocumento TipoDocumento { get; set; } = null!;
     }

@@ -27,18 +27,25 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Repositories
 
         public async Task<List<Usuario>> GetAllAsync()
         {
-            return await _context.Set<Usuario>().AsNoTracking().Include(u => u.rol).ToListAsync();
+            return await _context.Set<Usuario>().AsNoTracking()
+                .Include(u => u.rol)
+                .Include(u => u.PerfilUsuario)
+                .ToListAsync();
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)
         {
-            return await _context.Set<Usuario>().AsNoTracking().Include(u => u.rol)
+            return await _context.Set<Usuario>().AsNoTracking()
+                .Include(u => u.rol)
+                .Include(u => u.PerfilUsuario)
                 .FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
         public async Task<Usuario?> ObtenerPorUsernameAsync(string username)
         {
-            return await _context.Set<Usuario>().AsNoTracking().Include(u => u.rol)
+            return await _context.Set<Usuario>().AsNoTracking()
+                .Include(u => u.rol)
+                .Include(u => u.PerfilUsuario)
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
     }

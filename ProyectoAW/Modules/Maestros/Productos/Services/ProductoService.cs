@@ -1,4 +1,4 @@
-﻿
+
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
@@ -92,8 +92,8 @@ public class ProductoService : IProductoService
             Nombre = dto.Nombre?.Trim(),
             Lote = dto.Lote,
             Serie = dto.Serie,
-            Activo = true,
-            FchRegistro = DateTime.UtcNow,
+            Activo = dto.Activo,
+            FchRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
             IdCategoria = dto.IdCategoria,
             IdUnidadMedida = dto.IdUnidadMedida
         };
@@ -133,7 +133,7 @@ public class ProductoService : IProductoService
         producto.Lote = dto.Lote;
         producto.Serie = dto.Serie;
         producto.Activo = dto.Activo;
-        producto.FchModificacion = DateTime.Now;
+        producto.FchModificacion = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
         producto.IdCategoria = dto.IdCategoria;
         producto.IdUnidadMedida = dto.IdUnidadMedida;

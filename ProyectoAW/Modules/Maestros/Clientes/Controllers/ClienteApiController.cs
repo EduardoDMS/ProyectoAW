@@ -5,6 +5,8 @@ using ProyectoAW.Modules.Maestros.Clientes.Services;
 using ProyectoAW.Infraestructure.RP;
 using System.Reflection.Metadata.Ecma335;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
 {
     [ApiController]
@@ -19,6 +21,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
             _service = service;
         }
 
+        [Authorize(Policy = "Clientes.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -50,6 +53,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
             }
         }
 
+        [Authorize(Policy = "Clientes.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -86,6 +90,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
             }
                     }
 
+        [Authorize(Policy = "Clientes.Crear")]
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearClienteDto request)
         {
@@ -122,6 +127,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
 
         }
 
+        [Authorize(Policy = "Clientes.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarClienteDto request)
         {
@@ -156,6 +162,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Controllers
 
         }
 
+        [Authorize(Policy = "Clientes.Actualizar")]
         [HttpPatch("{id:int}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
         {

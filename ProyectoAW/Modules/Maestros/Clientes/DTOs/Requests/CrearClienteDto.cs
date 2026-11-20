@@ -8,8 +8,8 @@
         public string? Correo { get; set; }
         public string? Telefono { get; set; }
         public string Direccion { get; set; } = string.Empty;
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; }
 
-        public DateTime FchRegistro { get; set; } = DateTime.Now;
+        public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
     }
 }

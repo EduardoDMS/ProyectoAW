@@ -25,7 +25,7 @@ namespace ProyectoAW.Modules.Maestros.TipoDocumentos.Services
             {
                 Documento = nombre
             };
-
+            // NO CONTIENE ACTIVO
             await _repository.CrearAsync(documento);
 
             return new TipoDocumentoDto

@@ -9,8 +9,8 @@
         public string? NombreContacto { get; set; }
         public string? CorreoContacto { get; set; }
         public string? TelefonoContacto { get; set; }
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; }
 
-        public DateTime FchRegistro { get; set; }=DateTime.Now;
+        public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
     }
 }

@@ -15,14 +15,17 @@ public class GuiaConfiguration : IEntityTypeConfiguration<Guia>
                .IsRequired();
 
         builder.Property(guia => guia.FechaRegistro)
-               .HasDefaultValueSql("GETDATE()")
+               .HasMaxLength(16)
+               .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                .ValueGeneratedOnAdd();
+
+        builder.Property(guia => guia.FechaProgramada).HasMaxLength(16);
 
         builder.Property(guia => guia.Observacion)
                .HasMaxLength(500);
 
         builder.Property(x => x.FechaActualizada)
-               .HasColumnType("datetime2")
+               .HasMaxLength(16)
                .IsRequired(false);
 
         builder.HasOne(guia => guia.TipoOperacion)

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ProyectoAW.Infrastructure.Data;
 using ProyectoAW.Modules.Maestros.UnidadesMedida.Entities;
@@ -20,6 +21,7 @@ public class UnidadMedidaApiController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Policy = "UnidadesMedida.Ver")]
     [HttpGet]
     public async Task<IActionResult> ObtenerTodas()
     {
@@ -50,6 +52,7 @@ public class UnidadMedidaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "UnidadesMedida.Ver")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> ObtenerPorId(int id)
     {
@@ -80,6 +83,7 @@ public class UnidadMedidaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "UnidadesMedida.Crear")]
     [HttpPost]
     public async Task<IActionResult> Crear([FromBody] CrearUnidadMedidaDto request)
     {
@@ -114,6 +118,7 @@ public class UnidadMedidaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "UnidadesMedida.Actualizar")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarUnidadMedidaDto request)
     {
@@ -150,6 +155,7 @@ public class UnidadMedidaApiController : ControllerBase
 
     }
 
+    [Authorize(Policy = "UnidadesMedida.Actualizar")]
     [HttpPatch("{id:int}/estado")]
     public async Task<IActionResult>CambiarEstado(int id ,[FromBody] bool activo)
     {
@@ -184,6 +190,7 @@ public class UnidadMedidaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "UnidadesMedida.Eliminar")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> EliminarUnidadMedidaAsync(int id)
     {

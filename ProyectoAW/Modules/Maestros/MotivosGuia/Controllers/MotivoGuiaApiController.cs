@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.MotivosGuia.Services;
@@ -16,6 +17,7 @@ public class MotivoGuiaApiController : ControllerBase
         _service = service;
     }
 
+    [Authorize(Policy = "MotivosGuia.Ver")]
     [HttpGet]
     public async Task<IActionResult> Listar([FromQuery] int? idOperacion, [FromQuery] bool soloActivos = false)
     {
@@ -39,6 +41,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Ver")]
     [HttpGet("comportamientos")]
     public async Task<IActionResult> ListarComportamientos()
     {
@@ -62,6 +65,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Ver")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Obtener(int id)
     {
@@ -85,6 +89,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Crear")]
     [HttpPost]
     public async Task<IActionResult> Crear([FromBody] CrearMotivoGuiaDto request)
     {
@@ -108,6 +113,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Actualizar")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarMotivoGuiaDto request)
     {
@@ -133,6 +139,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Actualizar")]
     [HttpPatch("{id:int}/estado")]
     public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
     {
@@ -158,6 +165,7 @@ public class MotivoGuiaApiController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "MotivosGuia.Eliminar")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Eliminar(int id)
     {

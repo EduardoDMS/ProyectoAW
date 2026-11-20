@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Stocks.Entities
@@ -19,7 +19,8 @@ namespace ProyectoAW.Modules.Stocks.Entities
             builder.Property(s => s.CantidadActual);
 
             builder.Property(s => s.FechaUltimoRegitro)
-                   .HasDefaultValueSql("GETDATE()")
+                   .HasMaxLength(16)
+                   .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                    .ValueGeneratedOnAdd();
 
             builder.HasOne(s => s.Almacen)

@@ -17,6 +17,7 @@ namespace ProyectoAW.Modules.Maestros.TipoDocumentos.Controllers
             _service = service;
         }
 
+        [Authorize(Policy = "TipoDocumentos.Ver")]
         [HttpGet]
         public async Task<IActionResult> ListarTodos()
         {
@@ -48,7 +49,6 @@ namespace ProyectoAW.Modules.Maestros.TipoDocumentos.Controllers
                 });
             }
         }
-
 
     }
 }

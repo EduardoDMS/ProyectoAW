@@ -14,7 +14,7 @@ namespace ProyectoAW.Modules.Stocks.Entities
         public int IdAlmacen { get; set; }
         public int IdTipoOperacion { get; set; }
         public int Cantidad { get; set; }
-        public DateTime FchMovimiento { get; set; } = DateTime.Now;
+        public string FchMovimiento { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
         public int IdGuia { get; set; }
         public int IdUsuarioOperador { get; set; }

@@ -38,6 +38,8 @@ using ProyectoAW.Modules.Maestros.UnidadesMedida.Services;
 // Rol
 using ProyectoAW.Modules.Seguridad.Roles.Repositories;
 using ProyectoAW.Modules.Seguridad.Roles.Services;
+using ProyectoAW.Modules.Seguridad.Perfiles.Repositories;
+using ProyectoAW.Modules.Seguridad.Perfiles.Services;
 //Security(ni se por que lo pongo)
 using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
 using ProyectoAW.Modules.Seguridad.Security_Session.Repositories;
@@ -50,6 +52,11 @@ using ProyectoAW.Modules.Seguridad.Usuarios.Services;
 using ProyectoAW.Modules.Stocks.Repositories;
 using ProyectoAW.Modules.Stocks.Services;
 using ProyectoAW.Modules.Stocks.Validacion;
+//Fecha_Hora
+//Tipo ComportamientoGuia
+using ProyectoAW.Modules.Maestros.Operaciones.Entities;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Repositories;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Services;
 //System
 using System.Text;
 using System.Transactions;
@@ -117,20 +124,26 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
+builder.Services.AddScoped<IPerfilService, PerfilService>();
 builder.Services.AddScoped<IGuiaRepository, GuiaRepository>();
 builder.Services.AddScoped<IGuiaService, GuiaService>();
 builder.Services.AddScoped<IMotivoGuiaRepository, MotivoGuiaRepository>();
 builder.Services.AddScoped<IMotivoGuiaService, MotivoGuiaService>();
 builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository>();
 builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
+builder.Services.AddScoped<IStockBalanceRepository, StockBalanceRepository>();
 builder.Services.AddScoped<ILecturaGuiaRepository, LecturaGuiaRepository>();
 builder.Services.AddHttpContextAccessor(); // no
 builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<IGuiaStockProcessor, EntradaStockProcessor>();
+builder.Services.AddScoped<IGuiaStockProcessor, SalidaStockProcessor>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ITipoComportamientosRepository, TipoComportamientosRepository>();
+builder.Services.AddScoped<ITipoComportamientoService, TipoComportamientoService>();
 
 builder.Services.AddScoped<ValidacionesBase>();
 builder.Services.AddScoped<ValidacionesGuia>();
@@ -198,11 +211,34 @@ builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
+
+    options.AddPolicy("Administrador", policy =>
+        policy.RequireAssertion(context =>
+            CatalogoPermisos.EsAdministrador(context.User)));
+
+    options.AddPolicy("Operador", policy =>
+        policy.RequireRole("Operador"));
+
+    foreach (var codigoPermiso in CatalogoPermisos.ListarCodigosPermiso())
+    {
+        var permiso = codigoPermiso;
+        options.AddPolicy(permiso, policy =>
+            policy.RequireAssertion(context =>
+                CatalogoPermisos.EsAdministrador(context.User) ||
+                context.User.HasClaim("Permiso", permiso)));
+    }
 });
 
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+    await UsuarioConfiguration.CrearAdminSiUsuariosVacioAsync(dbContext);
+}
 
 
 // Configure the HTTP request pipeline.

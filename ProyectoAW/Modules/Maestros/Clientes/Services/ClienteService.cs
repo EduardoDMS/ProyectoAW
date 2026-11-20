@@ -1,4 +1,4 @@
-﻿using ProyectoAW.Infraestructure.RP;
+using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Modules.Maestros.Clientes.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Clientes.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Clientes.Entities;
@@ -38,7 +38,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
             cliente.Telefono=dto.Telefono;
             cliente.Direccion=dto.Direccion;
             cliente.Activo=dto.Activo;
-            cliente.FchModificacion= DateTime.UtcNow;
+            cliente.FchModificacion= ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
 
             await _repository.ActualizarAsync(cliente);
 
@@ -76,8 +76,8 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
                 Correo=dto.Correo,
                 Telefono=dto.Telefono,
                 Direccion=dto.Direccion,
-                Activo=true,
-                FchRegistro=DateTime.UtcNow
+                Activo=dto.Activo,
+                FchRegistro=ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now)
             };
 
             await _repository.CrearAsync(cliente);

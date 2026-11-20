@@ -4,6 +4,8 @@ using ProyectoAW.Modules.Maestros.Proveedores.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Proveedores.Services;
 using ProyectoAW.Infraestructure.RP;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
 {
     [ApiController]
@@ -18,6 +20,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
             _service=service;
         }
 
+        [Authorize(Policy = "Proveedores.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodos()
         {
@@ -50,6 +53,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
         
         }
 
+        [Authorize(Policy = "Proveedores.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -81,6 +85,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
             }
         }
 
+        [Authorize(Policy = "Proveedores.Crear")]
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearProveedorDto request)
         {
@@ -117,6 +122,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
 
         }
 
+        [Authorize(Policy = "Proveedores.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] ActualizarProveedorDto request)
         {
@@ -150,6 +156,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Controllers
             }
         }
 
+        [Authorize(Policy = "Proveedores.Actualizar")]
         [HttpPatch("{id:int}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
         {

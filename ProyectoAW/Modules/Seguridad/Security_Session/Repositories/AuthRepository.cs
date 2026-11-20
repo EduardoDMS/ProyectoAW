@@ -18,6 +18,8 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Repositories
         {
             return await _context.Usuarios.AsNoTracking()
                                 .Include(usuario => usuario.rol)
+                                .Include(usuario => usuario.PerfilUsuario)
+                                    .ThenInclude(perfil => perfil!.Permisos)
                                 .FirstOrDefaultAsync(usuario => usuario.Username == username);
         }
     }

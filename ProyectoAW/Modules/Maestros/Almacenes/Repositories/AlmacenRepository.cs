@@ -56,11 +56,8 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
             }
         }
 
-        public async Task<Almacen?> ObtenerAlmacenParaActualizarAsync(int id) // metodo duplicado ia wbn
-        {
-            return await _context.Almacenes.FirstOrDefaultAsync(almacen => almacen.IdAlmacen == id);
-        }
-        public async Task<Almacen?> ObtenerAlmacenPorIdAsync(int id) // metodo duplicado ia wbn
+      
+        public async Task<Almacen?> ObtenerAlmacenPorIdAsync(int id) // metodo duplicado ia
         {
             return await _context.Almacenes.AsNoTracking().Include(a => a.UbicacionesDespacho).FirstOrDefaultAsync(a => a.IdAlmacen == id);
         }
@@ -75,8 +72,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
         {
             return await _context.Almacenes.AsNoTracking().Include(a => a.UbicacionesDespacho).FirstOrDefaultAsync(a => a.Codigo == codigo);
         }
-
-        
 
         public async Task<List<Almacen>> ObtenerAlmacenesAsync()
         {
@@ -138,5 +133,9 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
         }
 
 
+        public async Task<Almacen?> ObtenerAlmacenParaActualizarAsync(int id) // metodo duplicado 
+        {
+            return await _context.Almacenes.FirstOrDefaultAsync(almacen => almacen.IdAlmacen == id);
+        }
     }
 }

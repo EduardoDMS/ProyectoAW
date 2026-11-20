@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProyectoAW.Modules.Stocks.Entities
@@ -14,7 +14,8 @@ namespace ProyectoAW.Modules.Stocks.Entities
             builder.ToTable("StockUbicacion", t => t.HasCheckConstraint("CK_StockUbicacion_Cantidad", "CantidadActual >= 0"));
 
             builder.Property(s => s.FechaUltimoRegistro)
-                   .HasDefaultValueSql("GETDATE()")
+                   .HasMaxLength(16)
+                   .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)")
                    .ValueGeneratedOnAdd();
 
             builder.HasOne(s => s.Producto)
