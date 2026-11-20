@@ -5,6 +5,7 @@ let tablaClientes;
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
     cargarClientes();
+    cargarTipoDocumentosSelect();
     inicializarEventos();
 
     document.addEventListener('cliente:guardado', () => {
@@ -25,7 +26,7 @@ function inicializarTabla() {
 
         columns: [
             { title: 'Razón social/Nombre', field: 'razonSocial' },
-            { title: 'Tipo de documento', field: 'idTipoDocumento' },
+            { title: 'Tipo de documento', field: 'nombreDocumento' },
             { title: 'Número', field: 'numeroDocumento' },
             { title: 'Correo', field: 'correo' },
             { title: 'Teléfono', field: 'telefono' },
@@ -91,6 +92,45 @@ async function cargarClientes() {
 
     } catch (error) {
         console.error('Error: ', error.message)
+    }
+}
+
+// Select de crear y editar
+async function cargarTipoDocumentosSelect() {
+    try {
+        const response = await fetch('/api/TipoDocumentoApi');
+
+        const resultado = await response.json();
+        console.log(resultado);
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los tipos de documento');
+        }
+
+        if (resultado.exito) {
+            const tipoDocumentos = resultado.datos;
+            const selects = [
+                document.getElementById('slcTipoDocumento'),
+                document.getElementById('slcTipoDocumentoEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                tipoDocumentos.forEach(tipoDocumento => {
+                    const option = document.createElement('option');
+
+                    option.value = tipoDocumento.idTipoDoc;
+                    option.textContent = tipoDocumento.documento;
+
+                    select.appendChild(option);
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
     }
 }
 

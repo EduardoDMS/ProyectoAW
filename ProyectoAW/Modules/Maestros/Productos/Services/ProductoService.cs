@@ -92,7 +92,7 @@ public class ProductoService : IProductoService
             Nombre = dto.Nombre?.Trim(),
             Lote = dto.Lote,
             Serie = dto.Serie,
-            Activo = true,
+            Activo = dto.Activo,
             FchRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
             IdCategoria = dto.IdCategoria,
             IdUnidadMedida = dto.IdUnidadMedida

@@ -65,4 +65,12 @@ public class PerfilRepository : IPerfilRepository
         _context.Perfiles.Remove(perfil);
         await _context.SaveChangesAsync();
     }
+
+    public Task<string?> ObtenerNombreRolAsync(int idRol)
+    {
+        return _context.Roles
+                       .Where(rol => rol.IdRol == idRol)
+                       .Select(rol => rol.Nombre)
+                       .FirstOrDefaultAsync();
+    }
 }

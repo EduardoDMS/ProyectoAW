@@ -15,9 +15,10 @@ public class PerfilService : IPerfilService
         _repository = repository;
     }
 
-    public Task<List<string>> ListarModulosAsync()
+    public async Task<List<string>> ListarModulosAsync(int idRol)
     {
-        return Task.FromResult(CatalogoPermisos.ListarModulos());
+        var nombreRol = await ObtenerNombreRolValidoAsync(idRol);
+        return CatalogoPermisos.ListarModulosPermitidos(nombreRol);
     }
 
     public async Task<List<PerfilDto>> ListarAsync()
@@ -40,7 +41,8 @@ public class PerfilService : IPerfilService
     {
         var nombre = request.NombrePerfil.Trim();
         ValidarNombre(nombre);
-        ValidarPermisos(request.Permisos);
+        var nombreRol = await ObtenerNombreRolValidoAsync(request.IdRol);
+        ValidarPermisos(request.Permisos, nombreRol);
 
         if (await _repository.NombreExisteAsync(nombre))
             throw new NegocioException("Ya existe un perfil con ese nombre.");
@@ -48,6 +50,7 @@ public class PerfilService : IPerfilService
         var perfil = new Perfil
         {
             NombrePerfil = nombre,
+            IdRol = request.IdRol,
             Permisos = request.Permisos.Select(CrearPermiso).ToList()
         };
 
@@ -58,18 +61,22 @@ public class PerfilService : IPerfilService
     public async Task<bool> ActualizarAsync(int id, ActualizarPerfilDto request)
     {
         var perfil = await _repository.ObtenerPorIdAsync(id);
-
         if (perfil == null)
             throw new NegocioException($"No se encontró el perfil con ID {id}.");
 
+
         var nombre = request.NombrePerfil.Trim();
         ValidarNombre(nombre);
-        ValidarPermisos(request.Permisos);
 
         if (await _repository.NombreExisteAsync(nombre, id))
             throw new NegocioException("Ya existe un perfil con ese nombre.");
 
+        var nombreRol = await ObtenerNombreRolValidoAsync(request.IdRol);
+        ValidarPermisos(request.Permisos, nombreRol);
+
+
         perfil.NombrePerfil = nombre;
+        perfil.IdRol = request.IdRol;
         perfil.Permisos.Clear();
 
         foreach (var permiso in request.Permisos)
@@ -102,9 +109,25 @@ public class PerfilService : IPerfilService
             throw new NegocioException("El nombre del perfil no puede superar los 100 caracteres.");
     }
 
-    private static void ValidarPermisos(List<PermisoPerfilRequestDto> permisos)
+    private async Task<string> ObtenerNombreRolValidoAsync(int idRol)
+    {
+        var nombreRol = await _repository.ObtenerNombreRolAsync(idRol);
+
+        if (string.IsNullOrWhiteSpace(nombreRol))
+            throw new NegocioException("No se encontró el rol indicado.");
+
+        if (!CatalogoPermisos.EsAdministrador(nombreRol) && !CatalogoPermisos.EsOperador(nombreRol))
+            throw new NegocioException("Solo se pueden crear perfiles para los roles Administrador u Operador.");
+
+        return nombreRol;
+    }
+
+    private static void ValidarPermisos(List<PermisoPerfilRequestDto> permisos, string nombreRol)
     {
         var modulos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var modulosPermitidos = new HashSet<string>(
+            CatalogoPermisos.ListarModulosPermitidos(nombreRol),
+            StringComparer.OrdinalIgnoreCase);
 
         foreach (var permiso in permisos)
         {
@@ -115,6 +138,9 @@ public class PerfilService : IPerfilService
 
             if (!CatalogoPermisos.ExisteModulo(modulo))
                 throw new NegocioException($"El módulo '{modulo}' no existe en el catálogo de permisos.");
+
+            if (!modulosPermitidos.Contains(modulo))
+                throw new NegocioException($"El rol '{nombreRol}' no puede tener permisos para el módulo '{modulo}'.");
 
             if (!modulos.Add(modulo))
                 throw new NegocioException($"El módulo '{modulo}' está repetido en los permisos.");
@@ -139,6 +165,7 @@ public class PerfilService : IPerfilService
         {
             IdPerfil = perfil.IdPerfil,
             NombrePerfil = perfil.NombrePerfil,
+            IdRol = perfil.IdRol,
             Permisos = perfil.Permisos.Select(permiso => new PermisoPerfilDto
             {
                 Modulo = permiso.Modulo,

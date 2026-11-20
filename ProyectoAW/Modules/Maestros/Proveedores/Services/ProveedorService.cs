@@ -79,7 +79,7 @@ namespace ProyectoAW.Modules.Maestros.Proveedores.Services
                 NombreContacto=dto.NombreContacto,
                 CorreoContacto=dto.CorreoContacto,
                 TelefonoContacto=dto.TelefonoContacto,
-                Activo=true,
+                Activo=dto.Activo,
                 FchRegistro=ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now)
             };
 

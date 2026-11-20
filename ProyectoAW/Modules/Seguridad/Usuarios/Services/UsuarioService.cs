@@ -43,7 +43,7 @@ public class UsuarioService : IUsuarioService
 
         // Confirma que el rol sea asignable y que el nombre de usuario no pertenezca a otra cuenta.
         await ValidarRolAsync(dto.IdRol);
-        await ValidarPerfilAsync(dto.IdPerfilUsuario);
+        await ValidarPerfilAsync(dto.IdPerfilUsuario, dto.IdRol);
         var username = dto.Username.Trim();
         var usuarioConElmismoNombre = await _repository.ObtenerPorUsernameAsync(username);
         if (usuarioConElmismoNombre is not null && usuarioConElmismoNombre.IdUsuario != id)
@@ -81,7 +81,7 @@ public class UsuarioService : IUsuarioService
             throw new NegocioException("La contraseña es obligatoria.");
 
         await ValidarRolAsync(dto.IdRol);
-        await ValidarPerfilAsync(dto.IdPerfilUsuario);
+        await ValidarPerfilAsync(dto.IdPerfilUsuario, dto.IdRol);
         var username = dto.Username.Trim();
         if (await _repository.ObtenerPorUsernameAsync(username) is not null)
             throw new NegocioException("Ya existe un usuario con ese nombre de usuario.");
@@ -93,7 +93,7 @@ public class UsuarioService : IUsuarioService
             Apellido = dto.Apellido.Trim(),
             IdRol = dto.IdRol,
             IdPerfilUsuario = dto.IdPerfilUsuario,
-            Activo = true,
+            Activo = dto.Activo,
             FechaRegistro = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
             Password = dto.Password
         };
@@ -124,12 +124,14 @@ public class UsuarioService : IUsuarioService
             throw new NegocioException("Solo se puede asignar el rol Administrador o Operador.");
     }
 
-    private async Task ValidarPerfilAsync(int idPerfilUsuario)
+    private async Task ValidarPerfilAsync(int idPerfilUsuario, int idRol)
     {
         if (idPerfilUsuario <= 0)
             throw new NegocioException("Selecciona un perfil válido.");
 
-        await _perfilService.ObtenerPorIdAsync(idPerfilUsuario);
+        var perfil = await _perfilService.ObtenerPorIdAsync(idPerfilUsuario);
+        if (perfil.IdRol != idRol)
+            throw new NegocioException("El perfil seleccionado no corresponde al rol del usuario.");
     }
 
     private static void ValidarDatos(string nombre, string apellido, string username)

@@ -14,7 +14,7 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Entitites
         public string Password { get; set; } = string.Empty;
         public string FechaRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
         public string? FechaActualizada { get; set; }
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; } 
 
         public int IdRol { get; set; }
         public Rol? rol { get; set; }

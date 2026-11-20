@@ -19,14 +19,21 @@ public class PerfilApiController : ControllerBase
     }
 
     [HttpGet("modulos")]
-    public async Task<IActionResult> ListarModulos()
+    public async Task<IActionResult> ListarModulos([FromQuery] int idRol)
     {
-        return Ok(new Respuesta
+        try
         {
-            Exito = true,
-            Mensaje = "Módulos disponibles obtenidos correctamente.",
-            Datos = await _service.ListarModulosAsync()
-        });
+            return Ok(new Respuesta
+            {
+                Exito = true,
+                Mensaje = "Módulos disponibles obtenidos correctamente.",
+                Datos = await _service.ListarModulosAsync(idRol)
+            });
+        }
+        catch (NegocioException ex)
+        {
+            return BadRequest(new Respuesta { Exito = false, Mensaje = ex.Message });
+        }
     }
 
     [HttpGet]

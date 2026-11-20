@@ -24,7 +24,7 @@
 <div class="card card-body">
 	<div class="row mb-3">
 		<div class="col">
-			<label class="form-label">Clientes</label>
+			<label class="form-label">Cliente</label>
 			<div class="input-group">
 				<input id="txtBuscarCliente" class="form-control" placeholder="Buscar cliente..." />
 				<button id="btnLimpiarFiltros" class="btn btn-outline-secondary"><i class="ti ti-eraser fs-5"></i></button>
@@ -72,7 +72,7 @@
 						<label class="form-label">
 							Tipo de documento <span class="text-danger">*</span>
 						</label>
-						<select id="slcTipoDocumento" class="form-select">
+						<select id="slcTipoDocumento" class="form-select" required>
 							<option value="0">Ninguna</option>
 						</select>
 					</div>
@@ -150,6 +150,7 @@
 			</div>
 
 			<div class="modal-body">
+				<input type="hidden" id="txtIdClienteEditar" />
 				<div class="row">
 					<!-- Razón social/Nombre -->
 					<div class="col-md-12 mb-3">
@@ -164,7 +165,7 @@
 						<label class="form-label">
 							Tipo de documento <span class="text-danger">*</span>
 						</label>
-						<select id="slcTipoDocumentoEditar" class="form-select">
+						<select id="slcTipoDocumentoEditar" class="form-select" required>
 							<option value="0">Ninguna</option>
 						</select>
 					</div>

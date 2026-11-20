@@ -11,7 +11,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Entities
         public string? Correo { get; set; }
         public string? Telefono { get; set; }
         public string Direccion { get; set; } = string.Empty;
-        public bool Activo { get; set; } = true;
+        public bool Activo { get; set; }
         public string FchRegistro { get; set; } = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
         public string? FchModificacion { get; set; }
 

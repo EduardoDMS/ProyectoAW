@@ -31,7 +31,24 @@ public static class CatalogoPermisos
         "Eliminar"
     };
 
+    private static readonly string[] ModulosOperador =
+    {
+        "Guias",
+        "Stocks"
+    };
+
     public static List<string> ListarModulos() => Modulos.ToList();
+
+    public static List<string> ListarModulosPermitidos(string? nombreRol)
+    {
+        if (EsAdministrador(nombreRol))
+            return ListarModulos();
+
+        if (EsOperador(nombreRol))
+            return ModulosOperador.ToList();
+
+        return new List<string>();
+    }
 
     public static List<string> ListarCodigosPermiso()
     {
@@ -52,6 +69,10 @@ public static class CatalogoPermisos
         (nombreRol.Equals("Administrador", StringComparison.OrdinalIgnoreCase) ||
          nombreRol.Equals("Administrador inicial", StringComparison.OrdinalIgnoreCase) ||
          nombreRol.Equals("Admin", StringComparison.OrdinalIgnoreCase));
+
+    public static bool EsOperador(string? nombreRol) =>
+        nombreRol != null &&
+        nombreRol.Trim().Equals("Operador", StringComparison.OrdinalIgnoreCase);
 
     public static bool EsAdministrador(ClaimsPrincipal usuario) =>
         usuario.IsInRole("Administrador") ||
@@ -77,5 +98,17 @@ public static class CatalogoPermisos
         }
 
         return codigos;
+    }
+
+    public static List<string> ObtenerPermisos(string? nombreRol, IEnumerable<PermisoPerfil> permisos)
+    {
+        if (EsAdministrador(nombreRol))
+            return ListarCodigosPermiso();
+
+        if (!EsOperador(nombreRol))
+            return new List<string>();
+
+        var modulosPermitidos = new HashSet<string>(ModulosOperador, StringComparer.OrdinalIgnoreCase);
+        return ObtenerPermisos(permisos.Where(permiso => modulosPermitidos.Contains(permiso.Modulo)));
     }
 }

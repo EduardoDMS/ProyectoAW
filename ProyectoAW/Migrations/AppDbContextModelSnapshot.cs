@@ -701,12 +701,17 @@ namespace ProyectoAW.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPerfil"));
 
+                    b.Property<int>("IdRol")
+                        .HasColumnType("int");
+
                     b.Property<string>("NombrePerfil")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("IdPerfil");
+
+                    b.HasIndex("IdRol");
 
                     b.HasIndex("NombrePerfil")
                         .IsUnique();
@@ -738,6 +743,9 @@ namespace ProyectoAW.Migrations
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
+
+                    b.Property<bool>("Todos")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Ver")
                         .HasColumnType("bit");
@@ -1220,6 +1228,17 @@ namespace ProyectoAW.Migrations
                     b.Navigation("Almacen");
 
                     b.Navigation("Ubicacion");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Seguridad.Perfiles.Entites.Perfil", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Seguridad.Roles.Entities.Rol", "rol")
+                        .WithMany()
+                        .HasForeignKey("IdRol")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("rol");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Seguridad.Perfiles.Entites.PermisoPerfil", b =>

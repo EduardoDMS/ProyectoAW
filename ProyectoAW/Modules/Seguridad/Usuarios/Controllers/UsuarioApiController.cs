@@ -179,8 +179,16 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
        // }
 
 
+        //[HttpPatch("{id:int}/estado")]
+        //public async Task<IActionResult> CambiarEstado(int id, [FromBody] bool activo)
+        //{
+        //    var actualizado = await _service.CambiarEstadoAsync(id, activo);
 
+        //    if (!actualizado)
+        //        return NotFound();
 
+        //    return NoContent();
 
+        // }
     }
 }

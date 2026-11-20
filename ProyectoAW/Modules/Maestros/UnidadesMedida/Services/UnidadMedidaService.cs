@@ -62,7 +62,7 @@ namespace ProyectoAW.Modules.Maestros.UnidadesMedida.Services
             {
                 Codigo = codigo,
                 Nombre = dto.Nombre?.Trim(),
-                Activo = true
+                Activo = dto.Activo
             };
 
             await _repository.CrearAsync(unidadMedida);

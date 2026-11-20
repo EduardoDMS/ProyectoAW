@@ -10,6 +10,7 @@ public class PermisoPerfil
     public bool Crear { get; set; }
     public bool Actualizar { get; set; }
     public bool Eliminar { get; set; }
+    public bool Todos { get; set; }
 
     public Perfil Perfil { get; set; } = null!;
 }

@@ -17,5 +17,10 @@ public class PerfilConfiguration : IEntityTypeConfiguration<Perfil>
 
         builder.HasIndex(perfil => perfil.NombrePerfil)
             .IsUnique();
+
+        builder.HasOne(perfil => perfil.rol)
+               .WithMany()
+               .HasForeignKey(perfil => perfil.IdRol)
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }

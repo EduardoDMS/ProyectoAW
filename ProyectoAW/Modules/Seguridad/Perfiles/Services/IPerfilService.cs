@@ -5,7 +5,7 @@ namespace ProyectoAW.Modules.Seguridad.Perfiles.Services;
 
 public interface IPerfilService
 {
-    Task<List<string>> ListarModulosAsync();
+    Task<List<string>> ListarModulosAsync(int idRol);
     Task<List<PerfilDto>> ListarAsync();
     Task<PerfilDto> ObtenerPorIdAsync(int id);
     Task<PerfilDto> CrearAsync(CrearPerfilDto request);

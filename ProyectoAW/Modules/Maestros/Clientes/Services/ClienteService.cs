@@ -76,7 +76,7 @@ namespace ProyectoAW.Modules.Maestros.Clientes.Services
                 Correo=dto.Correo,
                 Telefono=dto.Telefono,
                 Direccion=dto.Direccion,
-                Activo=true,
+                Activo=dto.Activo,
                 FchRegistro=ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now)
             };
 

@@ -29,10 +29,9 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
                 return null;
 
             var rol = usuario.rol?.Nombre ?? string.Empty;
-            var permisos = CatalogoPermisos.EsAdministrador(rol)
-                ? CatalogoPermisos.ListarCodigosPermiso()
-                : CatalogoPermisos.ObtenerPermisos(
-                    usuario.PerfilUsuario?.Permisos ?? new List<ProyectoAW.Modules.Seguridad.Perfiles.Entites.PermisoPerfil>());
+            var permisos = CatalogoPermisos.ObtenerPermisos(
+                rol,
+                usuario.PerfilUsuario?.Permisos ?? new List<ProyectoAW.Modules.Seguridad.Perfiles.Entites.PermisoPerfil>());
 
             return new SesionResponse(
                 usuario.IdUsuario, usuario.Username, $"{usuario.Nombre} {usuario.Apellido}", usuario.IdRol,

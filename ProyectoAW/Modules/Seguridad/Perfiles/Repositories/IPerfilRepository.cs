@@ -8,6 +8,7 @@ public interface IPerfilRepository
     Task<Perfil?> ObtenerPorIdAsync(int id);
     Task<bool> NombreExisteAsync(string nombre, int? excluirId = null);
     Task<bool> TieneUsuariosAsignadosAsync(int idPerfil);
+    Task<string?> ObtenerNombreRolAsync(int idRol);
     Task CrearAsync(Perfil perfil);
     Task ActualizarAsync(Perfil perfil);
     Task EliminarAsync(Perfil perfil);
