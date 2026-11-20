@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoAW.Infraestructure.RP;
-using ProyectoAW.Modules.Guias.DTOs.Requests;
-using ProyectoAW.Modules.Guias.Services;
+using ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Requests;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Services;
 
-namespace ProyectoAW.Modules.Guias.Controllers;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

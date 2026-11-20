@@ -4,6 +4,7 @@ let tablaGuias;
 // INICIALIZACION
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
+    cargarGuias();
 });
 
 // CONFIGURACIÓN DE TABULATOR
@@ -72,7 +73,27 @@ function inicializarTabla() {
 
 // CARGA DE DATOS
 async function cargarGuias() {
+    try {
+        const response = await fetch('/api/guias');
 
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los productos');
+        }
+
+        if (resultado.exito) {
+            const guias = resultado.datos;
+
+            console.log(guias);
+            console.log(resultado.mensaje);
+
+            tablaGuias.setData(guias);
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
 }
 
 // Select de crear y editar

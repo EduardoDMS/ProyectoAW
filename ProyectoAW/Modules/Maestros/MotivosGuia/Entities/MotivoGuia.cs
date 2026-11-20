@@ -1,6 +1,7 @@
 ﻿using ProyectoAW.Modules.Maestros.Operaciones.Entities;
+using ProyectoAW.Modules.Maestros.TipoComportamientos.Entities;
 
-namespace ProyectoAW.Modules.Guias.Entities
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.Entities
 {
     public class MotivoGuia
     {

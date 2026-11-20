@@ -1,4 +1,4 @@
-namespace ProyectoAW.Modules.Guias.DTOs.Responses;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Responses;
 
 public class MotivoGuiaDto
 {

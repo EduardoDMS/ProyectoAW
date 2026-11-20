@@ -4,6 +4,7 @@ using ProyectoAW.Modules.Maestros.Proveedores.Entities;
 using ProyectoAW.Modules.Maestros.Almacenes.Entities;
 using ProyectoAW.Modules.Maestros.Clientes.Entities;
 using ProyectoAW.Modules.Stocks.Entities;
+using ProyectoAW.Modules.Maestros.MotivosGuia.Entities;
 
 namespace ProyectoAW.Modules.Guias.Entities;
 

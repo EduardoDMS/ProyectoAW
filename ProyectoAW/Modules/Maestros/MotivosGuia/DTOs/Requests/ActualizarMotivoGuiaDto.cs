@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoAW.Modules.Guias.DTOs.Requests;
+namespace ProyectoAW.Modules.Maestros.MotivosGuia.DTOs.Requests;
 
-public class CrearMotivoGuiaDto
+public class ActualizarMotivoGuiaDto
 {
     [Range(1, int.MaxValue, ErrorMessage = "Selecciona una operacion.")]
     public int IdTipoOperacionGuia { get; set; }
@@ -18,4 +18,6 @@ public class CrearMotivoGuiaDto
 
     [Range(1, int.MaxValue, ErrorMessage = "Selecciona un tipo de comportamiento.")]
     public int IdTipoComportamiento { get; set; }
+
+    public bool Activo { get; set; }
 }
