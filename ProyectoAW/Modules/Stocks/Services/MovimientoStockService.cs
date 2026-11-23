@@ -1,12 +1,13 @@
 using ProyectoAW.Infraestructure.RP;
 using ProyectoAW.Infrastructure.Data;
+using ProyectoAW.Modules.Guias.DTOs.Responses;
 using ProyectoAW.Modules.Guias.Entities;
 using ProyectoAW.Modules.Maestros.Estados.Entities;
 using ProyectoAW.Modules.Maestros.Operaciones.Entities;
+using ProyectoAW.Modules.Seguridad.Usuarios.Entitites;
 using ProyectoAW.Modules.Stocks.Dtos.Request;
 using ProyectoAW.Modules.Stocks.Dtos.Response;
 using ProyectoAW.Modules.Stocks.Entities;
-using ProyectoAW.Modules.Stocks.Factories;
 using ProyectoAW.Modules.Stocks.Repositories;
 using ProyectoAW.Modules.Stocks.Validacion;
 using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
@@ -23,15 +24,13 @@ namespace ProyectoAW.Modules.Stocks.Services
         private readonly ITransactionManager _transactions;
         private readonly ICurrentUserService _currentUser;
 
-        public MovimientoStockService(
-            ValidacionesGuia validacionesGuia,
-            ValidacionesUbicacion validacionesUbicacion,
-            ValidacionesStock validacionesStock,
-            IMovimientoStockRepository movimientoStockRepository,
-            ITransactionManager transactions,
-            ICurrentUserService currentUser,
-            ILecturaGuiaRepository repository
-            )
+        public MovimientoStockService(ValidacionesGuia validacionesGuia,
+                                      ValidacionesUbicacion validacionesUbicacion,
+                                      ValidacionesStock validacionesStock,
+                                      IMovimientoStockRepository movimientoStockRepository,
+                                      ITransactionManager transactions,
+                                      ICurrentUserService currentUser,
+                                      ILecturaGuiaRepository repository)
         {
             _validacionesGuia = validacionesGuia;
             _validacionesUbicacion = validacionesUbicacion;
@@ -70,14 +69,39 @@ namespace ProyectoAW.Modules.Stocks.Services
 
         public async Task FinalizarLecturaAsync(int idGuia)
         {
-          //  await _validacionesGuia.ExigirOperadorAsync();
             await _transactions.ExecuteSerializableAsync(_ => FinalizarLecturaEnTransaccionAsync(idGuia));
         }
 
         public async Task<IReadOnlyList<MovimientoStockDto>> ListarAsync(int? idGuia, int? idAlmacen, int? idOperacion)
         {
             var movimientos = await _movimientoStockRepo.ListarMovimientosStockAsync(idGuia, idAlmacen, idOperacion);
-            return movimientos.Select(GuiaMapper.ToMovimientoDto).ToList();
+            return movimientos.Select(movimiento => new MovimientoStockDto
+            {
+                IdMovimientoStock = movimiento.IdMovimientoStock,
+                IdProducto = movimiento.IdProducto,
+                IdAlmacen = movimiento.IdAlmacen,
+                IdTipoOperacion = movimiento.IdTipoOperacion,
+                Cantidad = movimiento.Cantidad,
+                FchMovimiento = movimiento.FchMovimiento,
+                IdGuia = movimiento.IdGuia,
+                Observacion = movimiento.Observacion,
+                CantidadDiferenciada = movimiento.CantidadDiferenciada,
+                IdUbicacionOrigen = movimiento.IdUbicacionOrigen,
+                IdUbicacionDestino = movimiento.IdUbicacionDestino,
+                NumeroGuia = movimiento.Guia?.NumeroGuia ?? string.Empty,
+                MotivoGuia = movimiento.Guia?.Motivo?.NombreMotivo ?? "—",
+                Operacion = movimiento.OperacionGuias?.Nombre ?? string.Empty,
+                CodigoProducto = movimiento.Producto?.Codigo ?? string.Empty,
+                Producto = movimiento.Producto?.Nombre ?? string.Empty,
+                Origen = NombreOrigen(movimiento),
+                Destino = NombreDestino(movimiento),
+                CantidadEsperada = movimiento.Guia?.Detalles
+                    .FirstOrDefault(detalle => detalle.IdProducto == movimiento.IdProducto)?.Cantidad ?? 0,
+                IdUsuarioOperador = movimiento.IdUsuarioOperador,
+                Operador = NombreOperador(movimiento.Usuario),
+                UbicacionOrigen = movimiento.UbicacionOrigen?.Codigo ?? string.Empty,
+                UbicacionDestino = movimiento.UbicacionDestino?.Codigo ?? string.Empty
+            }).ToList();
         }
 
         public async Task<IReadOnlyList<GuiaOperadorDto>> ListarGuiasOperadorAsync(int? idEstadoGuia)
@@ -85,7 +109,62 @@ namespace ProyectoAW.Modules.Stocks.Services
           //  await _validacionesGuia.ExigirOperadorAsync();
 
             var guia = await _repository.ListarGuiasParaOperadorAsync(_currentUser.IdUsuario, idEstadoGuia);
-            return guia.Select(GuiaMapper.ToGuiaOperadorDto).ToList();
+            return guia.Select(item =>
+            {
+                var requiereProveedor = item.Motivo?.RequiereProveedor ??
+                    item.IdTipoOperacionGuia == TipoOperacionGuiaIds.Entrada;
+                var requiereCliente = item.Motivo?.RequiereCliente ??
+                    item.IdTipoOperacionGuia == TipoOperacionGuiaIds.Salida;
+                var requiereAlmacenOrigen = item.Motivo?.RequiereAlmacenOrigen ??
+                    item.IdTipoOperacionGuia == TipoOperacionGuiaIds.Salida;
+                var requiereAlmacenDestino = item.Motivo?.RequiereAlmacenDestino ??
+                    item.IdTipoOperacionGuia == TipoOperacionGuiaIds.Entrada;
+
+                return new GuiaOperadorDto
+                {
+                    IdGuia = item.IdGuia,
+                    NumeroGuia = item.NumeroGuia,
+                    IdTipoOperacionGuia = item.IdTipoOperacionGuia,
+                    IdMotivoGuia = item.IdMotivoGuia,
+                    IdTipoComportamiento = item.Motivo?.IdTipoComportamiento,
+                    NombreMotivo = item.Motivo?.NombreMotivo,
+                    RequiereProveedor = requiereProveedor,
+                    RequiereCliente = requiereCliente,
+                    RequiereAlmacenOrigen = requiereAlmacenOrigen,
+                    RequiereAlmacenDestino = requiereAlmacenDestino,
+                    TipoTercero = requiereProveedor ? "Proveedor" : requiereCliente ? "Cliente" : null,
+                    NombreTercero = requiereProveedor
+                        ? item.Proveedor?.RazonSocial
+                        : requiereCliente ? item.Cliente?.RazonSocial : null,
+                    NombreAlmacenOrigen = item.AlmacenOrigen is null
+                        ? null
+                        : string.Join(" · ", new[] { item.AlmacenOrigen.Codigo, item.AlmacenOrigen.Nombre }
+                            .Where(valor => !string.IsNullOrWhiteSpace(valor))),
+                    NombreAlmacenDestino = item.AlmacenDestino is null
+                        ? null
+                        : string.Join(" · ", new[] { item.AlmacenDestino.Codigo, item.AlmacenDestino.Nombre }
+                            .Where(valor => !string.IsNullOrWhiteSpace(valor))),
+                    IdGuiaRelacionada = item.IdGuiaRelacionada,
+                    NumeroGuiaRelacionada = item.GuiaRelacionada?.NumeroGuia,
+                    IdEstadoGuia = item.IdEstadoGuia,
+                    IdProveedor = item.IdProveedor,
+                    IdCliente = item.IdCliente,
+                    IdAlmacenOrigen = item.IdAlmacenOrigen,
+                    IdAlmacenDestino = item.IdAlmacenDestino,
+                    FechaProgramada = item.FechaProgramada,
+                    FechaRegistro = item.FechaRegistro,
+                    FechaActualizada = item.FechaActualizada,
+                    TipoDocumentoReferencia = item.TipoDocumentoReferencia,
+                    NumeroDocumentoReferencia = item.NumeroDocumentoReferencia,
+                    Observacion = item.Observacion,
+                    Detalles = item.Detalles.Select(detalle => new DetalleGuiaResponse
+                    {
+                        IdGuiaDetalle = detalle.IdDetalleGuia,
+                        IdProducto = detalle.IdProducto,
+                        CantidadEsperada = detalle.Cantidad
+                    }).ToList()
+                };
+            }).ToList();
             
         }
 
@@ -96,14 +175,83 @@ namespace ProyectoAW.Modules.Stocks.Services
                  ?? throw new NegocioException("La guia no existe en tus guias en proceso o en tus guias terminadas. . .");
 
             ValidacionesGuia.ExigirOperacionesOperador(guia.IdTipoOperacionGuia);
-            return GuiaMapper.ToGuiaOperadorDto(guia);
+            var requiereProveedor = guia.Motivo?.RequiereProveedor ??
+                guia.IdTipoOperacionGuia == TipoOperacionGuiaIds.Entrada;
+            var requiereCliente = guia.Motivo?.RequiereCliente ??
+                guia.IdTipoOperacionGuia == TipoOperacionGuiaIds.Salida;
+            var requiereAlmacenOrigen = guia.Motivo?.RequiereAlmacenOrigen ??
+                guia.IdTipoOperacionGuia == TipoOperacionGuiaIds.Salida;
+            var requiereAlmacenDestino = guia.Motivo?.RequiereAlmacenDestino ??
+                guia.IdTipoOperacionGuia == TipoOperacionGuiaIds.Entrada;
+
+            return new GuiaOperadorDto
+            {
+                IdGuia = guia.IdGuia,
+                NumeroGuia = guia.NumeroGuia,
+                IdTipoOperacionGuia = guia.IdTipoOperacionGuia,
+                IdMotivoGuia = guia.IdMotivoGuia,
+                IdTipoComportamiento = guia.Motivo?.IdTipoComportamiento,
+                NombreMotivo = guia.Motivo?.NombreMotivo,
+                RequiereProveedor = requiereProveedor,
+                RequiereCliente = requiereCliente,
+                RequiereAlmacenOrigen = requiereAlmacenOrigen,
+                RequiereAlmacenDestino = requiereAlmacenDestino,
+                TipoTercero = requiereProveedor ? "Proveedor" : requiereCliente ? "Cliente" : null,
+                NombreTercero = requiereProveedor
+                    ? guia.Proveedor?.RazonSocial
+                    : requiereCliente ? guia.Cliente?.RazonSocial : null,
+                NombreAlmacenOrigen = guia.AlmacenOrigen is null
+                    ? null
+                    : string.Join(" · ", new[] { guia.AlmacenOrigen.Codigo, guia.AlmacenOrigen.Nombre }
+                        .Where(valor => !string.IsNullOrWhiteSpace(valor))),
+                NombreAlmacenDestino = guia.AlmacenDestino is null
+                    ? null
+                    : string.Join(" · ", new[] { guia.AlmacenDestino.Codigo, guia.AlmacenDestino.Nombre }
+                        .Where(valor => !string.IsNullOrWhiteSpace(valor))),
+                IdGuiaRelacionada = guia.IdGuiaRelacionada,
+                NumeroGuiaRelacionada = guia.GuiaRelacionada?.NumeroGuia,
+                IdEstadoGuia = guia.IdEstadoGuia,
+                IdProveedor = guia.IdProveedor,
+                IdCliente = guia.IdCliente,
+                IdAlmacenOrigen = guia.IdAlmacenOrigen,
+                IdAlmacenDestino = guia.IdAlmacenDestino,
+                FechaProgramada = guia.FechaProgramada,
+                FechaRegistro = guia.FechaRegistro,
+                FechaActualizada = guia.FechaActualizada,
+                TipoDocumentoReferencia = guia.TipoDocumentoReferencia,
+                NumeroDocumentoReferencia = guia.NumeroDocumentoReferencia,
+                Observacion = guia.Observacion,
+                Detalles = guia.Detalles.Select(detalle => new DetalleGuiaResponse
+                {
+                    IdGuiaDetalle = detalle.IdDetalleGuia,
+                    IdProducto = detalle.IdProducto,
+                    CantidadEsperada = detalle.Cantidad
+                }).ToList()
+            };
         }
 
         public async Task<LecturaGuiaDto> RegistrarLecturaAsync(int idGuia, RegistrarLecturaGuiaRequest request)
         {
            // await _validacionesGuia.ExigirOperadorAsync();
             var lectura = await RegistrarLecturaEnTransaccionAsync(idGuia, request);
-            return GuiaMapper.ToLecturaDto(lectura);
+            return new LecturaGuiaDto
+            {
+                IdLecturaGuia = lectura.IdLecturaGuia,
+                IdGuia = lectura.IdGuia,
+                IdProducto = lectura.IdProducto,
+                CodigoProducto = lectura.Producto?.Codigo ?? lectura.CodigoLeido,
+                DescripcionProducto = lectura.Producto?.Nombre ?? string.Empty,
+                CodigoLeido = lectura.CodigoLeido,
+                Cantidad = lectura.Cantidad,
+                Lote = lectura.Lote,
+                Serie = lectura.Serie,
+                Observacion = lectura.Observacion,
+                IdUbicacionOrigen = lectura.IdUbicacionOrigen,
+                UbicacionOrigen = lectura.UbicacionOrigen?.Codigo,
+                IdUbicacionDestino = lectura.IdUbicacionDestino,
+                UbicacionDestino = lectura.UbicacionDestino?.Codigo,
+                FechaRegistroUtc = lectura.FechaRegistroUtc
+            };
         }
 
         public async Task TomarGuiaAsync(int idGuia)
@@ -163,7 +311,7 @@ namespace ProyectoAW.Modules.Stocks.Services
 
 
 
-        private static MovimientoStock CrearMovimiento(
+        private MovimientoStock CrearMovimiento(
             Guia guia,
             DetalleGuia detalle,
             IReadOnlyList<LecturaGuia> lecturas,
@@ -187,9 +335,28 @@ namespace ProyectoAW.Modules.Stocks.Services
                 CantidadDiferenciada = checked(totalLeido - cantidadEsperada),
                 Observacion = observacion,
                 FchMovimiento = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now),
-                IdUbicacionOrigen = MovimientosStockFactory.ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionOrigen)),
-                IdUbicacionDestino = MovimientosStockFactory.ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionDestino))
+                IdUbicacionOrigen = ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionOrigen)),
+                IdUbicacionDestino = ObtenerUbicacionComun(lecturas.Select(lectura => lectura.IdUbicacionDestino))
             };
+        }
+
+        private static string NombreOperador(Usuario? usuario) =>
+                                                      usuario is null ? string.Empty : $"{usuario.Nombre} {usuario.Apellido}".Trim();
+
+        private static string NombreOrigen(MovimientoStock movimiento) =>
+                                                           movimiento.IdTipoOperacion == TipoOperacionGuiaIds.Entrada
+                                                           ? movimiento.Guia?.Proveedor?.RazonSocial ?? "Cliente"
+                                                           : movimiento.Guia?.AlmacenDestino?.Nombre ?? "Almacen";
+
+        private static string NombreDestino(MovimientoStock movimiento) =>
+                                                            movimiento.IdTipoOperacion == TipoOperacionGuiaIds.Salida
+                                                            ? movimiento.Guia?.Proveedor?.RazonSocial ?? "Cliente"
+                                                            : movimiento.Guia?.AlmacenDestino?.Nombre ?? "Almacen";
+
+        private static int? ObtenerUbicacionComun(IEnumerable<int?> ubicaciones)
+        {
+            var distintas = ubicaciones.Distinct().ToList();
+            return distintas.Count == 1 ? distintas[0] : null;
         }
 
         private async Task<LecturaGuia> RegistrarLecturaEnTransaccionAsync(
@@ -205,7 +372,20 @@ namespace ProyectoAW.Modules.Stocks.Services
                 await _validacionesUbicacion.ValidarUbicacionesYDisponibilidadAsync(guia, idGuia, request);
 
 
-                lectura = LecturaGuiaFactory.Crear(idGuia, _currentUser.IdUsuario, request);
+                lectura = new LecturaGuia
+                {
+                    IdGuia = idGuia,
+                    IdProducto = request.IdProducto,
+                    IdUsuarioOperador = _currentUser.IdUsuario,
+                    Cantidad = request.Cantidad,
+                    CodigoLeido = request.CodigoLeido.Trim(),
+                    Lote = string.IsNullOrWhiteSpace(request.Lote) ? null : request.Lote.Trim(),
+                    Serie = string.IsNullOrWhiteSpace(request.Serie) ? null : request.Serie.Trim(),
+                    Observacion = string.IsNullOrWhiteSpace(request.Observacion) ? null : request.Observacion.Trim(),
+                    IdUbicacionOrigen = request.IdUbicacionOrigen is > 0 ? request.IdUbicacionOrigen : null,
+                    IdUbicacionDestino = request.IdUbicacionDestino is > 0 ? request.IdUbicacionDestino : null,
+                    FechaRegistroUtc = DateTimeText.From(DateTime.Now)
+                };
 
                 _repository.AgregarLectura(lectura);
                 await _repository.GuardarCambiosAsync();
@@ -244,7 +424,7 @@ namespace ProyectoAW.Modules.Stocks.Services
             await processor.AplicarProductoAsync(guia, detalle, lecturasDelProducto);
 
             var cantidadEsperada = checked((int)detalle.Cantidad);
-            var movimiento = MovimientosStockFactory.CrearMovimiento(
+            var movimiento = CrearMovimiento(
                 guia, detalle, lecturasDelProducto, processor, idOperador,
                 (int)totalLeido, cantidadEsperada);
             _movimientoStockRepo.AgregarMovimiento(movimiento);

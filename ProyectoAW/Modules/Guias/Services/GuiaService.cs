@@ -9,6 +9,7 @@ using ProyectoAW.Modules.Maestros.MotivosGuia.Repositories;
 
 namespace ProyectoAW.Modules.Guias.Services;
 
+using ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
 using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
 
 public class GuiaService : IGuiaService
@@ -26,17 +27,66 @@ public class GuiaService : IGuiaService
         _motivoRepository = motivoRepository;
         _currentUser = currentUser;
     }
+    // ConvertirADto eliminar
 
     public async Task<List<GuiaDto>> ObtenerTodosAsync()
     {
         var guias = await _repository.ObtenerTodosAsync();
-        return guias.Select(ConvertirADto).ToList();
+        return guias.Select( guia => new GuiaDto
+        {
+            IdGuia = guia.IdGuia,
+            NumeroGuia = guia.NumeroGuia,
+            TipoOperacion = guia.TipoOperacion.Nombre,
+            IdMotivoGuia = guia.IdMotivoGuia,
+            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
+            Estado = guia.Estado.Nombre,
+            IdProveedor = guia.IdProveedor,
+            Proveedor = guia.Proveedor?.RazonSocial,
+            IdCliente = guia.IdCliente,
+            Cliente = guia.Cliente?.RazonSocial,
+            IdAlmacenOrigen = guia.IdAlmacenOrigen,
+            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
+            IdAlmacenDestino = guia.IdAlmacenDestino,
+            AlmacenDestino = guia.AlmacenDestino?.Nombre,
+            FechaProgramada = guia.FechaProgramada,
+            Observacion = guia.Observacion,
+            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
+            {
+                IdProducto = detalle.IdProducto,
+                Producto = detalle.Producto.Nombre,
+                Cantidad = detalle.Cantidad
+            }).ToList()
+        }).ToList();
     }
 
     public async Task<List<GuiaDto>> ListarGuiasXtipoOperacionAsync(int idTipoOperacionGuia)
     {
         var guiasOperacion = await _repository.ListarGuiasTipoOperacionAsync(idTipoOperacionGuia);
-        return guiasOperacion.Select(ConvertirADto).ToList();
+        return guiasOperacion.Select( guia => new GuiaDto
+        {
+            IdGuia = guia.IdGuia,
+            NumeroGuia = guia.NumeroGuia,
+            TipoOperacion = guia.TipoOperacion.Nombre,
+            IdMotivoGuia = guia.IdMotivoGuia,
+            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
+            Estado = guia.Estado.Nombre,
+            IdProveedor = guia.IdProveedor,
+            Proveedor = guia.Proveedor?.RazonSocial,
+            IdCliente = guia.IdCliente,
+            Cliente = guia.Cliente?.RazonSocial,
+            IdAlmacenOrigen = guia.IdAlmacenOrigen,
+            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
+            IdAlmacenDestino = guia.IdAlmacenDestino,
+            AlmacenDestino = guia.AlmacenDestino?.Nombre,
+            FechaProgramada = guia.FechaProgramada,
+            Observacion = guia.Observacion,
+            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
+            {
+                IdProducto = detalle.IdProducto,
+                Producto = detalle.Producto.Nombre,
+                Cantidad = detalle.Cantidad
+            }).ToList()
+        }).ToList();
     }
 
 
@@ -47,8 +97,34 @@ public class GuiaService : IGuiaService
         if (guia == null)
             throw new NegocioException($"No se pudo encontrar la guia con id {id}.");
 
-        return ConvertirADto(guia);
+
+        return new GuiaDto
+        {
+            IdGuia = guia.IdGuia,
+            NumeroGuia = guia.NumeroGuia,
+            TipoOperacion = guia.TipoOperacion.Nombre,
+            IdMotivoGuia = guia.IdMotivoGuia,
+            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
+            Estado = guia.Estado.Nombre,
+            IdProveedor = guia.IdProveedor,
+            Proveedor = guia.Proveedor?.RazonSocial,
+            IdCliente = guia.IdCliente,
+            Cliente = guia.Cliente?.RazonSocial,
+            IdAlmacenOrigen = guia.IdAlmacenOrigen,
+            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
+            IdAlmacenDestino = guia.IdAlmacenDestino,
+            AlmacenDestino = guia.AlmacenDestino?.Nombre,
+            FechaProgramada = guia.FechaProgramada,
+            Observacion = guia.Observacion,
+            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
+            {
+                IdProducto = detalle.IdProducto,
+                Producto = detalle.Producto.Nombre,
+                Cantidad = detalle.Cantidad
+            }).ToList()
+        };
     }
+    
 
     public async Task<GuiaDto> CrearAsync(CrearGuiaDto request)
     {
@@ -97,8 +173,33 @@ public class GuiaService : IGuiaService
         await _repository.ActualizarAsync(guia);
 
         var guiaCreada = await _repository.ObtenerPorIdAsync(guia.IdGuia);
-        return ConvertirADto(guiaCreada!);
+        return new GuiaDto
+        {
+            IdGuia = guia.IdGuia,
+            NumeroGuia = guia.NumeroGuia,
+            TipoOperacion = guia.TipoOperacion.Nombre,
+            IdMotivoGuia = guia.IdMotivoGuia,
+            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
+            Estado = guia.Estado.Nombre,
+            IdProveedor = guia.IdProveedor,
+            Proveedor = guia.Proveedor?.RazonSocial,
+            IdCliente = guia.IdCliente,
+            Cliente = guia.Cliente?.RazonSocial,
+            IdAlmacenOrigen = guia.IdAlmacenOrigen,
+            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
+            IdAlmacenDestino = guia.IdAlmacenDestino,
+            AlmacenDestino = guia.AlmacenDestino?.Nombre,
+            FechaProgramada = guia.FechaProgramada,
+            Observacion = guia.Observacion,
+            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
+            {
+                IdProducto = detalle.IdProducto,
+                Producto = detalle.Producto.Nombre,
+                Cantidad = detalle.Cantidad
+            }).ToList()
+        };
     }
+    
 
     public async Task<bool> ActualizarAsync(int id, ActualizarGuiaDto request)
     {
@@ -184,34 +285,7 @@ public class GuiaService : IGuiaService
             throw new NegocioException("El motivo seleccionado requiere un almacen de destino.");
     }
 
-    private GuiaDto ConvertirADto(Guia guia)
-    {
-        return new GuiaDto
-        {
-            IdGuia = guia.IdGuia,
-            NumeroGuia = guia.NumeroGuia,
-            TipoOperacion = guia.TipoOperacion.Nombre,
-            IdMotivoGuia = guia.IdMotivoGuia,
-            Motivo = guia.Motivo?.NombreMotivo ?? string.Empty,
-            Estado = guia.Estado.Nombre,
-            IdProveedor = guia.IdProveedor,
-            Proveedor = guia.Proveedor?.RazonSocial,
-            IdCliente = guia.IdCliente,
-            Cliente = guia.Cliente?.RazonSocial,
-            IdAlmacenOrigen = guia.IdAlmacenOrigen,
-            AlmacenOrigen = guia.AlmacenOrigen?.Nombre,
-            IdAlmacenDestino = guia.IdAlmacenDestino,
-            AlmacenDestino = guia.AlmacenDestino?.Nombre,
-            FechaProgramada = guia.FechaProgramada,
-            Observacion = guia.Observacion,
-            Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
-            {
-                IdProducto = detalle.IdProducto,
-                Producto = detalle.Producto.Nombre,
-                Cantidad = detalle.Cantidad
-            }).ToList()
-        };
-    }
+    
 
 
 }

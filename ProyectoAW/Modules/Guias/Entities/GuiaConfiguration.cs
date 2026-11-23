@@ -73,6 +73,5 @@ public class GuiaConfiguration : IEntityTypeConfiguration<Guia>
                .WithMany()
                .HasForeignKey(x => x.IdUsuarioModificacion)
                .OnDelete(DeleteBehavior.Restrict);
-
     }
 }

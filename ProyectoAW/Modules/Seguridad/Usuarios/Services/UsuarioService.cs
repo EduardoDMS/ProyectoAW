@@ -71,6 +71,21 @@ public class UsuarioService : IUsuarioService
         await _repository.ActualizarAsync(usuario);
         return true;
     }
+    public async Task<bool> EliminarUsuarioAsync(int id)
+    {
+        var usuario = await _repository.GetByIdAsync(id);
+
+        if (usuario is null)
+            throw new NegocioException("No se encontro el usuario");
+
+        if (await _repository.TieneRegistrosAsociadosAsync(id))
+            throw new NegocioException(
+                "No se puede eliminar el usuario porque tiene lecturas, movimientos de stock o guías asociadas. " +
+                "Puedes desactivarlo si ya no debe tener acceso al sistema.");
+
+        await _repository.EliminarAsync(usuario);
+        return true;
+    }
 
     public async Task<UsuarioDto?> CrearUsuarioAsync(CrearUsuarioDto dto)
     {
@@ -100,15 +115,48 @@ public class UsuarioService : IUsuarioService
         return await ObtenerUsuarioPorIdAsync(usuario.IdUsuario);
     }
 
-    public async Task<List<UsuarioDto>> ListarUsuariosAsync() =>
-        (await _repository.GetAllAsync()).Select(ToDto).ToList();
+    public async Task<List<UsuarioDto>> ListarUsuariosAsync()
+    {
+        var usuarios = await _repository.GetAllAsync();
+        return usuarios.Select(usuario => new UsuarioDto
+        {
+            IdUsuario = usuario.IdUsuario,
+            Nombre = usuario.Nombre,
+            Apellido = usuario.Apellido,
+            Username = usuario.Username,
+            Password = usuario.Password,
+            IdRol = usuario.IdRol,
+            NombreRol = usuario.rol?.Nombre ?? string.Empty,
+            IdPerfilUsuario = usuario.IdPerfilUsuario,
+            NombrePerfil = usuario.PerfilUsuario?.NombrePerfil ?? string.Empty,
+            Activo = usuario.Activo
+        }).ToList();
+    }
 
     public async Task<UsuarioDto?> ObtenerUsuarioPorIdAsync(int id)
     {
         var usuario = await _repository.GetByIdAsync(id);
-        return usuario is null ? null : ToDto(usuario);
+        if (usuario is null)
+            return null;
+
+        return new UsuarioDto
+        {
+            IdUsuario = usuario.IdUsuario,
+            Nombre = usuario.Nombre,
+            Apellido = usuario.Apellido,
+            Username = usuario.Username,
+            Password = usuario.Password,
+            IdRol = usuario.IdRol,
+            NombreRol = usuario.rol?.Nombre ?? string.Empty,
+            IdPerfilUsuario = usuario.IdPerfilUsuario,
+            NombrePerfil = usuario.PerfilUsuario?.NombrePerfil ?? string.Empty,
+            Activo = usuario.Activo
+        };
     }
 
+
+
+    #region VALIDACIONES_USUARIOS
     private async Task ValidarRolAsync(int idRol)
     {
         var rol = await _rolService.ObtenerRolPorIdAsync(idRol);
@@ -140,18 +188,5 @@ public class UsuarioService : IUsuarioService
         if (nombre.Trim().Length > 100 || apellido.Trim().Length > 100 || username.Trim().Length > 20)
             throw new NegocioException("El nombre y apellido admiten hasta 100 caracteres; el usuario, hasta 20.");
     }
-
-    private static UsuarioDto ToDto(Usuario usuario) => new()
-    {
-        IdUsuario = usuario.IdUsuario,
-        Nombre = usuario.Nombre,
-        Apellido = usuario.Apellido,
-        Username = usuario.Username,
-        Password = usuario.Password,
-        IdRol = usuario.IdRol,
-        NombreRol = usuario.rol?.Nombre ?? string.Empty,
-        IdPerfilUsuario = usuario.IdPerfilUsuario,
-        NombrePerfil = usuario.PerfilUsuario?.NombrePerfil ?? string.Empty,
-        Activo = usuario.Activo
-    };
+    #endregion
 }

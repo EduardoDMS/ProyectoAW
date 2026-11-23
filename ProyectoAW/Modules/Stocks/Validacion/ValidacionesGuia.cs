@@ -7,7 +7,6 @@ using ProyectoAW.Modules.Maestros.Operaciones.Entities;
 using ProyectoAW.Modules.Stocks.Dtos.Request;
 using ProyectoAW.Modules.Stocks.Entities;
 using ProyectoAW.Modules.Stocks.Repositories;
-using ProyectoAW.Modules.Stocks.Factories;
 using ProyectoAW.Modules.Seguridad.Security_Session.Permisos.HttpAuth;
 
 namespace ProyectoAW.Modules.Stocks.Validacion
@@ -71,21 +70,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
             await _repository.GuardarCambiosAsync();
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

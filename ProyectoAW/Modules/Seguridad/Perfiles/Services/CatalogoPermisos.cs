@@ -20,7 +20,8 @@ public static class CatalogoPermisos
         "Stocks",
         "Usuarios",
         "Roles",
-        "Perfiles"
+        "Perfiles",
+        "TipoComportamiento"
     };
 
     private static readonly string[] Acciones =
@@ -34,7 +35,8 @@ public static class CatalogoPermisos
     private static readonly string[] ModulosOperador =
     {
         "Guias",
-        "Stocks"
+        "Stocks",
+        "Usuarios"
     };
 
     public static List<string> ListarModulos() => Modulos.ToList();
