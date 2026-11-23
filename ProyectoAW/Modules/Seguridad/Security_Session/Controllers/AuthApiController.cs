@@ -38,16 +38,5 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Controllers
                 usuario = sesion
             });
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }
