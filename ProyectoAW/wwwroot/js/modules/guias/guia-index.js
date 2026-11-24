@@ -37,10 +37,19 @@ function inicializarTabla() {
             { title: 'Fecha programada', field: 'fechaProgramada' },
             {
                 title: 'Estado',
-                field: 'activo',
-                formatter: (cell) => cell.getValue()
-                    ? '<span class="badge bg-success">Activo</span>'
-                    : '<span class="badge bg-danger">Inactivo</span>'
+                field: 'estado',
+                formatter: function (cell) {
+                    const estado = cell.getValue();
+
+                    const estados = {
+                        'Pendiente': '<span class="badge bg-warning"> Pendiente </span>',
+                        'En proceso': '<span class="badge bg-primary"> En proceso </span>',
+                        'Atendido': '<span class="badge bg-success"> Atendido </span>',
+                        'Cancelado': '<span class="badge bg-danger"> Cancelado </span>'
+                    };
+
+                    return estados[estado] || '<span class="badge bg-secondary">Desconocido</span>'
+                }
             },
             {
                 title: 'Acciones',
@@ -50,7 +59,7 @@ function inicializarTabla() {
                     return `
                         <div class="d-flex justify-content-center gap-2">
                             <button class="btn btn-sm btn-primary btn-ver" title="Ver">
-                                <i class="ti ti-eye-search"></i>
+                                <i class="ti ti-eye"></i>
                             </button>
 
                             <button class="btn btn-sm btn-primary btn-editar" title="Editar">
@@ -100,6 +109,7 @@ async function cargarGuias() {
             console.log(guias);
             console.log(resultado.mensaje);
 
+            guias.sort((a, b) => b.idGuia - a.idGuia);
             tablaGuias.setData(guias);
         }
 
@@ -124,7 +134,7 @@ async function cargarMotivosGuiaSelect() {
             motivosGuia = resultado.datos;
             const selects = [
                 document.getElementById('slcMotivoGuia'),
-                //document.getElementById('slcComportamientoEditar')
+                document.getElementById('slcMotivoGuiaEditar')
             ];
 
             selects.forEach(select => {
@@ -164,7 +174,7 @@ async function cargarProveedoresSelect() {
             const proveedores = resultado.datos;
             const selects = [
                 document.getElementById('slcProveedor'),
-                //document.getElementById('slcProveedorEditar')
+                document.getElementById('slcProveedorEditar')
             ];
 
             selects.forEach(select => {
@@ -203,8 +213,8 @@ async function cargarAlmacenesSelect() {
             const selects = [
                 document.getElementById('slcAlmacenOrigen'),
                 document.getElementById('slcAlmacenDestino'),
-                //document.getElementById('slcAlmacenOrigenEditar'),
-                //document.getElementById('slcAlmacenDestinoEditar')
+                document.getElementById('slcAlmacenOrigenEditar'),
+                document.getElementById('slcAlmacenDestinoEditar')
             ];
 
             selects.forEach(select => {
@@ -242,7 +252,7 @@ async function cargarClientesSelect() {
             const clientes = resultado.datos;
             const selects = [
                 document.getElementById('slcCliente'),
-                //document.getElementById('slcClienteEditar')
+                document.getElementById('slcClienteEditar')
             ];
 
             selects.forEach(select => {
@@ -299,7 +309,10 @@ function cargarProductosSelect(fila) {
 
 // EVENTOS
 function inicializarEventos() {
-
+    document.getElementById('txtBuscarGuia').addEventListener('input', filtrarGuia);
+    document.getElementById('slcOperacion').addEventListener('change', filtrarGuia);
+    document.getElementById('slcEstado').addEventListener('change', filtrarGuia);
+    document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
 
     document.getElementById('slcMotivoGuia').addEventListener('change', actualizarCamposMotivo);
     document.getElementById('btnAgregarProducto').addEventListener('click', agregarProductoGuia);
@@ -368,3 +381,40 @@ function eliminarProductoGuia(event) {
 }
 
 // FILTROS
+function filtrarGuia() {
+    const numeroGuia = document.getElementById('txtBuscarGuia').value.trim();
+    const operacion = document.getElementById('slcOperacion').value;
+    const estado = document.getElementById('slcEstado').value;
+
+    const filtros = [];
+
+    if (numeroGuia !== "") {
+        filtros.push({
+            field: 'numeroGuia',
+            type: 'like',
+            value: numeroGuia
+        });
+    }
+
+    if (operacion !== "0") {
+        filtros.push({
+            field: 'idTipoOperacionGuia',
+            type: '=',
+            value: Number(operacion)
+        });
+    }
+
+    if (estado !== '0') {
+        filtros.push({
+            field: 'estado',
+            type: '=',
+            value: estado
+        });
+    }
+
+    tablaGuias.setFilter(filtros);
+}
+
+function limpiarFiltros() {
+
+}
