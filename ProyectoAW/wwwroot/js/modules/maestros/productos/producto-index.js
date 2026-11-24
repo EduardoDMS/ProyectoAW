@@ -105,7 +105,7 @@ async function cargarCategoriasSelect() {
         if (!response.ok) {
             throw new Error(resultado.mensaje || 'Error al cargar las categorías');
         }
-        console.log(resultado);
+
         if (resultado.exito) {
             const categorias = resultado.datos;
             const selects = [

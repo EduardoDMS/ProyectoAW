@@ -5,7 +5,13 @@ let tablaMotivosGuia;
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
     cargarMotivosGuia();
+    cargarComportamientosSelect();
     inicializarEventos();
+    
+    document.addEventListener('motivo:guardado', () => {
+        cargarMotivosGuia();
+    })
+
 });
 
 // CONFIGURACIÓN DE TABULATOR
@@ -117,25 +123,92 @@ async function cargarMotivosGuia() {
 }
 
 // Select de crear y editar
+async function cargarComportamientosSelect() {
+    try {
+        const response = await fetch('/api/TipoComportamientoApi');
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los comportamientos');
+        }
+
+        if (resultado.exito) {
+            const comportamientos = resultado.datos;
+            const selects = [
+                document.getElementById('slcComportamiento'),
+                document.getElementById('slcComportamientoEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                comportamientos.forEach(comportamiento => {
+                    const option = document.createElement('option');
+
+                    option.value = comportamiento.idTipoComportamiento;
+                    option.textContent = comportamiento.nombre;
+
+                    select.appendChild(option);
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
+}
 
 // EVENTOS
 function inicializarEventos() {
     document.getElementById('txtBuscarMotivoGuia').addEventListener('input', filtrarMotivosGuia);
+    document.getElementById('slcOperacion').addEventListener('change', filtrarMotivosGuia);
     document.getElementById('slcEstado').addEventListener('change', filtrarMotivosGuia);
     document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
+
+    validarCheckDatos();
 }
+
+// Validacion de checks
+function validarCheckDatos() {
+    const checksDatosGuia = document.querySelectorAll('.check-datos-guia');
+
+    checksDatosGuia.forEach(check => {
+        check.addEventListener('change', validarCantidadChecks);
+    });
+}
+function validarCantidadChecks() {
+    const seleccionados = document.querySelectorAll('.check-datos-guia:checked');
+
+    if (seleccionados.length > 2) {
+        this.checked = false;
+        //alert('Solo puedes seleccionar un máximo de 2 opciones.')
+    }
+}
+
 // FILTROS
 function filtrarMotivosGuia() {
     const nombre = document.getElementById('txtBuscarMotivoGuia').value.trim();
+    const operacion = document.getElementById('slcOperacion').value;
     const estado = document.getElementById('slcEstado').value;
 
     const filtros = [];
 
     if (nombre !== "") {
         filtros.push({
-            field: 'nombre',
+            field: 'nombreMotivo',
             type: 'like',
             value: nombre
+        });
+    }
+
+    if (operacion !== "0") {
+        filtros.push({
+            field: 'idTipoOperacionGuia',
+            type: '=',
+            value: Number(operacion)
         });
     }
 
@@ -152,6 +225,7 @@ function filtrarMotivosGuia() {
 
 function limpiarFiltros() {
     document.getElementById('txtBuscarMotivoGuia').value = "";
+    document.getElementById('slcOperacion').value = 0;
     document.getElementById('slcEstado').value = 0;
 
     tablaMotivosGuia.clearFilter();

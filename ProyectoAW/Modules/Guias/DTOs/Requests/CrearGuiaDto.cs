@@ -12,7 +12,7 @@ public class CrearGuiaDto
     public int? IdAlmacenOrigen { get; set; }
     public int? IdAlmacenDestino { get; set; }
 
-    public int? TipoOperacion { get; set; }
+    public int? IdTipoOperacion { get; set; }
 
     [Required]
     public string FechaProgramada { get; set; } = string.Empty;
