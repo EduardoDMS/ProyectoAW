@@ -9,6 +9,7 @@ namespace ProyectoAW.Modules.Seguridad.Perfiles.Entites
         public string NombrePerfil { get; set; } = string.Empty;
         public int IdRol { get; set; }
         public Rol? rol { get; set; }
+        public bool Activo { get; set; }
 
         public ICollection<PermisoPerfil> Permisos { get; set; } = new List<PermisoPerfil>();
 

@@ -25,6 +25,12 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task EliminarAsync(Usuario usuario)
+        {
+            _context.Remove(usuario);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<Usuario>> GetAllAsync()
         {
             return await _context.Set<Usuario>().AsNoTracking()
@@ -47,6 +53,14 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Repositories
                 .Include(u => u.rol)
                 .Include(u => u.PerfilUsuario)
                 .FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> TieneRegistrosAsociadosAsync(int idUsuario)
+        {
+            return await _context.LecturasGuia.AnyAsync(lectura => lectura.IdUsuarioOperador == idUsuario)
+                || await _context.MovimientoStock.AnyAsync(movimiento => movimiento.IdUsuarioOperador == idUsuario)
+                || await _context.Guias.AnyAsync(guia =>
+                    guia.IdUsuarioRegistro == idUsuario || guia.IdUsuarioModificacion == idUsuario);
         }
     }
 }

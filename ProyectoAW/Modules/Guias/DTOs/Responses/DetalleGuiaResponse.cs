@@ -1,8 +1,9 @@
-﻿namespace ProyectoAW.Modules.Guias.DTOs.Responses
+namespace ProyectoAW.Modules.Guias.DTOs.Responses
 {
-    public record DetalleGuiaResponse(
-        int IdGuiaDetalle,
-        int IdProducto,
-        decimal CantidadEsperada // EL LA ENTIDAD DE DETALLEGUIA ES CANTIDAD NO CANTIDAD ESPERADA POS NOMAS XD
-    );
+    public sealed class DetalleGuiaResponse
+    {
+        public int IdGuiaDetalle { get; set; }
+        public int IdProducto { get; set; }
+        public decimal CantidadEsperada { get; set; }
+    }
 }

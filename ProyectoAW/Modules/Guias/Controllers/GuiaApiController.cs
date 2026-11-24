@@ -45,7 +45,7 @@ public class GuiaApiController : ControllerBase
             return StatusCode(500, new Respuesta
             {
                 Exito = false,
-                Mensaje = "Hubo un error al consultar la bd para obtener sus guias , comuniquese conn soporte o vuelva a intentarlo :( ."
+                Mensaje = "Hubo un error al consultar la bd para obtener sus guias , comuniquese con soporte o vuelva a intentarlo :( ."
             });
         }
     }

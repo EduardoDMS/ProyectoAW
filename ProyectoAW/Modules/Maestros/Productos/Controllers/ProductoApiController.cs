@@ -224,5 +224,37 @@ namespace ProyectoAW.Modules.Maestros.Productos.Controllers
                 });
             }
         }
+
+        [Authorize(Policy = "Productos.Ver")]
+        [HttpGet("listAlmacenXproducto")]
+        public async Task<IActionResult> ObtenerProductosXalmacen(int idAlmacen)
+        {
+            try
+            {
+                var productos = await _service.ListarPorAlmacenAsync(idAlmacen);
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Productos del almacen obtenidos correctamente.",
+                    Datos = productos
+                });
+            }
+            catch(NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch(Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno del servidor, intentelo nuevmaente o comuniquese con dms"
+                });
+            }
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Services
         Task<UsuarioDto?> CrearUsuarioAsync(CrearUsuarioDto dto);
         Task<bool> ActualizarUsuarioAsync(int id, ActualizarUsuarioDto dto);
         Task<bool> CambiarEstadoAsync(int id, bool activo);
+        Task<bool> EliminarUsuarioAsync(int id);
     }
 }

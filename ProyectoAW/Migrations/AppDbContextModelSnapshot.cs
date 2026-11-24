@@ -147,90 +147,6 @@ namespace ProyectoAW.Migrations
                     b.ToTable("Guias");
                 });
 
-            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.MotivoGuia", b =>
-                {
-                    b.Property<int>("IdMotivoGuia")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMotivoGuia"));
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("IdTipoComportamiento")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdTipoOperacionGuia")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NombreMotivo")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("RequiereAlmacenDestino")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RequiereAlmacenOrigen")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RequiereCliente")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RequiereProveedor")
-                        .HasColumnType("bit");
-
-                    b.HasKey("IdMotivoGuia");
-
-                    b.HasIndex("IdTipoComportamiento");
-
-                    b.HasIndex("IdTipoOperacionGuia", "NombreMotivo")
-                        .IsUnique();
-
-                    b.ToTable("MotivosGuia", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", b =>
-                {
-                    b.Property<int>("IdTipoComportamiento")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipoComportamiento"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("IdTipoComportamiento");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
-
-                    b.ToTable("TiposComportamientoGuia", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            IdTipoComportamiento = 1,
-                            Descripcion = "Movimiento entre proveedor o cliente y un almacén.",
-                            Nombre = "Movimiento normal"
-                        },
-                        new
-                        {
-                            IdTipoComportamiento = 2,
-                            Descripcion = "Movimiento de existencias entre almacenes.",
-                            Nombre = "Traslado interno"
-                        });
-                });
-
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
                 {
                     b.Property<int>("IdAlmacen")
@@ -413,6 +329,50 @@ namespace ProyectoAW.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.MotivosGuia.Entities.MotivoGuia", b =>
+                {
+                    b.Property<int>("IdMotivoGuia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMotivoGuia"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("IdTipoComportamiento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTipoOperacionGuia")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreMotivo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("RequiereAlmacenDestino")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereAlmacenOrigen")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereCliente")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequiereProveedor")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdMotivoGuia");
+
+                    b.HasIndex("IdTipoComportamiento");
+
+                    b.HasIndex("IdTipoOperacionGuia", "NombreMotivo")
+                        .IsUnique();
+
+                    b.ToTable("MotivosGuia", (string)null);
+                });
+
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Operaciones.Entities.TipoOperacionGuia", b =>
                 {
                     b.Property<int>("IdTipoOperacionGuia")
@@ -580,6 +540,46 @@ namespace ProyectoAW.Migrations
                     b.ToTable("Proveedores");
                 });
 
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoComportamientos.Entities.TipoComportamientoGuia", b =>
+                {
+                    b.Property<int>("IdTipoComportamiento")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipoComportamiento"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("IdTipoComportamiento");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("TiposComportamientoGuia", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            IdTipoComportamiento = 1,
+                            Descripcion = "Movimiento entre proveedor o cliente y un almacén.",
+                            Nombre = "Movimiento normal"
+                        },
+                        new
+                        {
+                            IdTipoComportamiento = 2,
+                            Descripcion = "Movimiento de existencias entre almacenes.",
+                            Nombre = "Traslado interno"
+                        });
+                });
+
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", b =>
                 {
                     b.Property<int>("IdTipoDocumento")
@@ -700,6 +700,9 @@ namespace ProyectoAW.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPerfil"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
 
                     b.Property<int>("IdRol")
                         .HasColumnType("int");
@@ -1096,7 +1099,7 @@ namespace ProyectoAW.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProyectoAW.Modules.Guias.Entities.MotivoGuia", "Motivo")
+                    b.HasOne("ProyectoAW.Modules.Maestros.MotivosGuia.Entities.MotivoGuia", "Motivo")
                         .WithMany()
                         .HasForeignKey("IdMotivoGuia")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1140,9 +1143,20 @@ namespace ProyectoAW.Migrations
                     b.Navigation("TipoOperacion");
                 });
 
-            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.MotivoGuia", b =>
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", b =>
                 {
-                    b.HasOne("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", "TipoComportamiento")
+                    b.HasOne("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", "TipoDocumento")
+                        .WithMany("Clientes")
+                        .HasForeignKey("IdTipoDocumento")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TipoDocumento");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.MotivosGuia.Entities.MotivoGuia", b =>
+                {
+                    b.HasOne("ProyectoAW.Modules.Maestros.TipoComportamientos.Entities.TipoComportamientoGuia", "TipoComportamiento")
                         .WithMany("Motivos")
                         .HasForeignKey("IdTipoComportamiento")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1157,17 +1171,6 @@ namespace ProyectoAW.Migrations
                     b.Navigation("TipoComportamiento");
 
                     b.Navigation("TipoOperacionGuia");
-                });
-
-            modelBuilder.Entity("ProyectoAW.Modules.Maestros.Clientes.Entities.Cliente", b =>
-                {
-                    b.HasOne("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", "TipoDocumento")
-                        .WithMany("Clientes")
-                        .HasForeignKey("IdTipoDocumento")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("TipoDocumento");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Productos.Entities.Producto", b =>
@@ -1416,11 +1419,6 @@ namespace ProyectoAW.Migrations
                     b.Navigation("MovimientoStocks");
                 });
 
-            modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.TipoComportamientoGuia", b =>
-                {
-                    b.Navigation("Motivos");
-                });
-
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", b =>
                 {
                     b.Navigation("MovimientoStock");
@@ -1447,6 +1445,11 @@ namespace ProyectoAW.Migrations
                     b.Navigation("MovimientoStocks");
 
                     b.Navigation("StockAlmacen");
+                });
+
+            modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoComportamientos.Entities.TipoComportamientoGuia", b =>
+                {
+                    b.Navigation("Motivos");
                 });
 
             modelBuilder.Entity("ProyectoAW.Modules.Maestros.TipoDocumentos.Entities.TipoDocumento", b =>

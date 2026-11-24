@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Requests;
 using ProyectoAW.Modules.Seguridad.Usuarios.Services;
 using ProyectoAW.Infraestructure.RP;
+using ProyectoAW.Modules.Seguridad.Usuarios.DTOs.Responses;
 
 namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
 {
@@ -164,6 +165,39 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             
             
         }
+
+
+        [Authorize(Policy ="Usuarios.Eliminar")]
+        [HttpDelete("eliminar-usuario/{id:int}")]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            try
+            {
+                await _service.EliminarUsuarioAsync(id);
+                return Ok(new Respuesta
+                {
+                    Exito = true,
+                    Mensaje = "Usuario eliminado"
+                });
+            }
+            catch (NegocioException ex)
+            {
+                return BadRequest(new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = ex.Message
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new Respuesta
+                {
+                    Exito = false,
+                    Mensaje = "Error interno del servidor, comuniquese con DMS"
+                });
+            }
+        }
+
 
 
         //[HttpPatch("{id:int}/estado")]
