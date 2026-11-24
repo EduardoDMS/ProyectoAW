@@ -8,6 +8,7 @@ public class ActualizarPerfilDto
     [StringLength(100)]
     public string NombrePerfil { get; set; } = string.Empty;
     public int IdRol { get; set; }
+    public bool Activo { get; set; }
 
     public List<PermisoPerfilRequestDto> Permisos { get; set; } = new();
 }

@@ -65,4 +65,15 @@ public class ProductoRepository : IProductoRepository
         _context.Productos.Remove(producto);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<Producto>> ObtenerProductosXAlmacenAsync(int idAlmacenOrigen)
+    {
+        return await _context.Productos.AsNoTracking()
+                                          .Include(p => p.Categoria)
+                                          .Include(p => p.UnidadMedida)
+                                          .Include(p => p.StockAlmacen!.Where(s => s.IdAlmacen == idAlmacenOrigen))
+                                          .Where(p => p.Activo && p.StockAlmacen!.Any(s => s.IdAlmacen == idAlmacenOrigen && s.CantidadActual > 0))
+                                          .OrderBy(p => p.Nombre)
+                                          .ToListAsync();
+    }
 }

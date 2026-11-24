@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarProductosGuia();
 
     inicializarEventos();
+
+    document.addEventListener('guia:guardado', () => {
+        cargarGuias();
+    });
 });
 
 // CONFIGURACIÓN DE TABULATOR
@@ -281,7 +285,7 @@ async function cargarProductosGuia() {
     }
 }
 function cargarProductosSelect(fila) {
-    const select = fila.querySelector('#slcProducto');
+    const select = fila.querySelector('.slcProducto');
 
     productosGuia.forEach(producto => {
         const option = document.createElement('option');
@@ -334,17 +338,17 @@ function agregarProductoGuia() {
 
     fila.innerHTML = `
         <td>
-            <select id="slcProducto" class="form-select">
+            <select class="form-select slcProducto">
                 <option value="0">Seleccione un producto</option>
             </select>
         </td>
 
         <td>
-            <input type="number" id="txtCantidad" class="form-control" min="1" step="1" placeholder="Ingrese cantidad">
+            <input type="number" class="form-control txtCantidad" min="1" step="1" placeholder="Ingrese cantidad">
         </td>
 
         <td class="text-center">
-            <button type="button" id="btnEliminarProducto" class="btn btn-outline-danger" title="Eliminar producto">
+            <button type="button" class="btn btn-outline-danger btnEliminarProducto" title="Eliminar producto">
                 <i class="ti ti-trash fs-5"></i>
             </button>
         </td>
@@ -356,7 +360,7 @@ function agregarProductoGuia() {
 }
 
 function eliminarProductoGuia(event) {
-    const boton = event.target.closest('#btnEliminarProducto');
+    const boton = event.target.closest('.btnEliminarProducto');
 
     if (!boton) return;
 

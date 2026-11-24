@@ -10,6 +10,7 @@ public class PerfilController : Controller
     [HttpGet("")]
     public IActionResult Index()
     {
+        RouteData.Values["viewModule"] = "Seguridad/Perfiles";
         return View();
     }
 }

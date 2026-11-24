@@ -17,8 +17,9 @@ namespace ProyectoAW.Modules.Maestros.TipoComportamientos.Controllers
             _service = service;
         }
 
-        [AllowAnonymous]
+        
         [HttpGet]
+        [Authorize(Policy = "TipoComportamiento.Ver")]
         public async Task<IActionResult> ListatTodosTipos()
         {
             try

@@ -12,4 +12,5 @@ public interface IProductoRepository
     Task<bool> TieneMovimientosAsociadosAsync(int idProducto);
     Task<bool> TieneStockAsociadoAsync(int idProducto);
     Task EliminarProductoAsync(Producto producto);
+    Task<List<Producto>> ObtenerProductosXAlmacenAsync(int idAlmacenOrigen);
 }

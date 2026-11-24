@@ -36,9 +36,15 @@ namespace ProyectoAW.Modules.Seguridad.Security_Session.Services
                 rol,
                 usuario.PerfilUsuario?.Permisos ?? new List<ProyectoAW.Modules.Seguridad.Perfiles.Entites.PermisoPerfil>());
 
-            return new SesionResponse(
-                usuario.IdUsuario, usuario.Username, $"{usuario.Nombre} {usuario.Apellido}", usuario.IdRol,
-                rol, permisos);
+            return new SesionResponse
+            {
+                IdUsuario = usuario.IdUsuario,
+                Username = usuario.Username,
+                NombreCompleto = $"{usuario.Nombre} {usuario.Apellido}",
+                IdRol = usuario.IdRol,
+                Rol = rol,
+                Permisos = permisos
+            };
         }
     }
 }

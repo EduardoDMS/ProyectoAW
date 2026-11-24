@@ -4,6 +4,8 @@ using ProyectoAW.Modules.Maestros.Productos.DTOs.Requests;
 using ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
 using ProyectoAW.Modules.Maestros.Productos.Entities;
 using ProyectoAW.Modules.Maestros.Productos.Repositories;
+using ProyectoAW.Modules.Stocks.Dtos.Response;
+using ProyectoAW.Modules.Stocks.Entities;
 //using ProyectoAW.Infrastructure.Errors;
 
 namespace ProyectoAW.Modules.Maestros.Productos.Services;
@@ -173,5 +175,25 @@ public class ProductoService : IProductoService
             throw new Exception("No se puede borrar si esta asociado a un stock <0");
 
         await _repository.EliminarProductoAsync(producto);
+    }
+
+    public async Task<List<ProductoAlmacenDto>> ListarPorAlmacenAsync(int idAlmacen)
+    {
+        if (idAlmacen <= 0)
+            throw new NegocioException("Indica un almacen valido");
+
+        var productos = await _repository.ObtenerProductosXAlmacenAsync(idAlmacen);
+
+        return productos.Select(p => new ProductoAlmacenDto
+        {
+            IdProducto = p.IdProducto,
+            Codigo = p.Codigo,
+            Nombre = p.Nombre,
+            Lote = p.Lote,
+            Serie = p.Serie,
+            NombreCategoria = p.Categoria?.Nombre ?? string.Empty,
+            NombreUnidadMedida = p.Categoria?.Nombre ?? string.Empty,
+            CantidadActual = p.StockAlmacen?.Sum(s => s.CantidadActual) ?? 0
+        }).ToList();
     }
 }

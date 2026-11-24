@@ -9,9 +9,5 @@ namespace ProyectoAW.Modules.Stocks.Repositories
         Task<IReadOnlyList<LecturaGuia>> ObtenerLecturasParaFinalizarAsync(int idGuia);
         void AgregarMovimiento(MovimientoStock movimiento);
         Task<bool> TieneUbicacionesDespachoActivasAsync(int idAlmacen);
-
-
-
-
     }
 }

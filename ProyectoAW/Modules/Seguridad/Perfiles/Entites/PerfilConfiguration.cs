@@ -22,5 +22,8 @@ public class PerfilConfiguration : IEntityTypeConfiguration<Perfil>
                .WithMany()
                .HasForeignKey(perfil => perfil.IdRol)
                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(perfil => perfil.Activo)
+            .IsRequired();
     }
 }

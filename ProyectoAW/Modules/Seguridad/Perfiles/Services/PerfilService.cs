@@ -24,7 +24,22 @@ public class PerfilService : IPerfilService
     public async Task<List<PerfilDto>> ListarAsync()
     {
         var perfiles = await _repository.ListarAsync();
-        return perfiles.Select(ConvertirADto).ToList();
+        return perfiles.Select(perfil => new PerfilDto
+        {
+            IdPerfil = perfil.IdPerfil,
+            NombrePerfil = perfil.NombrePerfil,
+            IdRol = perfil.IdRol,
+            NombreRol = perfil.rol.Nombre,
+            Activo = perfil.Activo,
+            Permisos = perfil.Permisos.Select(permiso => new PermisoPerfilDto
+            {
+                Modulo = permiso.Modulo,
+                Ver = permiso.Ver,
+                Crear = permiso.Crear,
+                Actualizar = permiso.Actualizar,
+                Eliminar = permiso.Eliminar,
+            }).ToList()
+        }).ToList();
     }
 
     public async Task<PerfilDto> ObtenerPorIdAsync(int id)
@@ -34,7 +49,22 @@ public class PerfilService : IPerfilService
         if (perfil == null)
             throw new NegocioException($"No se encontró el perfil con ID {id}.");
 
-        return ConvertirADto(perfil);
+        return new PerfilDto
+        {
+            IdPerfil = perfil.IdPerfil,
+            NombrePerfil = perfil.NombrePerfil,
+            IdRol = perfil.IdRol,
+            NombreRol = perfil.rol.Nombre,
+            Activo = perfil.Activo,
+            Permisos = perfil.Permisos.Select(permiso => new PermisoPerfilDto
+            {
+                Modulo = permiso.Modulo,
+                Ver = permiso.Ver,
+                Crear = permiso.Crear,
+                Actualizar = permiso.Actualizar,
+                Eliminar = permiso.Eliminar
+            }).ToList()
+        };
     }
 
     public async Task<PerfilDto> CrearAsync(CrearPerfilDto request)
@@ -55,7 +85,22 @@ public class PerfilService : IPerfilService
         };
 
         await _repository.CrearAsync(perfil);
-        return ConvertirADto(perfil);
+        return new PerfilDto
+        {
+            IdPerfil = perfil.IdPerfil,
+            NombrePerfil = perfil.NombrePerfil,
+            IdRol = perfil.IdRol,
+            NombreRol = perfil.rol.Nombre,
+            Activo = perfil.Activo,
+            Permisos = perfil.Permisos.Select(permiso => new PermisoPerfilDto
+            {
+                Modulo = permiso.Modulo,
+                Ver = permiso.Ver,
+                Crear = permiso.Crear,
+                Actualizar = permiso.Actualizar,
+                Eliminar = permiso.Eliminar
+            }).ToList()
+        }; 
     }
 
     public async Task<bool> ActualizarAsync(int id, ActualizarPerfilDto request)
@@ -77,6 +122,7 @@ public class PerfilService : IPerfilService
 
         perfil.NombrePerfil = nombre;
         perfil.IdRol = request.IdRol;
+        perfil.Activo = request.Activo;
         perfil.Permisos.Clear();
 
         foreach (var permiso in request.Permisos)
@@ -156,24 +202,6 @@ public class PerfilService : IPerfilService
             Crear = request.Crear,
             Actualizar = request.Actualizar,
             Eliminar = request.Eliminar
-        };
-    }
-
-    private static PerfilDto ConvertirADto(Perfil perfil)
-    {
-        return new PerfilDto
-        {
-            IdPerfil = perfil.IdPerfil,
-            NombrePerfil = perfil.NombrePerfil,
-            IdRol = perfil.IdRol,
-            Permisos = perfil.Permisos.Select(permiso => new PermisoPerfilDto
-            {
-                Modulo = permiso.Modulo,
-                Ver = permiso.Ver,
-                Crear = permiso.Crear,
-                Actualizar = permiso.Actualizar,
-                Eliminar = permiso.Eliminar
-            }).ToList()
         };
     }
 }
