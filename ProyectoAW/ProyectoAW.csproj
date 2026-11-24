@@ -54,10 +54,8 @@
     <Folder Include="Modules\Maestros\Clientes\Entities\" />
     <Folder Include="Modules\Maestros\Clientes\Services\" />
     <Folder Include="Modules\Maestros\Clientes\Repositories\" />
-    <Folder Include="Modules\Maestros\MotivosGuia\Views\" />
     <Folder Include="Modules\Maestros\Productos\Controllers\" />
     <Folder Include="Modules\Maestros\Productos\DTOs\Requests\" />
-    <Folder Include="Modules\Maestros\Productos\DTOs\Responses\" />
     <Folder Include="Modules\Maestros\Productos\Entities\" />
     <Folder Include="Modules\Maestros\Productos\Services\" />
     <Folder Include="Modules\Maestros\Productos\Repositories\" />

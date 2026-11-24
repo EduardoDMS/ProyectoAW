@@ -18,6 +18,9 @@ public class GuiaDto
     public int? IdAlmacenDestino { get; set; }
     public string? AlmacenDestino { get; set; }
     public string FechaProgramada { get; set; } = string.Empty;
+    public string TipoDocumentoReferencia { get; set; } = string.Empty;
+    public string NumeroDocumentoReferencia { get; set; } = string.Empty;
+
     public string? Observacion { get; set; }
     public List<DetalleGuiaDto> Detalles { get; set; } = new();
 }

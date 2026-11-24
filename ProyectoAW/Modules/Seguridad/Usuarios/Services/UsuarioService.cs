@@ -176,6 +176,10 @@ public class UsuarioService : IUsuarioService
             throw new NegocioException("Selecciona un perfil válido.");
 
         var perfil = await _perfilService.ObtenerPorIdAsync(idPerfilUsuario);
+
+        if (perfil is null)
+            throw new NegocioException("El perfil seleccionado no existe.");
+
         if (perfil.IdRol != idRol)
             throw new NegocioException("El perfil seleccionado no corresponde al rol del usuario.");
     }

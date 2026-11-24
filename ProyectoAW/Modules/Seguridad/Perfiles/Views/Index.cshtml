@@ -1,222 +1,178 @@
 @{
-    ViewData["Title"] = "Prueba de perfiles";
+	ViewData["Title"] = "Perfiles";
+	ViewData["Description"] = "Organiza y crea los perfiles para los usuarios";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Prueba de perfiles</h1>
-
-<p>Formulario simple para probar los endpoints de perfiles. La API requiere un token JWT de administrador.</p>
-
-<div>
-    <label for="token">Token Bearer</label><br />
-    <textarea id="token" rows="4" cols="100" placeholder="Pega aquí el token recibido desde /api/auth/login"></textarea>
+<div class="card card-body py-3">
+	<div class="row align-items-center">
+		<div class="col-12">
+			<div class="d-sm-flex align-items-center justify-content-between">
+				<div>
+					<h4 class="card-title">Perfiles</h4>
+					<p>Organiza y crea los perfiles correspondientes a cada usuario</p>
+				</div>
+				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearPerfil">
+					<i class="ti ti-plus fs-5"></i>
+					Nuevo perfil
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
 
-<hr />
+<div class="card card-body">
+	<div class="row mb-3">
+		<div class="col">
+			<label class="form-label">Perfil</label>
+			<div class="input-group">
+				<input id="txtBuscarPerfil" class="form-control" placeholder="Buscar perfil..." />
+				<button id="btnLimpiarFiltros" class="btn btn-outline-secondary"><i class="ti ti-eraser fs-5"></i></button>
+			</div>
+		</div>
+		<div class="col">
+			<label class="form-label">Estado</label>
+			<select id="slcEstado" class="form-select">
+				<option value="0">Todos</option>
+				<option value="1">Activo</option>
+				<option value="2">Inactivo</option>
+			</select>
+		</div>
+	</div>
 
-<div>
-    <h2>Datos del perfil</h2>
-    <label for="perfilId">ID del perfil (solo para actualizar)</label><br />
-    <input id="perfilId" type="number" min="1" />
-    <button type="button" id="cargarPerfil">Obtener perfil</button><br /><br />
-
-    <label for="nombrePerfil">Nombre del perfil</label><br />
-    <input id="nombrePerfil" type="text" maxlength="100" /><br /><br />
-
-    <label for="idRol">ID del rol</label><br />
-    <input id="idRol" type="number" min="1" /><br />
-    <button type="button" id="cargarModulos">Cargar módulos del rol</button>
+	<div id="tblPerfiles" class="table-striped"></div>
 </div>
 
-<div>
-    <h2>Permisos por módulo</h2>
-    <div id="modulos">Ingresa un ID de rol y carga sus módulos.</div>
+
+<!-- MODAL CREAR PERFIL -->
+<div class="modal fade" id="modalCrearPerfil" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">Crear perfil</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label for="txtNombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+						<input type="text" id="txtNombre" class="form-control" placeholder="Ej: Almacenero" maxlength="100" required />
+					</div>
+
+					<div class="col-md-6 mb-3">
+						<label for="slcRol" class="form-label">Rol <span class="text-danger">*</span></label>
+						<select id="slcRol" class="form-select">
+							<option value="0">Seleccione un rol</option>
+						</select>
+					</div>
+
+					<div class="col-12">
+						<label class="form-label">Permisos por módulo</label>
+						<div class="table-responsive border rounded">
+							<table class="table table-bordered align-middle text-center mb-0 tabla-permisos">
+								<thead class="table-light">
+									<tr>
+										<th class="text-start">Módulo</th>
+										<th>Ver <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="ver" title="Marcar toda la columna" /></th>
+										<th>Crear <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="crear" title="Marcar toda la columna" /></th>
+										<th>Actualizar <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="actualizar" title="Marcar toda la columna" /></th>
+										<th>Eliminar <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="eliminar" title="Marcar toda la columna" /></th>
+									</tr>
+								</thead>
+								<tbody id="tbodyPermisos">
+									<tr><td colspan="5" class="text-muted py-3">Selecciona un rol para ver los módulos disponibles.</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnGuardarPerfil" class="btn bg-primary-subtle text-primary">
+						Guardar perfil
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<p>
-    <button type="button" id="crear">Crear perfil</button>
-    <button type="button" id="actualizar">Actualizar perfil</button>
-</p>
+<!-- MODAL EDITAR PERFIL -->
+<div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">Editar perfil</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
 
-<h2>Respuesta</h2>
-<pre id="respuesta">Listo.</pre>
+			<div class="modal-body">
+				<input type="hidden" id="txtIdPerfilEditar" />
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label for="txtNombreEditar" class="form-label">Nombre <span class="text-danger">*</span></label>
+						<input type="text" id="txtNombreEditar" class="form-control" maxlength="100" required />
+					</div>
 
-<script>
-    const apiBase = "/api/perfiles";
-    const respuesta = document.getElementById("respuesta");
+					<div class="col-md-6 mb-3">
+						<label for="slcRolEditar" class="form-label">Rol <span class="text-danger">*</span></label>
+						<select id="slcRolEditar" class="form-select">
+							<option value="0">Seleccione un rol</option>
+						</select>
+					</div>
 
-    function headersJson() {
-        const headers = { "Content-Type": "application/json" };
-        const token = document.getElementById("token").value.trim();
-        if (token) headers.Authorization = `Bearer ${token}`;
-        return headers;
-    }
+					<div class="col-12 mb-3">
+						<div class="form-check form-switch">
+							<input type="checkbox" id="chkActivoEditar" class="form-check-input" checked />
+							<label for="chkActivoEditar" class="form-check-label">Activo</label>
+						</div>
+						<small class="text-muted">Indica si el perfil estará habilitado para asignarse a usuarios</small>
+					</div>
 
-    async function llamarApi(url, options = {}) {
-        const response = await fetch(url, {
-            ...options,
-            headers: { ...headersJson(), ...(options.headers || {}) }
-        });
-        const text = await response.text();
-        let data;
-        try { data = text ? JSON.parse(text) : null; }
-        catch { data = text; }
+					<div class="col-12">
+						<label class="form-label">Permisos por módulo</label>
+						<div class="table-responsive border rounded">
+							<table class="table table-bordered align-middle text-center mb-0 tabla-permisos">
+								<thead class="table-light">
+									<tr>
+										<th class="text-start">Módulo</th>
+										<th>Ver <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="ver" title="Marcar toda la columna" /></th>
+										<th>Crear <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="crear" title="Marcar toda la columna" /></th>
+										<th>Actualizar <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="actualizar" title="Marcar toda la columna" /></th>
+										<th>Eliminar <br /><input type="checkbox" class="form-check-input chk-columna" data-permiso="eliminar" title="Marcar toda la columna" /></th>
+									</tr>
+								</thead>
+								<tbody id="tbodyPermisosEditar">
+									<tr><td colspan="5" class="text-muted py-3">Selecciona un rol para ver los módulos disponibles.</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        respuesta.textContent = `HTTP ${response.status}\n` +
-            (typeof data === "string" ? data : JSON.stringify(data, null, 2));
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnActualizarPerfil" class="btn bg-primary-subtle text-primary">
+						Actualizar perfil
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-        if (!response.ok) throw new Error(`La API respondió HTTP ${response.status}.`);
-        return data;
-    }
 
-    function valor(objeto, nombre) {
-        return objeto?.[nombre] ?? objeto?.[nombre.charAt(0).toUpperCase() + nombre.slice(1)];
-    }
-
-    document.getElementById("cargarModulos").addEventListener("click", async () => {
-        const idRol = Number(document.getElementById("idRol").value);
-        if (!idRol) {
-            respuesta.textContent = "Ingresa un ID de rol válido.";
-            return;
-        }
-
-        try {
-            const result = await llamarApi(`${apiBase}/modulos?idRol=${encodeURIComponent(idRol)}`);
-            const modulos = result?.datos ?? result?.Datos ?? [];
-            const contenedor = document.getElementById("modulos");
-            contenedor.replaceChildren();
-
-            for (const modulo of modulos) {
-                const fieldset = document.createElement("fieldset");
-                const legend = document.createElement("legend");
-                legend.textContent = modulo;
-                fieldset.appendChild(legend);
-
-                for (const accion of ["Ver", "Crear", "Actualizar", "Eliminar"]) {
-                    const label = document.createElement("label");
-                    const checkbox = document.createElement("input");
-                    checkbox.type = "checkbox";
-                    checkbox.dataset.modulo = modulo;
-                    checkbox.dataset.accion = accion;
-                    label.append(checkbox, ` ${accion} `);
-                    fieldset.appendChild(label);
-                }
-
-                contenedor.appendChild(fieldset);
-            }
-
-            if (modulos.length === 0) contenedor.textContent = "El rol no tiene módulos disponibles.";
-        } catch (error) {
-            console.error(error);
-        }
-    });
-
-    document.getElementById("cargarPerfil").addEventListener("click", async () => {
-        const id = Number(document.getElementById("perfilId").value);
-        if (!id) {
-            respuesta.textContent = "Ingresa el ID del perfil que deseas consultar.";
-            return;
-        }
-
-        try {
-            const result = await llamarApi(`${apiBase}/${id}`);
-            const perfil = valor(result, "datos");
-            if (!perfil) {
-                respuesta.textContent = "La respuesta no contiene los datos del perfil.";
-                return;
-            }
-
-            const idRol = valor(perfil, "idRol");
-            document.getElementById("nombrePerfil").value = valor(perfil, "nombrePerfil") ?? "";
-            document.getElementById("idRol").value = idRol ?? "";
-
-            const modulosResult = await llamarApi(
-                `${apiBase}/modulos?idRol=${encodeURIComponent(idRol)}`);
-            const modulos = valor(modulosResult, "datos") ?? [];
-            const contenedor = document.getElementById("modulos");
-            contenedor.replaceChildren();
-
-            for (const modulo of modulos) {
-                const fieldset = document.createElement("fieldset");
-                const legend = document.createElement("legend");
-                legend.textContent = modulo;
-                fieldset.appendChild(legend);
-
-                for (const accion of ["Ver", "Crear", "Actualizar", "Eliminar"]) {
-                    const label = document.createElement("label");
-                    const checkbox = document.createElement("input");
-                    checkbox.type = "checkbox";
-                    checkbox.dataset.modulo = modulo;
-                    checkbox.dataset.accion = accion;
-                    label.append(checkbox, ` ${accion} `);
-                    fieldset.appendChild(label);
-                }
-                contenedor.appendChild(fieldset);
-            }
-
-            const permisos = valor(perfil, "permisos") ?? [];
-            for (const permiso of permisos) {
-                const modulo = valor(permiso, "modulo");
-                for (const accion of ["Ver", "Crear", "Actualizar", "Eliminar"]) {
-                    const checkbox = document.querySelector(
-                        `#modulos input[data-modulo="${modulo}"][data-accion="${accion}"]`);
-                    if (checkbox) checkbox.checked = Boolean(valor(permiso, accion.toLowerCase()));
-                }
-            }
-
-            if (modulos.length === 0) contenedor.textContent = "El rol no tiene módulos disponibles.";
-        } catch (error) {
-            console.error(error);
-        }
-    });
-
-    function obtenerPayload() {
-        const nombrePerfil = document.getElementById("nombrePerfil").value.trim();
-        const idRol = Number(document.getElementById("idRol").value);
-        const permisosPorModulo = new Map();
-
-        document.querySelectorAll("#modulos input[type=checkbox]").forEach(checkbox => {
-            const modulo = checkbox.dataset.modulo;
-            if (!permisosPorModulo.has(modulo)) {
-                permisosPorModulo.set(modulo, {
-                    Modulo: modulo,
-                    Ver: false,
-                    Crear: false,
-                    Actualizar: false,
-                    Eliminar: false
-                });
-            }
-            permisosPorModulo.get(modulo)[checkbox.dataset.accion] = checkbox.checked;
-        });
-
-        return {
-            NombrePerfil: nombrePerfil,
-            IdRol: idRol,
-            Permisos: Array.from(permisosPorModulo.values())
-        };
-    }
-
-    document.getElementById("crear").addEventListener("click", async () => {
-        try {
-            await llamarApi(apiBase, { method: "POST", body: JSON.stringify(obtenerPayload()) });
-        } catch (error) {
-            console.error(error);
-        }
-    });
-
-    document.getElementById("actualizar").addEventListener("click", async () => {
-        const id = Number(document.getElementById("perfilId").value);
-        if (!id) {
-            respuesta.textContent = "Ingresa el ID del perfil que deseas actualizar.";
-            return;
-        }
-
-        try {
-            await llamarApi(`${apiBase}/${id}`, {
-                method: "PUT",
-                body: JSON.stringify(obtenerPayload())
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    });
-</script>
+@section Scripts{
+	<script src="~/js/modules/seguridad/perfiles/perfil-index.js" asp-append-version="true"></script>
+	<script src="~/js/modules/seguridad/perfiles/perfil-form.js" asp-append-version="true"></script>
+}

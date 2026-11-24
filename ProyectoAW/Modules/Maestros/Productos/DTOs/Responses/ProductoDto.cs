@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ProyectoAW.Modules.Stocks.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoAW.Modules.Maestros.Productos.DTOs.Responses;
 
@@ -14,4 +15,6 @@ public class ProductoDto
     public string NombreCategoria { get; set; } = string.Empty;
     public int IdUnidadMedida { get; set; }
     public string NombreUnidadMedida { get; set; } = string.Empty;
+
+    public StockAlmacen? stockcitoAlmacen { get; set; }
 }

@@ -12,11 +12,19 @@ public class CrearGuiaDto
     public int? IdAlmacenOrigen { get; set; }
     public int? IdAlmacenDestino { get; set; }
 
+    public int? TipoOperacion { get; set; }
+
     [Required]
     public string FechaProgramada { get; set; } = string.Empty;
 
     [StringLength(500)]
     public string? Observacion { get; set; }
+
+    [StringLength(100)]
+    public string TipoDocumentoReferencia { get; set; } = string.Empty;
+
+    [StringLength(100)]
+    public string NumeroDocumentoReferencia { get; set; } = string.Empty;
 
     [Required]
     [MinLength(1, ErrorMessage = "Agrega al menos un producto a la guía.")]

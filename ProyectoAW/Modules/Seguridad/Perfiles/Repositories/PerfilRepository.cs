@@ -18,6 +18,7 @@ public class PerfilRepository : IPerfilRepository
         return await _context.Perfiles
                              .AsNoTracking()
                              .Include(perfil => perfil.Permisos)
+                             .Include(perfil => perfil.rol)
                              .OrderBy(perfil => perfil.NombrePerfil)
                              .ToListAsync();
     }
@@ -26,6 +27,7 @@ public class PerfilRepository : IPerfilRepository
     {
         return _context.Perfiles
                        .Include(perfil => perfil.Permisos)
+                       .Include(perfil => perfil.rol)
                        .FirstOrDefaultAsync(perfil => perfil.IdPerfil == id);
     }
 
