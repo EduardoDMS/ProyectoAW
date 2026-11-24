@@ -12,7 +12,7 @@
 					<h4 class="card-title">Motivos</h4>
 					<p>Organiza y crea motivos para las guías de remisión</p>
 				</div>
-				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearMotivo">
+				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearMotivoGuia">
 					<i class="ti ti-plus fs-5"></i>
 					Nuevo motivo
 				</button>
@@ -50,6 +50,237 @@
 	</div>
 
 	<div id="tblMotivosGuia" class="table-striped">
+	</div>
+</div>
+
+<!-- MODAL CREAR MOTIVO -->
+<div class="modal fade" id="modalCrearMotivoGuia" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">
+					Crear motivo de guía
+				</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<!-- Nombre -->
+					<div class="col-md-12 mb-3">
+						<label for="txtNombre" class="form-label">
+							Nombre del motivo <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtNombre" class="form-control" placeholder="Ej: Devolución del cliente" maxlength="50" required />
+					</div>
+
+					<!-- Operacion -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo operación <span class="text-danger">*</span>
+						</label>
+						<select id="slcOperacion" class="form-select">
+							<option value="0">Ninguna</option>
+							<option value="1">Entrada</option>
+							<option value="2">Salida</option>
+						</select>
+					</div>
+
+					<!-- Comportamiento -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo comportamiento <span class="text-danger">*</span>
+						</label>
+						<select id="slcComportamiento" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Datos extras -->
+					<div class="col-md-12 mb-3">
+						<label class="form-label">
+							Datos que solicitará la guía <span class="text-danger">*</span>
+						</label>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereProveedor">
+									<label class="form-check-label" for="requiereProveedor">
+										Proveedor
+									</label>
+								</div>							
+							</div>
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereAlmacenOrigen">
+									<label class="form-check-label" for="requiereAlmacenOrigen">
+										Almacén origen
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereAlmacenDestino">
+									<label class="form-check-label" for="requiereAlmacenDestino">
+										Almacén destino
+									</label>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereCliente">
+									<label class="form-check-label" for="requiereCliente">
+										Cliente
+									</label>
+								</div>
+							</div>
+						</div>						
+					</div>
+
+					<!-- Estado -->
+					<div class="col-12 mb-3">
+						<div class="form-check form-switch">
+							<input type="checkbox" id="chkActivo" class="form-check-input" checked />
+							<label for="chkActivo" class="form-check-label">
+								Activo
+							</label>
+						</div>
+						<small class="text-muted">
+							Indica si el motivo estará habilitado para su utilización
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnGuardarMotivoGuia" class="btn bg-primary-subtle text-primary">
+						Guardar motivo
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL EDITAR MOTIVO -->
+<div class="modal fade" id="modalEditarMotivoGuia" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">
+					Editar motivo de guía
+				</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<input type="hidden" id="txtIdMotivoGuia" />
+				<div class="row">
+					<!-- Nombre -->
+					<div class="col-md-12 mb-3">
+						<label for="txtNombreEditar" class="form-label">
+							Nombre del motivo <span class="text-danger">*</span>
+						</label>
+						<input type="text" id="txtNombreEditar" class="form-control" placeholder="Ej: Devolución del cliente" maxlength="50" required />
+					</div>
+
+					<!-- Operacion -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo operación <span class="text-danger">*</span>
+						</label>
+						<select id="slcOperaciónEditar" class="form-select">
+							<option value="0">Ninguna</option>
+							<option value="1">Entrada</option>
+							<option value="2">Salida</option>
+						</select>
+					</div>
+
+					<!-- Comportamiento -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo comportamiento <span class="text-danger">*</span>
+						</label>
+						<select id="slcComportamientoEditar" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Datos extras -->
+					<div class="col-md-12 mb-3">
+						<label class="form-label">
+							Datos que solicitará la guía <span class="text-danger">*</span>
+						</label>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereProveedorEditar">
+									<label class="form-check-label" for="requiereProveedorEditar">
+										Proveedor
+									</label>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereAlmacenOrigenEditar">
+									<label class="form-check-label" for="requiereAlmacenOrigenEditar">
+										Almacén origen
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereAlmacenDestinoEditar">
+									<label class="form-check-label" for="requiereAlmacenDestinoEditar">
+										Almacén destino
+									</label>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-check">
+									<input class="form-check-input check-datos-guia" type="checkbox" id="requiereClienteEditar">
+									<label class="form-check-label" for="requiereClienteEditar">
+										Cliente
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Estado -->
+					<div class="col-12 mb-3">
+						<div class="form-check form-switch">
+							<input type="checkbox" id="chkActivoEditar" class="form-check-input" checked />
+							<label for="chkActivoEditar" class="form-check-label">
+								Activo
+							</label>
+						</div>
+						<small class="text-muted">
+							Indica si el motivo estará habilitado para su utilización
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnActualizarMotivoGuia" class="btn bg-primary-subtle text-primary">
+						Actualizar motivo
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

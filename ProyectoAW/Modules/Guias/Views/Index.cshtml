@@ -12,7 +12,7 @@
 					<h4 class="card-title">Guías</h4>
 					<p>Registra guías de remisión para el ingreso y salida de productos en tus almacenes</p>
 				</div>
-				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearProducto">
+				<button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCrearGuia">
 					<i class="ti ti-plus fs-5"></i>
 					Nueva guía
 				</button>
@@ -56,6 +56,160 @@
 
 	<div id="tblGuias" class="table-striped">
 
+	</div>
+</div>
+
+<!-- MODAL CREAR GUIA -->
+<div class="modal fade" id="modalCrearGuia" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header d-flex align-items-center">
+				<h4 class="modal-title">
+					Crear guía
+				</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<!-- Operacion -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Tipo operación <span class="text-danger">*</span>
+						</label>
+						<select id="slcOperación" class="form-select">
+							<option value="0">Ninguna</option>
+							<option value="1">Entrada</option>
+							<option value="2">Salida</option>
+						</select>
+					</div>
+
+					<!-- Motivo -->
+					<div class="col-md-6 mb-3">
+						<label class="form-label">
+							Motivo de la guía <span class="text-danger">*</span>
+						</label>
+						<select id="slcMotivoGuia" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Proveedor -->
+					<div id="divProveedor" class="col-md-6 mb-3 d-none">
+						<label class="form-label">
+							Proveedor <span class="text-danger">*</span>
+						</label>
+						<select id="slcProveedor" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Almacen destino -->
+					<div id="divAlmacenDestino" class="col-md-6 mb-3 d-none">
+						<label class="form-label">
+							Almacén destino <span class="text-danger">*</span>
+						</label>
+						<select id="slcAlmacenDestino" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Almacen origen -->
+					<div id="divAlmacenOrigen" class="col-md-6 mb-3 d-none">
+						<label class="form-label">
+							Almacén origen <span class="text-danger">*</span>
+						</label>
+						<select id="slcAlmacenOrigen" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Cliente -->
+					<div id="divCliente" class="col-md-6 mb-3 d-none">
+						<label class="form-label">
+							Cliente <span class="text-danger">*</span>
+						</label>
+						<select id="slcCliente" class="form-select">
+							<option value="0">Ninguna</option>
+						</select>
+					</div>
+
+					<!-- Fecha y hora programada -->
+					<div class="col-md-12 mb-3">
+						<label for="txtFechaProgramada" class="form-label">
+							Fecha programada <span class="text-danger">*</span>
+						</label>
+						<input type="datetime-local" id="txtFechaProgramada" class="form-control" required />
+					</div>
+
+					<!-- Tipo de documento -->
+					<div class="col-md-6 mb-3">
+						<label for="txtTipoDocumento" class="form-label">
+							Tipo de documento de referencia
+						</label>
+						<input type="text" id="txtTipoDocumento" class="form-control" placeholder="Ej: Orden de compra" maxlength="50" required />
+					</div>
+
+					<!-- Numero de documento -->
+					<div class="col-md-6 mb-3">
+						<label for="txtNumeroDocumento" class="form-label">
+							Número de documento
+						</label>
+						<input type="text" id="txtNumeroDocumento" class="form-control" placeholder="Ej: OC-2026-0001" maxlength="50" required />
+					</div>
+
+					<!-- Observacion -->
+					<div class="col-md-12 mb-3">
+						<label for="txtObservacion" class="form-label">
+							Observación
+						</label>
+						<textarea id="txtObservacion" class="form-control" placeholder="Notas sobre la guía"></textarea>
+					</div>					
+				</div>
+
+
+				<div class="row">
+					<div class="col-md-12">
+						<label class="form-label">
+							Productos de la guía <span class="text-danger">*</span>
+						</label>
+						<div class="table-responsive border rounded-1 mb-2">
+							<table class="table text-nowrap align-middle mb-0">
+								<thead class="text-dark fs-4">
+									<tr>
+										<th style="width:55%;">Producto</th>
+										<th style="width:30%;">Cantidad esperada</th>
+										<th style="width:15%;">Acción</th>
+									</tr>
+								</thead>
+
+								<tbody id="tbodyProductosGuia">
+
+								</tbody>
+							</table>
+						</div>
+
+						<div>
+							<button type="button" id="btnAgregarProducto" class="btn btn-outline-success">
+								<i class="ti ti-plus"></i>
+								Añadir producto
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<div>
+					<button type="button" class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" aria-label="Close">
+						Cancelar
+					</button>
+					<button type="button" id="btnGuardarGuia" class="btn bg-primary-subtle text-primary">
+						Guardar guía
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

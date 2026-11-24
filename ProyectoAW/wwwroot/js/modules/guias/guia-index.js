@@ -5,6 +5,14 @@ let tablaGuias;
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTabla();
     cargarGuias();
+
+    cargarMotivosGuiaSelect();
+    cargarProveedoresSelect();
+    cargarAlmacenesSelect();
+    cargarClientesSelect();
+    cargarProductosGuia();
+
+    inicializarEventos();
 });
 
 // CONFIGURACIÓN DE TABULATOR
@@ -97,7 +105,262 @@ async function cargarGuias() {
 }
 
 // Select de crear y editar
+let motivosGuia = [];
+async function cargarMotivosGuiaSelect() {
+    try {
+        const response = await fetch('/api/MotivoGuiaApi');
+
+        const resultado = await response.json();
+        console.log(resultado);
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los motivos de guía');
+        }
+
+        if (resultado.exito) {
+            motivosGuia = resultado.datos;
+            const selects = [
+                document.getElementById('slcMotivoGuia'),
+                //document.getElementById('slcComportamientoEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                motivosGuia
+                    .filter(motivo=>motivo.activo)
+                    .forEach(motivoGuia => {
+                        const option = document.createElement('option');
+
+                        option.value = motivoGuia.idMotivoGuia;
+                        option.textContent = motivoGuia.nombreMotivo;
+
+                        select.appendChild(option);
+                    });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
+}
+
+async function cargarProveedoresSelect() {
+    try {
+        const response = await fetch('/api/ProveedorApi');
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los proveedores');
+        }
+
+        if (resultado.exito) {
+            const proveedores = resultado.datos;
+            const selects = [
+                document.getElementById('slcProveedor'),
+                //document.getElementById('slcProveedorEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                proveedores.forEach(proveedor => {
+                    const option = document.createElement('option');
+
+                    option.value = proveedor.idProveedor;
+                    option.textContent = proveedor.razonSocial;
+
+                    select.appendChild(option);
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
+}
+
+async function cargarAlmacenesSelect() {
+    try {
+        const response = await fetch('/api/AlmacenApi');
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los almacenes');
+        }
+
+        if (resultado.exito) {
+            const almacenes = resultado.datos;
+            const selects = [
+                document.getElementById('slcAlmacenOrigen'),
+                document.getElementById('slcAlmacenDestino'),
+                //document.getElementById('slcAlmacenOrigenEditar'),
+                //document.getElementById('slcAlmacenDestinoEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                almacenes.forEach(almacen => {
+                    const option = document.createElement('option');
+
+                    option.value = almacen.idAlmacen;
+                    option.textContent = almacen.nombre;
+
+                    select.appendChild(option);
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
+}
+
+async function cargarClientesSelect() {
+    try {
+        const response = await fetch('/api/ClienteApi');
+
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar los clientes');
+        }
+
+        if (resultado.exito) {
+            const clientes = resultado.datos;
+            const selects = [
+                document.getElementById('slcCliente'),
+                //document.getElementById('slcClienteEditar')
+            ];
+
+            selects.forEach(select => {
+                // Limpiar opciones anteriores
+                select.innerHTML = '<option value="0">Ninguno</option>';
+
+                // Recorrer los almacenes
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+
+                    option.value = cliente.idCliente;
+                    option.textContent = cliente.razonSocial;
+
+                    select.appendChild(option);
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Error: ', error.message);
+    }
+}
+
+let productosGuia = [];
+async function cargarProductosGuia() {
+    try {
+        const response = await fetch('api/ProductoApi');
+        const resultado = await response.json();
+
+        if (!response.ok) {
+            throw new Error(resultado.mensaje || 'Error al cargar productos');
+        }
+
+        if (resultado.exito) {
+            productosGuia = resultado.datos;
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+function cargarProductosSelect(fila) {
+    const select = fila.querySelector('#slcProducto');
+
+    productosGuia.forEach(producto => {
+        const option = document.createElement('option');
+
+        option.value = producto.idProducto;
+        option.textContent = `${producto.codigo} - ${producto.nombre}`;
+
+        select.appendChild(option);
+    });
+}
 
 // EVENTOS
+function inicializarEventos() {
+
+
+    document.getElementById('slcMotivoGuia').addEventListener('change', actualizarCamposMotivo);
+    document.getElementById('btnAgregarProducto').addEventListener('click', agregarProductoGuia);
+    document.getElementById('tbodyProductosGuia').addEventListener('click', eliminarProductoGuia);
+}
+
+function actualizarCamposMotivo() {
+    const idMotivo = Number(document.getElementById('slcMotivoGuia').value);
+
+    const motivo = motivosGuia.find(item => item.idMotivoGuia == idMotivo);
+
+    const campos = [
+        { div: 'divProveedor', select: 'slcProveedor', requerido: motivo?.requiereProveedor },
+        { div: 'divAlmacenDestino', select: 'slcAlmacenDestino', requerido: motivo?.requiereAlmacenDestino },
+        { div: 'divAlmacenOrigen', select: 'slcAlmacenOrigen', requerido: motivo?.requiereAlmacenOrigen },
+        { div: 'divCliente', select: 'slcCliente', requerido: motivo?.requiereCliente }
+    ];
+
+    campos.forEach(campo => {
+        const contenedor = document.getElementById(campo.div);
+        const select = document.getElementById(campo.select);
+        const mostrar = campo.requerido === true;
+
+        contenedor.classList.toggle('d-none', !mostrar);
+        select.required = mostrar;
+
+        if (!mostrar) {
+            select.value = '0';
+        }
+    });
+}
+
+function agregarProductoGuia() {
+    const tbody = document.getElementById('tbodyProductosGuia');
+    const fila = document.createElement('tr');
+
+    fila.innerHTML = `
+        <td>
+            <select id="slcProducto" class="form-select">
+                <option value="0">Seleccione un producto</option>
+            </select>
+        </td>
+
+        <td>
+            <input type="number" id="txtCantidad" class="form-control" min="1" step="1" placeholder="Ingrese cantidad">
+        </td>
+
+        <td class="text-center">
+            <button type="button" id="btnEliminarProducto" class="btn btn-outline-danger" title="Eliminar producto">
+                <i class="ti ti-trash fs-5"></i>
+            </button>
+        </td>
+    `;
+
+    tbody.appendChild(fila);
+
+    cargarProductosSelect(fila);
+}
+
+function eliminarProductoGuia(event) {
+    const boton = event.target.closest('#btnEliminarProducto');
+
+    if (!boton) return;
+
+    boton.closest('tr').remove();
+}
 
 // FILTROS
