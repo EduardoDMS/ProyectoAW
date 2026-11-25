@@ -123,8 +123,8 @@ async function actualizarMotivoGuia() {
         idTipoOperacionGuia: parseInt(document.getElementById('slcOperacionEditar').value),
         idTipoComportamiento: parseInt(document.getElementById('slcComportamientoEditar').value),
         requiereProveedor: document.getElementById('requiereProveedorEditar').checked,
-        requiereAlmacenOrigen: document.getElementById('requiereAlmacenDestinoEditar').checked,
-        requiereAlmacenDestino: document.getElementById('requiereAlmacenOrigenEditar').checked,
+        requiereAlmacenOrigen: document.getElementById('requiereAlmacenOrigenEditar').checked,
+        requiereAlmacenDestino: document.getElementById('requiereAlmacenDestinoEditar').checked,
         requiereCliente: document.getElementById('requiereClienteEditar').checked,
         activo: document.getElementById('chkActivoEditar').checked
     };

@@ -141,7 +141,7 @@ async function cargarMotivosGuiaSelect() {
                 // Limpiar opciones anteriores
                 select.innerHTML = '<option value="0">Ninguno</option>';
 
-                // Recorrer los almacenes
+                // Recorrer los motivos
                 motivosGuia
                     .filter(motivo=>motivo.activo)
                     .forEach(motivoGuia => {
@@ -153,6 +153,7 @@ async function cargarMotivosGuiaSelect() {
                         select.appendChild(option);
                     });
             });
+            console.log(motivosGuia);
         }
 
     } catch (error) {
@@ -320,8 +321,9 @@ function inicializarEventos() {
 }
 
 function actualizarCamposMotivo() {
+    console.log('HOLAAAA');
     const idMotivo = Number(document.getElementById('slcMotivoGuia').value);
-
+    console.log(idMotivo);
     const motivo = motivosGuia.find(item => item.idMotivoGuia == idMotivo);
 
     const campos = [
