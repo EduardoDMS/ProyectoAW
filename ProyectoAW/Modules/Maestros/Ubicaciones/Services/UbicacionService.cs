@@ -70,6 +70,7 @@ namespace ProyectoAW.Modules.Maestros.Ubicaciones.Services
                 Nombre = ubicacion.Nombre,
                 Activo = ubicacion.Activo,
                 IdAlmacen = ubicacion.IdAlmacen,
+                NombreAlmacen = ubicacion.Almacen?.Nombre ?? string.Empty,
                 EsUbicacionDespacho = ubicacion.UbicacionesDespacho.Any(x => x.IdAlmacen == ubicacion.IdAlmacen)
             };
         }

@@ -6,6 +6,7 @@ public class CrearDetalleGuiaDto
 {
     [Range(1, int.MaxValue, ErrorMessage = "Selecciona un producto.")]
     public int IdProducto { get; set; }
+    public string CodProducto { get; set; } = string.Empty;
 
     [Range(typeof(decimal), "0.01", "9999999999999999", ErrorMessage = "La cantidad debe ser mayor que cero.")]
     public decimal Cantidad { get; set; }
