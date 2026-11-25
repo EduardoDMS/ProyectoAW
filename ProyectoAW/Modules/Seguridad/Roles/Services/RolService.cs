@@ -17,8 +17,6 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Services
             _repo = repo;
         }
 
-
-
         public async Task<bool> ActualizarRolAsync(int id, ActualizarRolDto dto)
         {
             var rol = await _repo.GetByIdAsync(id);
@@ -41,8 +39,6 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Services
 
             return true;
         }
-
-     
 
         public async Task<RolDto> CrearRolAsync(CrearRolDto dto)
         {

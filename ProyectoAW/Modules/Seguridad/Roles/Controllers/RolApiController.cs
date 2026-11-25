@@ -18,7 +18,6 @@ namespace ProyectoAW.Modules.Seguridad.Roles.Controllers
             _service = service;
         }
 
-
         [Authorize(Policy = "Roles.Ver")]
         [HttpGet]
         public async Task<IActionResult> ObtenerTodas()

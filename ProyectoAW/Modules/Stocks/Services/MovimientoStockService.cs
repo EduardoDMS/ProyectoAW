@@ -53,6 +53,7 @@ namespace ProyectoAW.Modules.Stocks.Services
             {
                 var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
                 ValidacionesGuia.ValidarGuiaEnProceso(guia, _currentUser.IdUsuario);
+                await _validacionesGuia.ValidarOrdenTrasladoAsync(guia);
 
                 var lectura = await _repository.ObtenerLecturaGuiaAsync(
                     idGuia, idLecturaGuia, _currentUser.IdUsuario);
@@ -162,7 +163,7 @@ namespace ProyectoAW.Modules.Stocks.Services
                         IdGuiaDetalle = detalle.IdDetalleGuia,
                         IdProducto = detalle.IdProducto,
                         CantidadEsperada = detalle.Cantidad,
-                        CodProducto = detalle.CodProducto
+                        CodProducto = detalle.Producto.Codigo
                     }).ToList()
                 };
             }).ToList();
@@ -226,11 +227,11 @@ namespace ProyectoAW.Modules.Stocks.Services
                 {
                     IdGuiaDetalle = detalle.IdDetalleGuia,
                     IdProducto = detalle.IdProducto,
+                    CodProducto = detalle.Producto.Codigo,
                     CantidadEsperada = detalle.Cantidad
                 }).ToList()
             };
         }
-
         public async Task<LecturaGuiaDto> RegistrarLecturaAsync(int idGuia, RegistrarLecturaGuiaRequest request)
         {
            // await _validacionesGuia.ExigirOperadorAsync();
@@ -262,22 +263,21 @@ namespace ProyectoAW.Modules.Stocks.Services
             {
                 var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
                 ValidacionesGuia.ValidarGuiaPuedeSerTomada(guia);
+                await _validacionesGuia.ValidarOrdenTrasladoAsync(guia);
 
                 guia.IdEstadoGuia = EstadoGuiasIds.EnProceso;
                 guia.IdUsuarioModificacion = _currentUser.IdUsuario;
                 guia.FechaActualizada = ProyectoAW.Infrastructure.Data.DateTimeText.From(DateTime.Now);
                 await _repository.GuardarCambiosAsync();
             });
-
         }
 
-
         #region metodos de transaccion con contacto directo con service
-
 
         public async Task FinalizarLecturaEnTransaccionAsync(int idGuia)
         {
             var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
+            await _validacionesGuia.ValidarOrdenTrasladoAsync(guia);
             var processor = _validacionesGuia.ValidarGuiaParaFinalizar(guia);
 
             var lecturas = await ObtenerLecturasValidadasAsync(guia, processor);
@@ -291,6 +291,7 @@ namespace ProyectoAW.Modules.Stocks.Services
 
             await _repository.GuardarCambiosAsync();
         }
+
         public async Task<IReadOnlyList<LecturaGuia>> ObtenerLecturasValidadasAsync(
                 Guia guia, IGuiaStockProcessor processor)
         {
@@ -308,9 +309,6 @@ namespace ProyectoAW.Modules.Stocks.Services
             await _validacionesUbicacion.ValidarUbicacionesFinalesAsync(guia, lecturas, processor, requiereUbicacionDespacho);
             return lecturas;
         }
-
-
-
 
         private MovimientoStock CrearMovimiento(
             Guia guia,
@@ -369,6 +367,7 @@ namespace ProyectoAW.Modules.Stocks.Services
             {
                 var guia = await _validacionesGuia.ObtenerGuiaAsync(idGuia);
                 ValidacionesGuia.ValidarGuiaEnProceso(guia, _currentUser.IdUsuario);
+                await _validacionesGuia.ValidarOrdenTrasladoAsync(guia);
                 await _validacionesStock.ValidarProductoLeidoAsync(guia, request);
                 await _validacionesUbicacion.ValidarUbicacionesYDisponibilidadAsync(guia, idGuia, request);
 
@@ -394,7 +393,6 @@ namespace ProyectoAW.Modules.Stocks.Services
             return lectura ?? throw new NegocioException("La transaccion termino sin registrar la lectura");
         }
 
-
         public async Task AplicarLecturasAsync(
         Guia guia,
         IReadOnlyList<LecturaGuia> lecturas,
@@ -405,7 +403,6 @@ namespace ProyectoAW.Modules.Stocks.Services
             foreach (var detalle in guia.Detalles)
                 await AplicarLecturasDelProductoAsync(guia, detalle, lecturas, processor, idOperador);
         }
-
 
         private async Task AplicarLecturasDelProductoAsync(
         Guia guia,
@@ -429,11 +426,6 @@ namespace ProyectoAW.Modules.Stocks.Services
                 (int)totalLeido, cantidadEsperada);
             _movimientoStockRepo.AgregarMovimiento(movimiento);
         }
-
         #endregion
-
-
     }
 }
-
-

@@ -171,8 +171,6 @@ namespace ProyectoAW.Modules.Stocks.Repositories
                                                                              despacho.IdUbicacion == ubicacion.IdUbicacion));
         }
 
-
-
         public async Task GuardarCambiosAsync()
         {
              await _context.SaveChangesAsync();
@@ -189,6 +187,7 @@ namespace ProyectoAW.Modules.Stocks.Repositories
         }
 
         private IQueryable<Guia> ConsultaGuias() => _context.Guias
+            .Include(g => g.GuiaRelacionada)
             .Include(g => g.TipoOperacion)
             .Include(g => g.Estado)
             .Include(g => g.Motivo)
@@ -198,6 +197,5 @@ namespace ProyectoAW.Modules.Stocks.Repositories
             .Include(g => g.AlmacenDestino)
             .Include(g => g.Detalles).ThenInclude(d => d.Producto);
 
-      
     }
 }

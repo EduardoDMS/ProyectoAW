@@ -13,8 +13,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
 {
     public class ValidacionesGuia : ValidacionesBase
     {
-
-
         public ValidacionesGuia(ILecturaGuiaRepository repository, ICurrentUserService currentUser, ITransactionManager transactions, IEnumerable<IGuiaStockProcessor> stockProcessors) : base(repository, currentUser, transactions, stockProcessors)
         {
         }
@@ -22,6 +20,22 @@ namespace ProyectoAW.Modules.Stocks.Validacion
         public async Task<Guia> ObtenerGuiaAsync(int idGuia)
         {
             return await _repository.ObtenerGuiaParaLecturaAsync(idGuia) ?? throw new NegocioException($"La guia {idGuia} no existe.");
+        }
+
+        public Task ValidarOrdenTrasladoAsync(Guia guia)
+        {
+            if (guia.IdTipoOperacionGuia != TipoOperacionGuiaIds.Entrada || !guia.IdGuiaRelacionada.HasValue)
+                return Task.CompletedTask;
+
+            var guiaSalida = guia.GuiaRelacionada;
+
+            if (guiaSalida == null || guiaSalida.IdTipoOperacionGuia != TipoOperacionGuiaIds.Salida)
+                throw new NegocioException("No se encontró la guía de salida relacionada a este traslado.");
+
+            if (guiaSalida.IdEstadoGuia != EstadoGuiasIds.Atendida)
+                throw new NegocioException("Primero debe completarse la guía de salida del traslado para poder tomar o procesar esta guía de entrada.");
+
+            return Task.CompletedTask;
         }
 
         public async Task ExigirOperadorAsync()
@@ -37,7 +51,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 throw new NegocioException("La guia no esta pendiente ya fue tomada por alguien mas, Finalizando proceso.");
         }
 
-
         public static void ValidarGuiaEnProceso(Guia guia, int idOperador)
         {
             if (guia.IdTipoOperacionGuia is not (TipoOperacionGuiaIds.Entrada or TipoOperacionGuiaIds.Salida))
@@ -51,18 +64,17 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 throw new NegocioException("Esta guia está siendo atendida por otro operador.");
         }
 
-
         public static void ExigirOperacionesOperador(int idTipoOperacionGuia)
         {
             if (idTipoOperacionGuia is not (TipoOperacionGuiaIds.Entrada or TipoOperacionGuiaIds.Salida))
                 throw new NegocioException("El operadorr solo puede atender guia de entrada y salida , otros movimientos externos no se le son permitidos");
         }
 
-
         public async Task TomarGuiaTransaccionAsync(int idGuia)
         {
             var guia = await ObtenerGuiaAsync(idGuia);
             ValidarGuiaPuedeSerTomada(guia);
+            await ValidarOrdenTrasladoAsync(guia);
 
             guia.IdEstadoGuia = EstadoGuiasIds.EnProceso;
             guia.IdUsuarioModificacion = _currentUser.IdUsuario;
@@ -70,8 +82,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
             await _repository.GuardarCambiosAsync();
 
         }
-
-
 
         private static void ValidarDetallesDeGuia(Guia guia)
         {
@@ -84,12 +94,10 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 throw new NegocioException("La guía no tiene productos válidos para procesar.");
         }
 
-
         private IGuiaStockProcessor ObtenerProcesador(int idTipoOperacionGuia) =>
             _stockProcessors.TryGetValue(idTipoOperacionGuia, out var processor)
                 ? processor
                 : throw new NegocioException("La guía tiene un tipo de operación inválido.");
-
 
         private static void ValidarCantidadesEnteras(Guia guia)
         {
@@ -120,8 +128,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
             ValidarAsignacionEnProceso(guia, _currentUser.IdUsuario);
             return processor;
         }
-
-
 
     }
 }
