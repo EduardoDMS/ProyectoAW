@@ -63,6 +63,11 @@ public class GuiaConfiguration : IEntityTypeConfiguration<Guia>
                .HasForeignKey(guia => guia.IdAlmacenDestino)
                .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(guia => guia.GuiaRelacionada)    // emote con la guia
+               .WithMany(guia => guia.GuiasRelacionadas)
+               .HasForeignKey(guia => guia.IdGuiaRelacionada)
+               .OnDelete(DeleteBehavior.Restrict);
+
         // NUEVOS DATOS PARA SQL guia
         builder.HasOne<Usuario>()
                    .WithMany()

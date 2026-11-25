@@ -33,6 +33,10 @@ namespace ProyectoAW.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("CodProducto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("IdGuia")
                         .HasColumnType("int");
 
@@ -71,9 +75,6 @@ namespace ProyectoAW.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)")
                         .HasDefaultValueSql("LEFT(CONVERT(varchar(19), GETDATE(), 120), 16)");
-
-                    b.Property<int?>("GuiaRelacionadaIdGuia")
-                        .HasColumnType("int");
 
                     b.Property<int?>("IdAlmacenDestino")
                         .HasColumnType("int");
@@ -124,8 +125,6 @@ namespace ProyectoAW.Migrations
 
                     b.HasKey("IdGuia");
 
-                    b.HasIndex("GuiaRelacionadaIdGuia");
-
                     b.HasIndex("IdAlmacenDestino");
 
                     b.HasIndex("IdAlmacenOrigen");
@@ -133,6 +132,8 @@ namespace ProyectoAW.Migrations
                     b.HasIndex("IdCliente");
 
                     b.HasIndex("IdEstadoGuia");
+
+                    b.HasIndex("IdGuiaRelacionada");
 
                     b.HasIndex("IdMotivoGuia");
 
@@ -1074,10 +1075,6 @@ namespace ProyectoAW.Migrations
 
             modelBuilder.Entity("ProyectoAW.Modules.Guias.Entities.Guia", b =>
                 {
-                    b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "GuiaRelacionada")
-                        .WithMany("GuiasRelacionadas")
-                        .HasForeignKey("GuiaRelacionadaIdGuia");
-
                     b.HasOne("ProyectoAW.Modules.Maestros.Almacenes.Entities.Almacen", "AlmacenDestino")
                         .WithMany()
                         .HasForeignKey("IdAlmacenDestino")
@@ -1098,6 +1095,11 @@ namespace ProyectoAW.Migrations
                         .HasForeignKey("IdEstadoGuia")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("ProyectoAW.Modules.Guias.Entities.Guia", "GuiaRelacionada")
+                        .WithMany("GuiasRelacionadas")
+                        .HasForeignKey("IdGuiaRelacionada")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProyectoAW.Modules.Maestros.MotivosGuia.Entities.MotivoGuia", "Motivo")
                         .WithMany()

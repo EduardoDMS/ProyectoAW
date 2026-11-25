@@ -161,7 +161,8 @@ namespace ProyectoAW.Modules.Stocks.Services
                     {
                         IdGuiaDetalle = detalle.IdDetalleGuia,
                         IdProducto = detalle.IdProducto,
-                        CantidadEsperada = detalle.Cantidad
+                        CantidadEsperada = detalle.Cantidad,
+                        CodProducto = detalle.CodProducto
                     }).ToList()
                 };
             }).ToList();
@@ -370,7 +371,6 @@ namespace ProyectoAW.Modules.Stocks.Services
                 ValidacionesGuia.ValidarGuiaEnProceso(guia, _currentUser.IdUsuario);
                 await _validacionesStock.ValidarProductoLeidoAsync(guia, request);
                 await _validacionesUbicacion.ValidarUbicacionesYDisponibilidadAsync(guia, idGuia, request);
-
 
                 lectura = new LecturaGuia
                 {

@@ -134,7 +134,6 @@ builder.Services.AddScoped<IMovimientoStockRepository, MovimientoStockRepository
 builder.Services.AddScoped<IMovimientoStockService, MovimientoStockService>();
 builder.Services.AddScoped<IStockBalanceRepository, StockBalanceRepository>();
 builder.Services.AddScoped<ILecturaGuiaRepository, LecturaGuiaRepository>();
-builder.Services.AddHttpContextAccessor(); // no
 builder.Services.AddScoped<ICurrentUserService,CurrentUserService>();
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 builder.Services.AddScoped<IGuiaStockProcessor, EntradaStockProcessor>();
@@ -150,6 +149,7 @@ builder.Services.AddScoped<ValidacionesGuia>();
 builder.Services.AddScoped<ValidacionesStock>();
 builder.Services.AddScoped<ValidacionesUbicacion>();
 
+builder.Services.AddHttpContextAccessor(); // no
 
 
 builder.Services
