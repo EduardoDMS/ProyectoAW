@@ -71,6 +71,7 @@ public class UsuarioService : IUsuarioService
         await _repository.ActualizarAsync(usuario);
         return true;
     }
+
     public async Task<bool> EliminarUsuarioAsync(int id)
     {
         var usuario = await _repository.GetByIdAsync(id);
@@ -153,7 +154,6 @@ public class UsuarioService : IUsuarioService
             Activo = usuario.Activo
         };
     }
-
 
 
     #region VALIDACIONES_USUARIOS

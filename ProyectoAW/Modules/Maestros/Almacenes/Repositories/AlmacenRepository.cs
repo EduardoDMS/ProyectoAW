@@ -55,7 +55,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
                 throw;
             }
         }
-
       
         public async Task<Almacen?> ObtenerAlmacenPorIdAsync(int id) // metodo duplicado ia
         {
@@ -131,7 +130,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Repositories
             return await _context.Ubicaciones
                                  .AnyAsync(a => a.IdAlmacen == idAlmacen);
         }
-
 
         public async Task<Almacen?> ObtenerAlmacenParaActualizarAsync(int id) // metodo duplicado 
         {

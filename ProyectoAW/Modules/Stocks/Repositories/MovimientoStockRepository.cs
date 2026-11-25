@@ -59,9 +59,6 @@ namespace ProyectoAW.Modules.Stocks.Repositories
                                  .OrderBy(lectura => lectura.IdLecturaGuia)
                                  .ToListAsync();
 
-
-        
-
         public Task<bool> TieneUbicacionesDespachoActivasAsync(int idAlmacen)
         {
             return _context.Ubicaciones

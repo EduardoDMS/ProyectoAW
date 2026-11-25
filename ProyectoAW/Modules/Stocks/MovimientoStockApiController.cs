@@ -21,10 +21,7 @@ public class MovimientoStockApiController : ControllerBase
     // GET: api/movimientos-stock
     [Authorize(Policy = "Stocks.Ver")]
     [HttpGet]//LISTA OS MOVIMINTOS REALIZADOS POR CADA GUIA XDDDD
-    public async Task<IActionResult> Listar(
-        [FromQuery] int? idGuia,
-        [FromQuery] int? idAlmacen,
-        [FromQuery] int? idOperacion)
+    public async Task<IActionResult> Listar([FromQuery] int? idGuia, [FromQuery] int? idAlmacen, [FromQuery] int? idOperacion)
     {
         try
         {
@@ -58,8 +55,7 @@ public class MovimientoStockApiController : ControllerBase
 
     [Authorize(Policy = "Stocks.Ver")]
     [HttpGet("guias-operador")]
-    public async Task<IActionResult> ListarGuiasOperador(
-        [FromQuery] int? idEstadoGuia)
+    public async Task<IActionResult> ListarGuiasOperador([FromQuery] int? idEstadoGuia)
     {
         try
         {
@@ -161,9 +157,7 @@ public class MovimientoStockApiController : ControllerBase
     // POST: api/movimientos-stock/guias/15/lecturas
     [Authorize(Policy = "Stocks.Crear")]
     [HttpPost("guias/{idGuia:int}/lecturas")]
-    public async Task<IActionResult> RegistrarLectura(
-        int idGuia,
-        [FromBody] RegistrarLecturaGuiaRequest request)
+    public async Task<IActionResult> RegistrarLectura(int idGuia, [FromBody] RegistrarLecturaGuiaRequest request)
     {
         try
         {
@@ -197,14 +191,11 @@ public class MovimientoStockApiController : ControllerBase
     // DELETE: api/movimientos-stock/guias/15/lecturas/100
     [Authorize(Policy = "Stocks.Eliminar")]
     [HttpDelete("guias/{idGuia:int}/lecturas/{idLecturaGuia:long}")]
-    public async Task<IActionResult> EliminarLectura(
-        int idGuia,
-        long idLecturaGuia)
+    public async Task<IActionResult> EliminarLectura(int idGuia, long idLecturaGuia)
     {
         try
         {
-            var eliminada = await _service.EliminarLecturaAsync(
-                idGuia, idLecturaGuia);
+            var eliminada = await _service.EliminarLecturaAsync(idGuia, idLecturaGuia);
 
             if (!eliminada)
             {
@@ -273,4 +264,5 @@ public class MovimientoStockApiController : ControllerBase
             });
         }
     }
+
 }
