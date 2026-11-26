@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProyectoAW.PWA</title>
+    <script type="importmap"></script>
+
+    <!-- CSS TERCEROS -->
+    <link rel="stylesheet" href="~/libs/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/matdash/fonts/tabler-icons/tabler-icons.css" />
+    <link rel="stylesheet" href="~/matdash/css/styles.css" />
+
+    <!-- CSS PROPIOS-->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pwa.css" asp-append-version="true" />
+</head>
+<body>
+@*     <header>
+        <nav class="navbar navbar-dark bg-primary px-3">
+            <span class="navbar-brand mb-0">AW - Operador</span>
+        </nav>
+    </header> *@
+
+    <div class="container-fluid p-3">
+        @RenderBody()
+    </div>
+
+    <nav class="navbar fixed-bottom bg-white border-top">
+        <div class="container-fluid d-flex justify-content-around">
+            <a class="nav-link text-center">
+                <i class="ti ti-settings fs-6 d-block"></i>
+                <small>Ajustes</small>
+            </a>
+
+            <a class="nav-link text-center active">
+                <i class="ti ti-home fs-6 d-block"></i>
+                <small>Inicio</small>
+            </a>
+
+            <a class="nav-link text-center">
+                <i class="ti ti-search fs-6 d-block"></i>
+                <small>Consultar</small>
+            </a>
+        </div>
+    </nav>
+
+    <!-- JS TERCEROS -->
+    <script src="~/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- JS PROPIOS -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

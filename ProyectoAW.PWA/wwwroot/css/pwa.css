@@ -1,0 +1,23 @@
+﻿/* Navegacion inferior*/
+body {
+    padding-bottom:75px;
+}
+
+/* Navegacion inferior */
+.navbar.fixed-bottom{
+    min-height: 65px;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Opciones de navegacion */
+.navbar.fixed-botton .nav-link {
+    color: #6c757d;
+    flex: 1;
+    padding: 6px 0;
+}
+
+/* Opcion seleccionada */
+.navbar.fixed-bottom .nav-link.active {
+    color: #0d6efd !important;
+    font-weight: 600 !important;
+}
