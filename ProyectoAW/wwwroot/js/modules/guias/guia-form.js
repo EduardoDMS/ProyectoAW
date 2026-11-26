@@ -224,7 +224,7 @@ function cargarProductosGuiaVer(detalles) {
         const fila = document.createElement('tr');
 
         const tdProducto = document.createElement('td');
-        tdProducto.textContent = `${detalle.idProducto} - ${detalle.producto}`;
+        tdProducto.textContent = `${detalle.codProducto} - ${detalle.producto}`;
 
         const tdCantidad = document.createElement('td');
         tdCantidad.textContent = detalle.cantidad;

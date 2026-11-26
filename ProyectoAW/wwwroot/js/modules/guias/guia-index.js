@@ -125,7 +125,7 @@ async function cargarMotivosGuiaSelect() {
         const response = await fetch('/api/MotivoGuiaApi');
 
         const resultado = await response.json();
-        console.log(resultado);
+        
         if (!response.ok) {
             throw new Error(resultado.mensaje || 'Error al cargar los motivos de guía');
         }
@@ -153,7 +153,7 @@ async function cargarMotivosGuiaSelect() {
                         select.appendChild(option);
                     });
             });
-            console.log(motivosGuia);
+            
         }
 
     } catch (error) {
@@ -289,6 +289,7 @@ async function cargarProductosGuia() {
 
         if (resultado.exito) {
             productosGuia = resultado.datos;
+            console.log(productosGuia);
         }
 
     } catch (error) {
@@ -302,7 +303,7 @@ function cargarProductosSelect(fila) {
         const option = document.createElement('option');
 
         option.value = producto.idProducto;
-        option.textContent = `${producto.codigo} - ${producto.nombre}`;
+        option.textContent = `${producto.idProducto} - ${producto.nombre}`;
 
         select.appendChild(option);
     });
@@ -316,14 +317,15 @@ function inicializarEventos() {
     document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
 
     document.getElementById('slcMotivoGuia').addEventListener('change', actualizarCamposMotivo);
-    document.getElementById('btnAgregarProducto').addEventListener('click', agregarProductoGuia);
+    document.getElementById('btnAgregarProducto').addEventListener('click', () => {
+        agregarProductoGuia('tbodyProductosGuia');
+    });
     document.getElementById('tbodyProductosGuia').addEventListener('click', eliminarProductoGuia);
 }
 
 function actualizarCamposMotivo() {
-    console.log('HOLAAAA');
     const idMotivo = Number(document.getElementById('slcMotivoGuia').value);
-    console.log(idMotivo);
+    
     const motivo = motivosGuia.find(item => item.idMotivoGuia == idMotivo);
 
     const campos = [
@@ -347,8 +349,10 @@ function actualizarCamposMotivo() {
     });
 }
 
-function agregarProductoGuia() {
-    const tbody = document.getElementById('tbodyProductosGuia');
+// Para crear y editar
+function agregarProductoGuia(idTbody, detalle=null) {
+    console.log('holaa');
+    const tbody = document.getElementById(idTbody);
     const fila = document.createElement('tr');
 
     fila.innerHTML = `
@@ -372,6 +376,14 @@ function agregarProductoGuia() {
     tbody.appendChild(fila);
 
     cargarProductosSelect(fila);
+
+    if (detalle) {
+        const select = fila.querySelector('.slcProducto');
+        const input = fila.querySelector('.txtCantidad');
+
+        select.value = detalle.idProducto;
+        input.value = detalle.cantidad;
+    }
 }
 
 function eliminarProductoGuia(event) {

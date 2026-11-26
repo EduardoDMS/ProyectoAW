@@ -20,7 +20,7 @@ public class MovimientoStockApiController : ControllerBase
 
     // GET: api/movimientos-stock
     [Authorize(Policy = "Stocks.Ver")]
-    [HttpGet]
+    [HttpGet]//LISTA OS MOVIMINTOS REALIZADOS POR CADA GUIA XDDDD
     public async Task<IActionResult> Listar(
         [FromQuery] int? idGuia,
         [FromQuery] int? idAlmacen,

@@ -7,6 +7,7 @@ public class GuiaDto
     public int IdTipoOperacionGuia { get; set; } 
     public string TipoOperacion { get; set; } = string.Empty;
     public int? IdMotivoGuia { get; set; }
+    public int? IdGuiaRelacionada { get; set; } // relacionando la guia
     public string Motivo { get; set; } = string.Empty;
     public string Estado { get; set; } = string.Empty;
     public int? IdProveedor { get; set; }
@@ -29,5 +30,6 @@ public class DetalleGuiaDto
 {
     public int IdProducto { get; set; }
     public string Producto { get; set; } = string.Empty;
+    public string CodProducto { get; set; } = string.Empty;
     public decimal Cantidad { get; set; }
 }

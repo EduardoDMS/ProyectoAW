@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security;
 
 namespace ProyectoAW.Modules.Guias.DTOs.Requests;
 
@@ -14,6 +15,9 @@ public class ActualizarGuiaDto
 
     [Required]
     public string FechaProgramada { get; set; } = string.Empty;
+
+    public string TipoDocumentoReferencia { get; set; } = string.Empty;
+    public string NumeroDcumentoReferencia { get; set; } = string.Empty;
 
     [StringLength(500)]
     public string? Observacion { get; set; }
