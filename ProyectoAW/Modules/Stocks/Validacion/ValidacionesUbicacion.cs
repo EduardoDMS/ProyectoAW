@@ -51,7 +51,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 throw new NegocioException("Indica las ubicaciones correspondientes al tipo de operacion de esta guia.");
         }
 
-
         private static void ValidarUbicacionesIndicadas(
             bool requiereOrigen, bool requiereDestino, bool tieneOrigen, bool tieneDestino, int idProducto)
         {
@@ -77,7 +76,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 guia.IdAlmacenOrigen!.Value, destino!.Value, true))
                 throw new NegocioException("La ubicacion elegida no esta habilitada para despacho en el almacen de origen");
         }
-
 
         public async Task ValidarUbicacionDestinoAsync(Guia guia, IGuiaStockProcessor processor, bool salida, int? destino)
         {
@@ -117,14 +115,12 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 throw new NegocioException($"La Ubicacion de origen {Math.Max(stockActual - yaRegistrado, 0)}solo tiene unidades disponibles de este producto");
         }
 
-
         private static void ValidarUbicacionOrigenLeida(
             ProyectoAW.Modules.Stocks.Entities.LecturaGuia lectura, bool requiereOrigen, IReadOnlySet<int> ubicacionesOrigenValidas)
         {
             if (requiereOrigen && !ubicacionesOrigenValidas.Contains(lectura.IdUbicacionOrigen!.Value))
                 throw new NegocioException($"La ubicación de origen del producto {lectura.IdProducto} dejó de estar activa o no pertenece al almacén.");
         }
-
 
         private static void ValidarUbicacionDestinoLeida(
             ProyectoAW.Modules.Stocks.Entities.LecturaGuia lectura,
@@ -144,6 +140,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 }
             }
 
+
         private Task<IReadOnlySet<int>> ObtenerUbicacionesOrigenValidasAsync(
             Guia guia,
             IReadOnlyList<ProyectoAW.Modules.Stocks.Entities.LecturaGuia> lecturas,
@@ -161,6 +158,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
             return _repository.ObtenerUbicacionesActivasAsync(
                 guia.IdAlmacenOrigen!.Value, idsOrigen, false);
         }
+
 
         private Task<IReadOnlySet<int>> ObtenerUbicacionesDestinoValidasAsync(
         int idAlmacenDestino,
@@ -180,6 +178,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
             return _repository.ObtenerUbicacionesActivasAsync(
                 idAlmacenDestino, idsDestino, esDespacho);
         }
+
 
         private static void ValidarUbicacionLeida(
         ProyectoAW.Modules.Stocks.Entities.LecturaGuia lectura,
@@ -202,6 +201,7 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 lectura, salida, requiereDestino, ubicacionesDestinoValidas);
         }
 
+
         private static void ValidarLecturasContraUbicaciones(
         IReadOnlyList<ProyectoAW.Modules.Stocks.Entities.LecturaGuia> lecturas,
         IGuiaStockProcessor processor,
@@ -214,7 +214,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                 ValidarUbicacionLeida(lectura, processor, salida, requiereUbicacionDespacho,
                     ubicacionesOrigenValidas, ubicacionesDestinoValidas);
         }
-
 
 
         public async Task ValidarUbicacionesFinalesAsync(
@@ -237,9 +236,6 @@ namespace ProyectoAW.Modules.Stocks.Validacion
                     lecturas, processor, salida, requiereUbicacionDespacho,
                     ubicacionesOrigenValidas, ubicacionesDestinoValidas);
             }   
-
-
-
 
     }
 }

@@ -126,7 +126,6 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             }
         }
 
-
         [Authorize(Policy = "Usuarios.Actualizar")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Actualizar(int id , [FromBody] ActualizarUsuarioDto request)
@@ -166,7 +165,6 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
             
         }
 
-
         [Authorize(Policy ="Usuarios.Eliminar")]
         [HttpDelete("eliminar-usuario/{id:int}")]
         public async Task<IActionResult> Eliminar(int id)
@@ -197,7 +195,6 @@ namespace ProyectoAW.Modules.Seguridad.Usuarios.Controllers
                 });
             }
         }
-
 
 
         //[HttpPatch("{id:int}/estado")]

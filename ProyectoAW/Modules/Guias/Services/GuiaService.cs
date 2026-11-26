@@ -55,12 +55,14 @@ public class GuiaService : IGuiaService
             IdAlmacenDestino = guia.IdAlmacenDestino,
             AlmacenDestino = guia.AlmacenDestino?.Nombre,
             FechaProgramada = guia.FechaProgramada,
+            TipoDocumentoReferencia = guia.TipoDocumentoReferencia,
+            NumeroDocumentoReferencia = guia.NumeroDocumentoReferencia,
             Observacion = guia.Observacion,
             Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
             {
                 IdProducto = detalle.IdProducto,
                 Producto = detalle.Producto.Nombre,
-                CodProducto = detalle.CodProducto,
+                CodProducto = detalle.Producto.Codigo,
                 Cantidad = detalle.Cantidad
             }).ToList()
         }).ToList();
@@ -87,17 +89,18 @@ public class GuiaService : IGuiaService
             IdAlmacenDestino = guia.IdAlmacenDestino,
             AlmacenDestino = guia.AlmacenDestino?.Nombre,
             FechaProgramada = guia.FechaProgramada,
+            TipoDocumentoReferencia = guia.TipoDocumentoReferencia,
+            NumeroDocumentoReferencia = guia.NumeroDocumentoReferencia,
             Observacion = guia.Observacion,
             Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
             {
                 IdProducto = detalle.IdProducto,
                 Producto = detalle.Producto.Nombre,
-                CodProducto = detalle.CodProducto,
+                CodProducto = detalle.Producto.Codigo,
                 Cantidad = detalle.Cantidad
             }).ToList()
         }).ToList();
     }
-
 
     public async Task<GuiaDto?> ObtenerPorIdAsync(int id)
     {
@@ -125,18 +128,19 @@ public class GuiaService : IGuiaService
             IdAlmacenDestino = guia.IdAlmacenDestino,
             AlmacenDestino = guia.AlmacenDestino?.Nombre,
             FechaProgramada = guia.FechaProgramada,
+            TipoDocumentoReferencia = guia.TipoDocumentoReferencia,
+            NumeroDocumentoReferencia = guia.NumeroDocumentoReferencia,
             Observacion = guia.Observacion,
             Detalles = guia.Detalles.Select(detalle => new DetalleGuiaDto
             {
                 IdProducto = detalle.IdProducto,
                 Producto = detalle.Producto.Nombre,
-                CodProducto = detalle.CodProducto,
+                CodProducto = detalle.Producto.Codigo,
                 Cantidad = detalle.Cantidad
             }).ToList()
         };
     }
     
-
     public async Task<GuiaDto> CrearAsync(CrearGuiaDto request)
     {
         var idUsuarioRegistro = _currentUser.IdUsuario;
@@ -179,7 +183,6 @@ public class GuiaService : IGuiaService
             Detalles = request.Detalles.Select(detalle => new DetalleGuia
             {
                 IdProducto = detalle.IdProducto,
-                CodProducto = detalle.CodProducto,
                 Cantidad = detalle.Cantidad
             }).ToList()
         };
@@ -209,7 +212,6 @@ public class GuiaService : IGuiaService
                     Detalles = request.Detalles.Select(detalle => new DetalleGuia
                     {
                         IdProducto = detalle.IdProducto,
-                        CodProducto = detalle.CodProducto,
                         Cantidad = detalle.Cantidad
                     }).ToList()
                 };
@@ -259,7 +261,7 @@ public class GuiaService : IGuiaService
             {
                 IdProducto = detalle.IdProducto,
                 Producto = detalle.Producto.Nombre,
-                CodProducto = detalle.CodProducto,
+                CodProducto = detalle.Producto.Codigo,
                 Cantidad = detalle.Cantidad
             }).ToList()
         };
@@ -304,8 +306,7 @@ public class GuiaService : IGuiaService
             guia.Detalles.Add(new DetalleGuia
             {
                 IdProducto = detalle.IdProducto,
-                Cantidad = detalle.Cantidad,
-                CodProducto = detalle.CodProducto
+                Cantidad = detalle.Cantidad
             });
         }
 
@@ -392,4 +393,5 @@ public class GuiaService : IGuiaService
         if (idAlmacenOrigen == idAlmacenDestino)
             throw new NegocioException("El almacén de origen y destino del traslado deben ser diferentes.");
     }
+
 }

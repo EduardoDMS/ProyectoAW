@@ -54,7 +54,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
             }
         }
 
-
         [Authorize(Policy = "Almacenes.Ver")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObtenerPorId(int id)
@@ -149,7 +148,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
             }
         }
 
-
         [HttpDelete("{id:int}")]
         [Authorize(Policy = "Almacenes.Eliminar")]
         public async Task<IActionResult> Eliminar(int id)
@@ -180,10 +178,6 @@ namespace ProyectoAW.Modules.Maestros.Almacenes.Controllers
                 });
             }
         }
-
-
-
-
 
 
         #region METODOS NO USADOS
