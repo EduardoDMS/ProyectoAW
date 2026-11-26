@@ -44,8 +44,8 @@ function inicializarTabla() {
                     const estados = {
                         'Pendiente': '<span class="badge bg-warning"> Pendiente </span>',
                         'En proceso': '<span class="badge bg-primary"> En proceso </span>',
-                        'Atendido': '<span class="badge bg-success"> Atendido </span>',
-                        'Cancelado': '<span class="badge bg-danger"> Cancelado </span>'
+                        'Atendida': '<span class="badge bg-success"> Atendido </span>',
+                        'Cancelada': '<span class="badge bg-danger"> Cancelado </span>'
                     };
 
                     return estados[estado] || '<span class="badge bg-secondary">Desconocido</span>'
@@ -401,7 +401,7 @@ function eliminarProductoGuia(event) {
 // FILTROS
 function filtrarGuia() {
     const numeroGuia = document.getElementById('txtBuscarGuia').value.trim();
-    const operacion = document.getElementById('slcOperacion').value;
+    const operacion = document.getElementById('slcOperacionFiltro').value;
     const estado = document.getElementById('slcEstado').value;
 
     const filtros = [];
@@ -435,7 +435,7 @@ function filtrarGuia() {
 
 function limpiarFiltros() {
     document.getElementById('txtBuscarGuia').value = "";
-    document.getElementById('slcOperacion').value = 0;
+    document.getElementById('slcOperacionFiltro').value = 0;
     document.getElementById('slcEstado').value = 0;
 
     tablaGuias.clearFilter();

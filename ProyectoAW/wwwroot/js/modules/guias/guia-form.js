@@ -24,7 +24,7 @@ async function guardarGuia() {
     const observacion = document.getElementById('txtObservacion').value.trim();
 
     const detalles = obtenerDetallesGuia('tbodyProductosGuia');
-
+    console.log(idTipoOperacion);
     // Validaciones
     if (idTipoOperacion == 0) {
         alert("Seleccione un tipo de operación para la guía");
@@ -65,7 +65,7 @@ async function guardarGuia() {
         alert("Agregue al menos un producto a la guía");
         return;
     }
-
+    
     const request = {
         idTipoOperacion: idTipoOperacion,
         idMotivoGuia: idMotivoGuia,
@@ -124,7 +124,7 @@ function obtenerDetallesGuia(idTbody) {
         });
     });
 
-    console.log(detalles);
+    //console.log(detalles);
     return detalles;
 }
 
