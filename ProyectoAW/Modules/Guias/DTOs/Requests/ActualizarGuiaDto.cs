@@ -17,7 +17,7 @@ public class ActualizarGuiaDto
     public string FechaProgramada { get; set; } = string.Empty;
 
     public string TipoDocumentoReferencia { get; set; } = string.Empty;
-    public string NumeroDcumentoReferencia { get; set; } = string.Empty;
+    public string NumeroDocumentoReferencia { get; set; } = string.Empty;
 
     [StringLength(500)]
     public string? Observacion { get; set; }

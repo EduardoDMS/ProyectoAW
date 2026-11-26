@@ -106,8 +106,8 @@ async function cargarGuias() {
         if (resultado.exito) {
             const guias = resultado.datos;
 
-            console.log(guias);
-            console.log(resultado.mensaje);
+            // console.log(guias);
+            // console.log(resultado.mensaje);
 
             guias.sort((a, b) => b.idGuia - a.idGuia);
             tablaGuias.setData(guias);
@@ -289,7 +289,7 @@ async function cargarProductosGuia() {
 
         if (resultado.exito) {
             productosGuia = resultado.datos;
-            console.log(productosGuia);
+            //console.log(productosGuia);
         }
 
     } catch (error) {
@@ -303,7 +303,7 @@ function cargarProductosSelect(fila) {
         const option = document.createElement('option');
 
         option.value = producto.idProducto;
-        option.textContent = `${producto.idProducto} - ${producto.nombre}`;
+        option.textContent = `${producto.codigo} - ${producto.nombre}`;
 
         select.appendChild(option);
     });
@@ -315,12 +315,17 @@ function inicializarEventos() {
     document.getElementById('slcOperacion').addEventListener('change', filtrarGuia);
     document.getElementById('slcEstado').addEventListener('change', filtrarGuia);
     document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
-
     document.getElementById('slcMotivoGuia').addEventListener('change', actualizarCamposMotivo);
+
     document.getElementById('btnAgregarProducto').addEventListener('click', () => {
         agregarProductoGuia('tbodyProductosGuia');
     });
     document.getElementById('tbodyProductosGuia').addEventListener('click', eliminarProductoGuia);
+
+    document.getElementById('btnAgregarProductoEditar').addEventListener('click', () => {
+        agregarProductoGuia('tbodyProductosGuiaEditar');
+    });
+    document.getElementById('tbodyProductosGuiaEditar').addEventListener('click', eliminarProductoGuia);
 }
 
 function actualizarCamposMotivo() {
@@ -351,7 +356,6 @@ function actualizarCamposMotivo() {
 
 // Para crear y editar
 function agregarProductoGuia(idTbody, detalle=null) {
-    console.log('holaa');
     const tbody = document.getElementById(idTbody);
     const fila = document.createElement('tr');
 
@@ -430,5 +434,9 @@ function filtrarGuia() {
 }
 
 function limpiarFiltros() {
+    document.getElementById('txtBuscarGuia').value = "";
+    document.getElementById('slcOperacion').value = 0;
+    document.getElementById('slcEstado').value = 0;
 
+    tablaGuias.clearFilter();
 }

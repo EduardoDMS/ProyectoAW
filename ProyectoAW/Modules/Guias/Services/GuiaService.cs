@@ -297,7 +297,7 @@ public class GuiaService : IGuiaService
         guia.IdAlmacenDestino = motivo.RequiereAlmacenDestino ? request.IdAlmacenDestino : null;
         guia.FechaProgramada = fechaProgramada;
         guia.TipoDocumentoReferencia = request.TipoDocumentoReferencia;
-        guia.NumeroDocumentoReferencia = request.NumeroDcumentoReferencia;
+        guia.NumeroDocumentoReferencia = request.NumeroDocumentoReferencia;
         guia.Observacion = request.Observacion?.Trim();
         guia.Detalles.Clear();
 

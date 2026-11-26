@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnGuardarGuia').addEventListener('click', guardarGuia);
 
-    //document.getElementById('btnActualizarGuia').addEventListener('click', actualizarGuia);
+    document.getElementById('btnActualizarGuia').addEventListener('click', actualizarGuia);
 });
 
 // GUARDAR GUIA
@@ -23,7 +23,7 @@ async function guardarGuia() {
 
     const observacion = document.getElementById('txtObservacion').value.trim();
 
-    const detalles = obtenerDetallesGuia();
+    const detalles = obtenerDetallesGuia('tbodyProductosGuia');
 
     // Validaciones
     if (idTipoOperacion == 0) {
@@ -110,10 +110,11 @@ async function guardarGuia() {
         alert(error.message);
     }
 }
-function obtenerDetallesGuia() {
+// Para crear y editar
+function obtenerDetallesGuia(idTbody) {
     const detalles = [];
 
-    document.querySelectorAll('#tbodyProductosGuia tr').forEach(fila => {
+    document.querySelectorAll(`#${idTbody} tr`).forEach(fila => {
         const idProducto = Number(fila.querySelector('.slcProducto').value);
         const cantidad = Number(fila.querySelector('.txtCantidad').value);
 
@@ -123,6 +124,7 @@ function obtenerDetallesGuia() {
         });
     });
 
+    console.log(detalles);
     return detalles;
 }
 
@@ -255,6 +257,7 @@ async function editarGuia(guia) {
             console.log(resultado.mensaje);
 
             // Cargar datos en el formulario
+            document.getElementById('txtIdGuia').value = guia.idGuia;
             document.getElementById('slcOperacionEditar').value = String(guia.idTipoOperacionGuia);
             document.getElementById('slcMotivoGuiaEditar').value = String(guia.idMotivoGuia);
             document.getElementById('slcProveedorEditar').value = String(guia.idProveedor);
@@ -286,10 +289,106 @@ function cargarProductosGuiaEditar(detalles){
     tbody.innerHTML = '';
 
     detalles.forEach(detalle => {
-
+        agregarProductoGuia('tbodyProductosGuiaEditar', detalle);
     });
 }
 
 // ACTUALIZAR GUIA
+async function actualizarGuia() {
+    const id = document.getElementById('txtIdGuia').value;
+    
+    const request = {
+        idTipoOperacion: parseInt(document.getElementById('slcOperacionEditar').value),
+        idMotivoGuia: parseInt(document.getElementById('slcMotivoGuiaEditar').value),
+        idProveedor: parseInt(document.getElementById('slcProveedorEditar').value),
+        idAlmacenOrigen: parseInt(document.getElementById('slcAlmacenOrigenEditar').value),
+        idAlmacenDestino: parseInt(document.getElementById('slcAlmacenDestinoEditar').value),
+        idCliente: parseInt(document.getElementById('slcClienteEditar').value),
+        fechaProgramada: document.getElementById('txtFechaProgramadaEditar').value,
+        tipoDocumentoReferencia: document.getElementById('txtTipoDocumentoEditar').value.trim(),
+        numeroDocumentoReferencia: document.getElementById('txtNumeroDocumentoEditar').value.trim(),
+        observacion: document.getElementById('txtObservacionEditar').value.trim(),
+        detalles: obtenerDetallesGuia('tbodyProductosGuiaEditar')
+    };
+    console.log(request);
+
+    const motivo = motivosGuia.find(item => item.idMotivoGuia == request.idMotivoGuia);
+
+    // Validaciones
+    if (request.idTipoOperacion == 0) {
+        alert("Seleccione un tipo de operación para la guía");
+        return;
+    }
+
+    if (!motivo) {
+        alert("Seleccione un motivo para la guía");
+        return;
+    }
+
+    if (motivo.requiereProveedor && request.idProveedor == 0) {
+        alert("Seleccione un proveedor");
+        return;
+    }
+
+    if (motivo.requiereAlmacenOrigen && request.idAlmacenOrigen == 0) {
+        alert("Seleccione un proveedor");
+        return;
+    }
+
+    if (motivo.requiereAlmacenDestino && request.idAlmacenDestino == 0) {
+        alert("Seleccione un proveedor");
+        return;
+    }
+
+    if (motivo.requiereCliente && request.idCliente == 0) {
+        alert("Seleccione un proveedor");
+        return;
+    }
+
+    if (!request.fechaProgramada) {
+        alert("Ingrese la fecha programada");
+        return;
+    }
+
+    if (request.detalles.length === 0) {
+        alert("Agregue al menos un producto a la guía");
+        return;
+    }
+
+    try {
+        const response = await fetch(`api/guias/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        });
+
+        const resultado = await response.json();
+
+        if (!response.ok || !resultado.exito) {
+            throw new Error(resultado.mensaje || 'No se pudo actualizar la guía');
+        }
+
+        // Cerrar modal
+        const modalElement = document.getElementById('modalEditarGuia');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+
+        // Notificar que se actualizo un almacen
+        document.dispatchEvent(new CustomEvent('guia:guardado'));
+
+        // alert(resultado.mensaje);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+}
 
 // ELIMINAR GUIA
+function eliminarGuia(guia) {
+    console.log("Eliminar guía: ", guia);
+
+    // confirmacion de eliminar
+}
