@@ -191,7 +191,7 @@ function validarCantidadChecks() {
 // FILTROS
 function filtrarMotivosGuia() {
     const nombre = document.getElementById('txtBuscarMotivoGuia').value.trim();
-    const operacion = document.getElementById('slcOperacion').value;
+    const operacion = document.getElementById('slcOperacionFiltro').value;
     const estado = document.getElementById('slcEstado').value;
 
     const filtros = [];
@@ -225,7 +225,7 @@ function filtrarMotivosGuia() {
 
 function limpiarFiltros() {
     document.getElementById('txtBuscarMotivoGuia').value = "";
-    document.getElementById('slcOperacion').value = 0;
+    document.getElementById('slcOperacionFiltro').value = 0;
     document.getElementById('slcEstado').value = 0;
 
     tablaMotivosGuia.clearFilter();
