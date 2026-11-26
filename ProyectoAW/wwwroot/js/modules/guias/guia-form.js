@@ -26,7 +26,7 @@ async function guardarGuia() {
     const detalles = obtenerDetallesGuia();
 
     // Validaciones
-    if (idTipoOperacion == -1) {
+    if (idTipoOperacion == 0) {
         alert("Seleccione un tipo de operación para la guía");
         return;
     }
@@ -36,22 +36,22 @@ async function guardarGuia() {
         return;
     }
 
-    if (motivo.requiereProveedor && idProveedor == -1) {
+    if (motivo.requiereProveedor && idProveedor == 0) {
         alert("Seleccione un proveedor");
         return;
     }
 
-    if (motivo.requiereAlmacenOrigen && idAlmacenOrigen == -1) {
+    if (motivo.requiereAlmacenOrigen && idAlmacenOrigen == 0) {
         alert("Seleccione un proveedor");
         return;
     }
 
-    if (motivo.requiereAlmacenDestino && idAlmacenDestino == -1) {
+    if (motivo.requiereAlmacenDestino && idAlmacenDestino == 0) {
         alert("Seleccione un proveedor");
         return;
     }
 
-    if (motivo.requiereCliente && idCliente == -1) {
+    if (motivo.requiereCliente && idCliente == 0) {
         alert("Seleccione un proveedor");
         return;
     }
@@ -172,7 +172,7 @@ async function verGuia(guia) {
             document.getElementById('txtNumeroDocumentoVer').value = guia.numeroDocumentoReferencia ?? '';
             document.getElementById('txtObservacionVer').value = guia.observacion ?? '';
 
-            actualizarCamposMotivo(guia.idMotivoGuia);
+            actualizarCamposMotivoVer(guia.idMotivoGuia);
 
             cargarProductosGuiaVer(guia.detalles);
 
@@ -187,7 +187,7 @@ async function verGuia(guia) {
         alert(error.message);
     }
 }
-function actualizarCamposMotivo(idMotivo) {
+function actualizarCamposMotivoVer(idMotivo) {
     const motivo = motivosGuia.find(item => item.idMotivoGuia == idMotivo);
 
     const campos = [
@@ -224,7 +224,7 @@ function cargarProductosGuiaVer(detalles) {
         const fila = document.createElement('tr');
 
         const tdProducto = document.createElement('td');
-        tdProducto.textContent = `${detalle.idProducto} - ${detalle.producto}`;
+        tdProducto.textContent = `${detalle.codProducto} - ${detalle.producto}`;
 
         const tdCantidad = document.createElement('td');
         tdCantidad.textContent = detalle.cantidad;

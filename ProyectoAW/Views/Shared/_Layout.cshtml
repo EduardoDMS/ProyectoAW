@@ -136,12 +136,7 @@
                                     <a class="sidebar-link" asp-controller="Cliente" asp-action="Index">
                                         <span class="icon-small"></span><span class="hide-menu">Clientes</span>
                                     </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link" asp-controller="Usuario" asp-action="Index">
-                                        <span class="icon-small"></span><span class="hide-menu">Usuarios</span>
-                                    </a>
-                                </li>
+                                </li>                            
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" asp-controller="UnidadMedida" asp-action="Index">
                                         <span class="icon-small"></span><span class="hide-menu">Unidades de medida</span>
@@ -152,23 +147,26 @@
 
                          <!-- Seguridad -->
                         <li class="nav-small-cap">
-                            <span class="hide-menu">Gestión</span>
+                            <span class="hide-menu">Seguridad</span>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow" href="#" aria-expanded="false">
-                                <i class="ti ti-building-warehouse fs-6"></i>
-                                <span class="hide-menu">Gestión de Seguridad</span>
+                                <i class="ti ti-user-shield fs-6"></i>
+                                <span class="hide-menu">Usuarios y perfiles</span>
                             </a>
                             <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" asp-controller="Usuario" asp-action="Index">
+                                        <span class="icon-small"></span><span class="hide-menu">Usuarios</span>
+                                    </a>
+                                </li>
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" asp-controller="Perfil" asp-action="Index">
                                         <span class="icon-small"></span><span class="hide-menu">Perfiles</span>
                                     </a>
-                                </li>
-                                
+                                </li>                             
                             </ul>
                         </li> 
-
                     </ul>
                 </nav>
             </div>
